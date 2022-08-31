@@ -33,17 +33,21 @@ import kotlin.io.path.*
 fun BrowserWindow() {
     var isOpen by remember { mutableStateOf(false) }
     var currentLocation by remember { mutableStateOf(Path("/")) }
-    var search by remember { mutableStateOf("*") }
+    var search by remember { mutableStateOf("") }
     val sort by remember { mutableStateOf(Sort.NAME) }
     val files = remember(currentLocation, search, sort) {
         try {
-            currentLocation.listDirectoryEntries(search).sortedWith(compareBy {
-                when (sort) {
-                    Sort.NAME -> it.name.lowercase()
-                    Sort.SIZE -> it.fileSize()
-                    Sort.EXT -> it.extension
+            currentLocation.listDirectoryEntries()
+                .filter { path ->
+                    path.name.contains(search)
                 }
-            })
+                .sortedWith(compareBy {
+                    when (sort) {
+                        Sort.NAME -> it.name.lowercase()
+                        Sort.SIZE -> it.fileSize()
+                        Sort.EXT -> it.extension
+                    }
+                })
         } catch (e: IOException) {
             e.printStackTrace()
             emptyList()
