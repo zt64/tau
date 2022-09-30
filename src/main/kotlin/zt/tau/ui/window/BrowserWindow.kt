@@ -1,13 +1,14 @@
 package zt.tau.ui.window
 
-import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.PointerMatcher
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.onClick
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.ArrowRight
@@ -17,57 +18,43 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.PointerButton
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import zt.tau.enum.Sort
 import zt.tau.ui.component.FileItem
 import zt.tau.ui.component.PathBar
 import zt.tau.ui.component.SidePanel
+import zt.tau.ui.component.TextField
 import java.io.IOException
+import java.nio.file.Path
 import kotlin.io.path.*
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun BrowserWindow() {
-    var isOpen by remember { mutableStateOf(false) }
-    var currentLocation by remember { mutableStateOf(Path("/")) }
-    var search by remember { mutableStateOf("") }
-    val sort by remember { mutableStateOf(Sort.NAME) }
-    val files = remember(currentLocation, search, sort) {
-        try {
-            currentLocation.listDirectoryEntries()
-                .filter { path ->
-                    path.name.contains(search)
-                }
-                .sortedWith(compareBy {
-                    when (sort) {
-                        Sort.NAME -> it.name.lowercase()
-                        Sort.SIZE -> it.fileSize()
-                        Sort.EXT -> it.extension
-                    }
-                })
-        } catch (e: IOException) {
-            e.printStackTrace()
-            emptyList()
-        }
-    }
-
-    if (isOpen) {
-        ConfigWindow(
-            onCloseRequest = { isOpen = false }
-        )
-    }
-
     Surface {
+        var currentLocation by remember { mutableStateOf(Path("/")) }
+        var search by remember { mutableStateOf("") }
+        val files = remember(currentLocation, search) {
+            try {
+                currentLocation.listDirectoryEntries()
+                    .filter { it.name.contains(search) }
+                    .sortedBy { it.nameWithoutExtension }
+                    .sortedBy { it.isRegularFile() }
+                    .sortedBy { it.startsWith(".") }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                emptyList()
+            }
+        }
+
         Column {
             Surface(
                 tonalElevation = 5.dp
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     FilledIconButton(
@@ -80,6 +67,7 @@ fun BrowserWindow() {
                     }
 
                     FilledIconButton(
+                        enabled = false,
                         onClick = {
 
                         }
@@ -88,12 +76,15 @@ fun BrowserWindow() {
                     }
 
                     FilledIconButton(
+                        enabled = false,
                         onClick = {
 
                         }
                     ) {
                         Icon(Icons.Default.ArrowRight, null)
                     }
+
+                    PathBar(currentLocation)
 
                     Spacer(Modifier.weight(1f, true))
 
@@ -107,10 +98,6 @@ fun BrowserWindow() {
                         },
                         singleLine = true
                     )
-
-                    PathBar(
-                        currentLocation = currentLocation
-                    )
                 }
             }
 
@@ -122,47 +109,45 @@ fun BrowserWindow() {
                 SidePanel()
 
                 Column {
-                    var selectedIndex by remember { mutableStateOf(-1) }
+                    val interactionSource = remember { MutableInteractionSource() }
 
                     LazyVerticalGrid(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f, true)
-                            .selectableGroup(),
+                            .onClick(
+                                matcher = PointerMatcher.mouse(PointerButton.Secondary)
+                            ) {
+                                println("Right click")
+                            },
                         columns = GridCells.Adaptive(78.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(12.dp)
                     ) {
-                        itemsIndexed(files) { index, path ->
+                        items(
+                            items = files,
+                            key = Path::hashCode
+                        ) { path ->
                             FileItem(
                                 modifier = Modifier
-                                    .selectable(
-                                        selected = selectedIndex == index,
-                                        onClick = { selectedIndex = index }
-                                    )
                                     .pointerInput(Unit) {
                                         detectTapGestures(
                                             onDoubleTap = {
                                                 when {
-                                                    path.isDirectory() -> currentLocation = path
+                                                    path.isDirectory() -> {
+                                                        if (path.isReadable()) currentLocation = path
+                                                    }
                                                     path.isRegularFile() -> {
 
                                                     }
-
                                                     path.isExecutable() -> {
 
                                                     }
                                                 }
                                             }
                                         )
-                                        detectDragGestures(
-                                            onDrag = { pointerInputChange: PointerInputChange, offset: Offset ->
-
-                                            }
-                                        )
                                     },
-                                selected = selectedIndex == index,
                                 path = path
                             )
                         }
@@ -177,7 +162,7 @@ fun BrowserWindow() {
                                 .padding(4.dp),
                             horizontalArrangement = Arrangement.End
                         ) {
-                            Text("Information about current files selected")
+                            Text("${files.count()} items, Free space")
                         }
                     }
                 }
