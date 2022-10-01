@@ -15,8 +15,10 @@ dependencies {
     @Suppress("OPT_IN_IS_NOT_ENABLED")
     @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
     implementation(compose.material3)
-    implementation(compose.desktop.linux_x64)
     implementation(compose.materialIconsExtended)
+    implementation(compose.desktop.linux_x64) {
+        exclude("org.jetbrains.compose.material", "material-desktop")
+    }
 
     implementation("com.github.ajalt.clikt:clikt:3.5.0")
 }
