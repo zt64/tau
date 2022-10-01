@@ -8,13 +8,15 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
+import zt.tau.ui.window.currentLocation
 import java.nio.file.Path
+import kotlin.io.path.*
 import kotlin.io.path.absolutePathString
 
 @Composable
-fun PathBar(currentLocation: Path) {
+fun PathBar(location: Path) {
     var editing by remember { mutableStateOf(false) }
-    val segments = currentLocation
+    val segments = location
         .absolutePathString()
         .split("/")
         .filter(String::isNotBlank)
@@ -26,7 +28,7 @@ fun PathBar(currentLocation: Path) {
             FilledTonalButton(
                 shape = RoundedCornerShape(16.dp),
                 onClick = {
-
+                    currentLocation = Path("/")
                 }
             ) {
                 Text("/")
@@ -36,8 +38,8 @@ fun PathBar(currentLocation: Path) {
         itemsIndexed(segments) { index, segment ->
             FilledTonalButton(
                 shape = RoundedCornerShape(16.dp),
-                onClick = {
-
+                onClick = { // this could be cleaner probably
+                    currentLocation = Path(currentLocation.toString().substringBefore(segment) + segment )
                 }
             ) {
                 Text(segment)
