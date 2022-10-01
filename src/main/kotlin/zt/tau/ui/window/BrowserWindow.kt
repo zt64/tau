@@ -29,11 +29,12 @@ import java.io.IOException
 import java.nio.file.Path
 import kotlin.io.path.*
 
+var currentLocation by mutableStateOf(Path("/"))
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun BrowserWindow() {
     Surface {
-        var currentLocation by remember { mutableStateOf(Path("/")) }
         var search by remember { mutableStateOf("") }
         val files = remember(currentLocation, search) {
             try {
