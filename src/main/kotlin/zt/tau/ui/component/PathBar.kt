@@ -14,9 +14,9 @@ import kotlin.io.path.*
 import kotlin.io.path.absolutePathString
 
 @Composable
-fun PathBar(_currentLocation: Path) {
+fun PathBar(location: Path) {
     var editing by remember { mutableStateOf(false) }
-    val segments = _currentLocation
+    val segments = location
         .absolutePathString()
         .split("/")
         .filter(String::isNotBlank)
