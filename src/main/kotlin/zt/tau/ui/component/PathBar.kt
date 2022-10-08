@@ -15,11 +15,17 @@ import kotlin.io.path.absolutePathString
 
 @Composable
 fun PathBar(location: Path) {
-    var editing by remember { mutableStateOf(false) }
+    val isWindows = System.getProperty("os.name").contains("Windows")
+
+    val platformDelimiter = if (isWindows) "\\" else "/"
+    val platformRootDirectory = if (isWindows) "C:\\" else "/"
+
+    //var editing by remember { mutableStateOf(false) }
     val segments = location
-        .absolutePathString()
-        .split("/")
-        .filter(String::isNotBlank)
+            .absolutePathString()
+            .replace("C:\\", "")
+            .split(platformDelimiter)
+            .filter(String::isNotBlank)
 
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -28,10 +34,10 @@ fun PathBar(location: Path) {
             FilledTonalButton(
                 shape = RoundedCornerShape(16.dp),
                 onClick = {
-                    currentLocation = Path("/")
+                    currentLocation = Path(platformRootDirectory)
                 }
             ) {
-                Text("/")
+                Text(platformRootDirectory)
             }
         }
 
