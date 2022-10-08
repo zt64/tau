@@ -1,5 +1,9 @@
 package zt.tau
 
+import androidx.compose.foundation.DefaultContextMenuRepresentation
+import androidx.compose.foundation.LocalContextMenuRepresentation
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -26,7 +30,7 @@ private class Tau : CliktCommand() {
 
         application {
             val windowState = rememberWindowState()
-            
+
             LifecycleController(lifecycle, windowState)
 
             Window(
@@ -38,7 +42,15 @@ private class Tau : CliktCommand() {
                 window.minimumSize = Dimension(300, 400)
 
                 TauTheme {
-                    BrowserWindow()
+                    CompositionLocalProvider(
+                        LocalContextMenuRepresentation provides DefaultContextMenuRepresentation(
+                            backgroundColor = MaterialTheme.colorScheme.background,
+                            textColor = MaterialTheme.colorScheme.onBackground,
+                            itemHoverColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
+                        )
+                    ) {
+                        BrowserWindow()
+                    }
                 }
             }
         }

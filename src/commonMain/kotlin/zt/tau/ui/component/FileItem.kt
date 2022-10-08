@@ -52,78 +52,70 @@ fun FileItem(
     ) {
         val clipboardManager = LocalClipboardManager.current
 
-        CompositionLocalProvider(
-            LocalContextMenuRepresentation provides DefaultContextMenuRepresentation(
-                backgroundColor = MaterialTheme.colorScheme.background,
-                textColor = MaterialTheme.colorScheme.onBackground,
-                itemHoverColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
-            )
-        ) {
-            ContextMenuArea(
-                items = {
-                    listOf(
-                        ContextMenuItem("Copy") {
-                            clipboardManager.setContents(FileTransferable(listOf(path.toFile())), null)
-                        },
-                        ContextMenuItem("Cut") {
+        ContextMenuArea(
+            items = {
+                listOf(
+                    ContextMenuItem("Copy") {
+                        clipboardManager.setContents(FileTransferable(listOf(path.toFile())), null)
+                    },
+                    ContextMenuItem("Cut") {
 
-                        },
-                        ContextMenuItem("Delete") {
+                    },
+                    ContextMenuItem("Delete") {
 
-                        },
-                        ContextMenuItem("Properties") {
-                            showProperties = true
-                        }
-                    )
-                }
-            ) {
-                TooltipArea(
-                    tooltip = {
-                        Surface(
-                            shape = MaterialTheme.shapes.medium,
-                            tonalElevation = 6.dp,
-                            shadowElevation = 4.dp
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(10.dp),
-                                text = path.name
-                            )
-                        }
+                    },
+                    ContextMenuItem("Properties") {
+                        showProperties = true
                     }
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                )
+            }
+        ) {
+            TooltipArea(
+                tooltip = {
+                    Surface(
+                        shape = MaterialTheme.shapes.medium,
+                        tonalElevation = 6.dp,
+                        shadowElevation = 4.dp
                     ) {
-                        Box {
-                            Icon(
-                                modifier = Modifier.size(54.dp),
-                                imageVector = if (path.isRegularFile()) Icons.Default.Description else Icons.Default.Folder,
-                                contentDescription = null
-                            )
-
-                            val icon = when {
-                                path.isSymbolicLink() -> Icons.Default.Link
-                                !path.isReadable() -> Icons.Default.Lock
-                                else -> null
-                            }
-
-                            if (icon != null) {
-                                Icon(
-                                    modifier = Modifier
-                                        .size(36.dp)
-                                        .align(Alignment.BottomEnd),
-                                    imageVector = icon,
-                                    tint = MaterialTheme.colorScheme.inversePrimary,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-
                         Text(
-                            text = path.name,
-                            textAlign = TextAlign.Center
+                            modifier = Modifier.padding(10.dp),
+                            text = path.name
                         )
                     }
+                }
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box {
+                        Icon(
+                            modifier = Modifier.size(54.dp),
+                            imageVector = if (path.isRegularFile()) Icons.Default.Description else Icons.Default.Folder,
+                            contentDescription = null
+                        )
+
+                        val icon = when {
+                            path.isSymbolicLink() -> Icons.Default.Link
+                            !path.isReadable() -> Icons.Default.Lock
+                            else -> null
+                        }
+
+                        if (icon != null) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .align(Alignment.BottomEnd),
+                                imageVector = icon,
+                                tint = MaterialTheme.colorScheme.inversePrimary,
+                                contentDescription = null
+                            )
+                        }
+                    }
+
+                    Text(
+                        text = path.name,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }

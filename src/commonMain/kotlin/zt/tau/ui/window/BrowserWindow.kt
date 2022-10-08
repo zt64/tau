@@ -1,14 +1,10 @@
 package zt.tau.ui.window
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.PointerMatcher
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.onClick
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.ArrowRight
@@ -18,7 +14,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerButton
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import zt.tau.ui.component.FileItem
@@ -31,7 +26,7 @@ import kotlin.io.path.*
 
 var currentLocation by mutableStateOf(Path("/"))
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
 fun BrowserWindow() {
     Surface {
@@ -110,17 +105,8 @@ fun BrowserWindow() {
                 SidePanel()
 
                 Column {
-                    val interactionSource = remember { MutableInteractionSource() }
-
                     LazyVerticalGrid(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f, true)
-                            .onClick(
-                                matcher = PointerMatcher.mouse(PointerButton.Secondary)
-                            ) {
-                                println("Right click")
-                            },
+                        modifier = Modifier.weight(1f, true),
                         columns = GridCells.Adaptive(78.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -163,7 +149,7 @@ fun BrowserWindow() {
                                 .padding(4.dp),
                             horizontalArrangement = Arrangement.End
                         ) {
-                            Text("${files.count()} items, Free space")
+                            Text("${files.count()} items")
                         }
                     }
                 }
