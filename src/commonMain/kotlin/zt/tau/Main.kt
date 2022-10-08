@@ -26,7 +26,7 @@ private class Tau : CliktCommand() {
 
         application {
             val windowState = rememberWindowState()
-
+            
             LifecycleController(lifecycle, windowState)
 
             Window(
