@@ -44,6 +44,14 @@ compose.desktop {
             packageVersion = "1.0.0"
 
             targetFormats(TargetFormat.Deb, TargetFormat.Exe, TargetFormat.Msi)
+
+            linux {
+                iconFile.set(project.file("resources/window-icon.png"))
+            }
+
+            windows {
+                iconFile.set(project.file("resources/window-icon.ico"))
+            }
         }
     }
 }
