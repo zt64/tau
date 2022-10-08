@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import zt.tau.ui.window.PropertiesWindow
 import zt.tau.util.setContents
@@ -65,6 +66,9 @@ fun FileItem(
                             clipboardManager.setContents(FileTransferable(listOf(path.toFile())), null)
                         },
                         ContextMenuItem("Cut") {
+
+                        },
+                        ContextMenuItem("Delete") {
 
                         },
                         ContextMenuItem("Properties") {
@@ -115,7 +119,10 @@ fun FileItem(
                             }
                         }
 
-                        Text(path.name)
+                        Text(
+                            text = path.name,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }
