@@ -15,12 +15,13 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
+            @Suppress("OPT_IN_IS_NOT_ENABLED")
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             dependencies {
-                @Suppress("OPT_IN_IS_NOT_ENABLED")
-                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.material3)
                 implementation(compose.desktop.currentOs)
                 implementation(compose.materialIconsExtended)
+                implementation(compose.desktop.components.splitPane)
 
                 implementation("com.github.ajalt.clikt:clikt:3.5.0")
 
