@@ -3,6 +3,10 @@ package zt.tau
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.extensions.compose.jetbrains.lifecycle.LifecycleController
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.optional
@@ -16,16 +20,26 @@ fun main(args: Array<String>) = Tau().main(args)
 private class Tau : CliktCommand() {
     val path by argument().path(mustExist = true, canBeFile = false).optional()
 
-    override fun run() = application {
-        TauTheme {
+    @OptIn(ExperimentalDecomposeApi::class)
+    override fun run() {
+        val lifecycle = LifecycleRegistry()
+
+        application {
+            val windowState = rememberWindowState()
+
+            LifecycleController(lifecycle, windowState)
+
             Window(
                 title = "tau",
                 icon = painterResource("window-icon.svg"),
-                onCloseRequest = ::exitApplication
+                onCloseRequest = ::exitApplication,
+                state = windowState
             ) {
                 window.minimumSize = Dimension(300, 400)
 
-                BrowserWindow()
+                TauTheme {
+                    BrowserWindow()
+                }
             }
         }
     }

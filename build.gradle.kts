@@ -19,6 +19,11 @@ dependencies {
     implementation(compose.materialIconsExtended)
 
     implementation("com.github.ajalt.clikt:clikt:3.5.0")
+
+    // Decompose
+    val decomposeVersion = "1.0.0-alpha-06"
+    implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
+    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
 }
 
 compose.desktop {
