@@ -144,19 +144,21 @@ fun PropertiesWindow(
                                 }
                             )
 
-                            ListItem(
-                                headlineText = {
-                                    Text("Execute")
-                                },
-                                trailingContent = {
-                                    Switch(
-                                        checked = path.isExecutable(),
-                                        onCheckedChange = {
+                            if (!System.getProperty("os.name").contains("Windows")) {
+                                ListItem(
+                                        headlineText = {
+                                            Text("Execute")
+                                        },
+                                        trailingContent = {
+                                            Switch(
+                                                    checked = path.isExecutable(),
+                                                    onCheckedChange = {
 
+                                                    }
+                                            )
                                         }
-                                    )
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }
