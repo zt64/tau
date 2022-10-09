@@ -4,8 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -33,6 +32,8 @@ fun PropertiesWindow(
     onCloseRequest: () -> Unit
 ) {
     val windowState = rememberWindowState(width = 300.dp, height = 400.dp)
+    val isWindows = System.getProperty("os.name").contains("Windows")
+
 
     Window(
         title = "${path.name} - Properties",
@@ -100,6 +101,9 @@ fun PropertiesWindow(
                     Tab.PERMISSIONS -> {
                         Column {
                             ListItem(
+                                leadingContent = {
+                                    Icon(Icons.Default.Person, "Owner")
+                                },
                                 headlineText = {
                                     Text("Owner")
                                 },
@@ -109,15 +113,23 @@ fun PropertiesWindow(
                             )
 
                             ListItem(
+                                leadingContent = {
+                                    Icon(Icons.Default.Key, "Owner access")
+                                },
                                 headlineText = {
-                                    Text("Access")
+                                    Text("Owner access")
                                 },
                                 trailingContent = {
 
                                 }
                             )
-
+                            Divider(
+                                thickness = 1.dp
+                            )
                             ListItem(
+                                leadingContent = {
+                                    Icon(Icons.Default.Group, "Group")
+                                },
                                 headlineText = {
                                     Text("Group")
                                 },
@@ -127,36 +139,54 @@ fun PropertiesWindow(
                             )
 
                             ListItem(
+                                leadingContent = {
+                                    Icon(Icons.Default.Key, "Group access")
+                                },
                                 headlineText = {
-                                    Text("Access")
+                                    Text("Group access")
+                                },
+                                trailingContent = {
+
+                                }
+                            )
+                            Divider(
+                                thickness = 1.dp
+                            )
+                            ListItem(
+                                leadingContent = {
+                                    Icon(Icons.Default.Public, "Global")
+                                },
+                                headlineText = {
+                                    Text("Global")
+                                }
+                            )
+                            ListItem(
+                                leadingContent = {
+                                    Icon(Icons.Default.Key, "Global access")
+                                },
+                                headlineText = {
+                                    Text("Global access")
                                 },
                                 trailingContent = {
 
                                 }
                             )
 
-                            ListItem(
-                                headlineText = {
-                                    Text("Access")
-                                },
-                                trailingContent = {
+                            if (!isWindows) {
+                                ListItem(
+                                        headlineText = {
+                                            Text("Execute")
+                                        },
+                                        trailingContent = {
+                                            Switch(
+                                                    checked = path.isExecutable(),
+                                                    onCheckedChange = {
 
-                                }
-                            )
-
-                            ListItem(
-                                headlineText = {
-                                    Text("Execute")
-                                },
-                                trailingContent = {
-                                    Switch(
-                                        checked = path.isExecutable(),
-                                        onCheckedChange = {
-
+                                                    }
+                                            )
                                         }
-                                    )
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }
