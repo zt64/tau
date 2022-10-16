@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.rememberWindowState
+import zt.tau.util.humanReadableSize
 import zt.tau.util.rememberVectorPainter
 import java.nio.file.Path
 import kotlin.io.path.*
@@ -93,7 +94,7 @@ fun PropertiesWindow(
                                     Text("Size")
                                 },
                                 trailingContent = {
-                                    Text("${path.fileSize()} bytes")
+                                    Text(path.toFile().humanReadableSize())
                                 }
                             )
                         }
