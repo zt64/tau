@@ -20,6 +20,7 @@ import zt.tau.ui.component.FileItem
 import zt.tau.ui.component.PathBar
 import zt.tau.ui.component.SidePanel
 import zt.tau.ui.component.TextField
+import zt.tau.util.humanReadableSize
 import java.io.IOException
 import java.nio.file.Path
 import kotlin.io.path.*
@@ -30,6 +31,7 @@ var currentLocation by mutableStateOf(Path("/"))
 @Composable
 fun BrowserWindow() {
     Surface {
+        var selectedFile by remember { mutableStateOf(Path("/")) }
         var search by remember { mutableStateOf("") }
         val files = remember(currentLocation, search) {
             try {
@@ -132,6 +134,9 @@ fun BrowserWindow() {
 
                                                     }
                                                 }
+                                            },
+                                            onTap = {
+                                                selectedFile = path
                                             }
                                         )
                                     },
@@ -144,12 +149,23 @@ fun BrowserWindow() {
                         tonalElevation = 1.dp
                     ) {
                         Row(
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Spacer(modifier = Modifier.width(2.dp))
+                            selectedFile.fileName?.toString()?.let { Text(it) }
+                            Spacer(
+                                modifier = Modifier.width(12.dp)
+                            )
+                            Text("Size: " + selectedFile.toFile().humanReadableSize())
+                        }
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(4.dp),
                             horizontalArrangement = Arrangement.End
                         ) {
                             Text("${files.count()} items")
+                            Spacer(modifier = Modifier.width(2.dp))
                         }
                     }
                 }
