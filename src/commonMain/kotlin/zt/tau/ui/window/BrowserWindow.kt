@@ -15,6 +15,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import zt.tau.ui.component.FileItem
 import zt.tau.ui.component.PathBar
@@ -48,7 +50,7 @@ fun BrowserWindow() {
 
         Column {
             Surface(
-                tonalElevation = 5.dp
+                tonalElevation = 5.dp,
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
@@ -106,13 +108,21 @@ fun BrowserWindow() {
             ) {
                 SidePanel()
 
-                Column {
+                Column(
+                    modifier = Modifier.pointerInput(Unit) {
+                        detectTapGestures (
+                            onTap = {
+                                selectedFile = currentLocation
+                            }
+                        )
+                    }
+                ) {
                     LazyVerticalGrid(
                         modifier = Modifier.weight(1f, true),
                         columns = GridCells.Adaptive(78.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(12.dp)
+                        contentPadding = PaddingValues(12.dp),
                     ) {
                         items(
                             items = files,
@@ -123,6 +133,7 @@ fun BrowserWindow() {
                                     .pointerInput(Unit) {
                                         detectTapGestures(
                                             onDoubleTap = {
+                                                selectedFile = path
                                                 when {
                                                     path.isDirectory() -> {
                                                         if (path.isReadable()) currentLocation = path
@@ -152,9 +163,9 @@ fun BrowserWindow() {
                             horizontalArrangement = Arrangement.Start,
                         ) {
                             Spacer(modifier = Modifier.width(2.dp))
-                            selectedFile.fileName?.toString()?.let { Text(it) }
+                            selectedFile.fileName?.toString()?.let { Text(it, fontWeight = FontWeight.Bold) }
                             Spacer(
-                                modifier = Modifier.width(12.dp)
+                                modifier = Modifier.width(16.dp)
                             )
                             Text("Size: " + selectedFile.toFile().humanReadableSize())
                         }
