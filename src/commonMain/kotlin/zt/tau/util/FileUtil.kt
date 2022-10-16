@@ -14,7 +14,7 @@ fun File.moveTo(file: File, overwrite: Boolean = false) {
 }
 
 fun File.humanReadableSize(): String {
-    val bytes = toPath().fileSize().toDouble() // this absolutely shits itself at Longs, so..
+    val bytes = length().toDouble() // this absolutely shits itself at Longs, so..
     return when {
         bytes >= 1 shl 30 -> "%.1f GB".format(bytes / (1 shl 30))
         bytes >= 1 shl 20 -> "%.1f MB".format(bytes / (1 shl 20))
