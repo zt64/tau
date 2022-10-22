@@ -84,7 +84,12 @@ fun BrowserWindow() {
                         Icon(Icons.Default.ArrowRight, null)
                     }
 
-                    PathBar(currentLocation)
+                    PathBar(
+                        location = currentLocation,
+                        onClickSegment = { path ->
+                            currentLocation = path
+                        }
+                    )
 
                     Spacer(Modifier.weight(1f, true))
 

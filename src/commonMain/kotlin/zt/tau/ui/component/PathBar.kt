@@ -16,7 +16,10 @@ import kotlin.io.path.absolutePathString
 import kotlin.io.path.pathString
 
 @Composable
-fun PathBar(location: Path) {
+fun PathBar(
+    location: Path,
+    onClickSegment: (Path) -> Unit
+) {
     val rootPath = File.listRoots().first().toPath()
 
     //var editing by remember { mutableStateOf(false) }
@@ -33,7 +36,7 @@ fun PathBar(location: Path) {
             FilledTonalButton(
                 shape = RoundedCornerShape(16.dp),
                 onClick = {
-                    currentLocation = rootPath
+                    onClickSegment(rootPath)
                 }
             ) {
                 Text(rootPath.pathString)
@@ -44,7 +47,7 @@ fun PathBar(location: Path) {
             FilledTonalButton(
                 shape = RoundedCornerShape(16.dp),
                 onClick = { // this could be cleaner probably
-                    currentLocation = Path(currentLocation.toString().substringBefore(segment) + segment)
+                    onClickSegment(Path(currentLocation.toString().substringBefore(segment) + segment))
                 }
             ) {
                 Text(segment)
