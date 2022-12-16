@@ -2,7 +2,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     kotlin("multiplatform") version "1.7.20"
-    id("org.jetbrains.compose") version "1.3.0-alpha01-dev827"
+    id("org.jetbrains.compose") version "1.2.2"
 }
 
 repositories {
@@ -26,7 +26,7 @@ kotlin {
                 implementation("com.github.ajalt.clikt:clikt:3.5.0")
 
                 // Decompose
-                val decomposeVersion = "1.0.0-alpha-06"
+                val decomposeVersion = "1.0.0-beta-02"
                 implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
                 implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
             }
