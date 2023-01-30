@@ -1,8 +1,9 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    kotlin("multiplatform") version "1.7.20"
-    id("org.jetbrains.compose") version "1.2.2"
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.compose)
 }
 
 repositories {
@@ -11,6 +12,8 @@ repositories {
 }
 
 kotlin {
+    jvmToolchain(17)
+
     jvm()
 
     sourceSets {
@@ -23,12 +26,9 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 implementation(compose.desktop.components.splitPane)
 
-                implementation("com.github.ajalt.clikt:clikt:3.5.0")
-
-                // Decompose
-                val decomposeVersion = "1.0.0-beta-02"
-                implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
-                implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
+                implementation(libs.clikt)
+                implementation(libs.decompose)
+                implementation(libs.decompose.extensions.compose.jetbrains)
             }
         }
     }
@@ -46,11 +46,11 @@ compose.desktop {
             targetFormats(TargetFormat.Deb, TargetFormat.Exe, TargetFormat.Msi)
 
             linux {
-                iconFile.set(project.file("resources/window-icon.png"))
+                iconFile.set(file("resources/window-icon.png"))
             }
 
             windows {
-                iconFile.set(project.file("resources/window-icon.ico"))
+                iconFile.set(file("resources/window-icon.ico"))
             }
         }
     }

@@ -1,0 +1,13 @@
+[versions]
+kotlin = "1.8.0"
+compose = "1.3.0"
+decompose = "1.0.0-beta-02"
+
+[libraries]
+clikt = "com.github.ajalt.clikt:clikt:3.5.0"
+decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
+decompose-extensions-compose-jetbrains = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose" }
+
+[plugins]
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose" }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.ArrowRight
@@ -14,14 +15,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import zt.tau.ui.component.FileItem
 import zt.tau.ui.component.PathBar
 import zt.tau.ui.component.SidePanel
-import zt.tau.ui.component.TextField
 import zt.tau.util.humanReadableSize
 import java.io.IOException
 import java.nio.file.Path
@@ -95,13 +95,16 @@ fun BrowserWindow() {
 
                     TextField(
                         value = search,
+                        onValueChange = { search = it },
                         trailingIcon = {
                             Icon(Icons.Default.Search, null)
                         },
-                        onValueChange = {
-                            search = it
-                        },
-                        singleLine = true
+                        singleLine = true,
+                        shape = CircleShape,
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                        )
                     )
                 }
             }
@@ -115,10 +118,8 @@ fun BrowserWindow() {
 
                 Column(
                     modifier = Modifier.pointerInput(Unit) {
-                        detectTapGestures (
-                            onTap = {
-                                selectedFile = currentLocation
-                            }
+                        detectTapGestures(
+                            onTap = { selectedFile = currentLocation }
                         )
                     }
                 ) {
@@ -143,15 +144,17 @@ fun BrowserWindow() {
                                                     path.isDirectory() -> {
                                                         if (path.isReadable()) currentLocation = path
                                                     }
+
                                                     path.isRegularFile() -> {
 
                                                     }
+
                                                     path.isExecutable() -> {
 
                                                     }
                                                 }
                                             },
-                                            onTap = {
+                                            onPress = {
                                                 selectedFile = path
                                             }
                                         )
@@ -165,23 +168,20 @@ fun BrowserWindow() {
                         tonalElevation = 1.dp
                     ) {
                         Row(
-                            horizontalArrangement = Arrangement.Start,
-                        ) {
-                            Spacer(modifier = Modifier.width(2.dp))
-                            selectedFile.fileName?.toString()?.let { Text(it, fontWeight = FontWeight.Bold) }
-                            Spacer(
-                                modifier = Modifier.width(16.dp)
-                            )
-                            Text("Size: " + selectedFile.toFile().humanReadableSize())
-                        }
-                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(4.dp),
-                            horizontalArrangement = Arrangement.End
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
+                            selectedFile.fileName?.toString()?.let {
+                                Text(it, fontWeight = FontWeight.Bold)
+                                Spacer(Modifier.width(16.dp))
+                            }
+                            
+                            Text("Size: " + selectedFile.toFile().humanReadableSize())
+                            Spacer(Modifier.weight(1f, true))
                             Text("${files.count()} items")
-                            Spacer(modifier = Modifier.width(2.dp))
                         }
                     }
                 }
