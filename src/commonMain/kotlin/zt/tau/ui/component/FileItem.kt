@@ -1,6 +1,10 @@
 package zt.tau.ui.component
 
-import androidx.compose.foundation.*
+import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.ContextMenuArea
+import androidx.compose.foundation.ContextMenuItem
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -91,6 +95,7 @@ fun FileItem(
                         Icon(
                             modifier = Modifier.size(54.dp),
                             imageVector = if (path.isRegularFile()) Icons.Default.Description else Icons.Default.Folder,
+                            tint = MaterialTheme.colorScheme.tertiary,
                             contentDescription = null
                         )
 
@@ -114,6 +119,7 @@ fun FileItem(
 
                     Text(
                         text = path.name,
+                        style = MaterialTheme.typography.labelMedium,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -121,6 +127,10 @@ fun FileItem(
         }
     }
 }
+
+@Preview
+@Composable
+private fun FileItemPreview() = FileItem(path = File("/home/tau").toPath())
 
 data class FileTransferable(private val listOfFiles: List<File>) : Transferable {
     override fun getTransferDataFlavors() = arrayOf(DataFlavor.javaFileListFlavor)

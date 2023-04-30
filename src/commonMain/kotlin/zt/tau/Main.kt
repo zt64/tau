@@ -22,7 +22,11 @@ import java.awt.Dimension
 fun main(args: Array<String>) = Tau().main(args)
 
 private class Tau : CliktCommand() {
-    val path by argument().path(mustExist = true, canBeFile = false).optional()
+    val path by argument().path(
+        mustExist = true,
+        mustBeReadable = true,
+        canBeFile = false
+    ).optional()
 
     @OptIn(ExperimentalDecomposeApi::class)
     override fun run() {

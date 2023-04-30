@@ -59,9 +59,7 @@ fun BrowserWindow() {
                 ) {
                     FilledIconButton(
                         enabled = currentLocation.parent != null,
-                        onClick = {
-                            currentLocation = currentLocation.parent
-                        }
+                        onClick = { currentLocation = currentLocation.parent }
                     ) {
                         Icon(Icons.Default.ArrowUpward, null)
                     }
@@ -86,9 +84,7 @@ fun BrowserWindow() {
 
                     PathBar(
                         location = currentLocation,
-                        onClickSegment = { path ->
-                            currentLocation = path
-                        }
+                        onClickSegment = { path -> currentLocation = path }
                     )
 
                     Spacer(Modifier.weight(1f, true))
@@ -178,7 +174,7 @@ fun BrowserWindow() {
                                 Text(it, fontWeight = FontWeight.Bold)
                                 Spacer(Modifier.width(16.dp))
                             }
-                            
+
                             Text("Size: " + selectedFile.toFile().humanReadableSize())
                             Spacer(Modifier.weight(1f, true))
                             Text("${files.count()} items")

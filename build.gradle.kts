@@ -1,6 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose)
@@ -18,7 +17,6 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
-            @Suppress("OPT_IN_IS_NOT_ENABLED")
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             dependencies {
                 implementation(compose.material3)
@@ -34,24 +32,22 @@ kotlin {
     }
 }
 
-compose.desktop {
-    application {
-        mainClass = "zt.tau.MainKt"
+compose.desktop.application {
+    mainClass = "zt.tau.MainKt"
 
-        nativeDistributions {
-            packageName = "tau"
-            description = "Compose file manager"
-            packageVersion = "1.0.0"
+    nativeDistributions {
+        packageName = "tau"
+        description = "Compose file manager"
+        packageVersion = "1.0.0"
 
-            targetFormats(TargetFormat.Deb, TargetFormat.Exe, TargetFormat.Msi)
+        targetFormats(TargetFormat.Deb, TargetFormat.Exe, TargetFormat.Msi)
 
-            linux {
-                iconFile.set(file("resources/window-icon.png"))
-            }
+        linux {
+            iconFile.set(file("resources/window-icon.png"))
+        }
 
-            windows {
-                iconFile.set(file("resources/window-icon.ico"))
-            }
+        windows {
+            iconFile.set(file("resources/window-icon.ico"))
         }
     }
 }
