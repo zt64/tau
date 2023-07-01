@@ -4,14 +4,8 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,13 +16,17 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.apache.tika.Tika
 import zt.tau.ui.window.PropertiesWindow
 import zt.tau.ui.window.selectedFile
+import zt.tau.util.contains
 import zt.tau.util.setContents
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.io.File
+import java.net.URLConnection
 import java.nio.file.Path
+import javax.lang.model.type.NullType
 import kotlin.io.path.isReadable
 import kotlin.io.path.isRegularFile
 import kotlin.io.path.isSymbolicLink
@@ -43,6 +41,13 @@ fun FileItem(
     modifier: Modifier = Modifier,
 ) {
     var showProperties by remember { mutableStateOf(false) }
+    val tika = Tika()
+    val (dataType, dataFormat) = try {
+        tika.detect(path.toFile().inputStream(), path.fileName.toString()).split("/")
+    } catch (_: Exception) {
+        listOf(null, null)
+    }
+
 
     if (showProperties) {
         PropertiesWindow(
@@ -99,8 +104,31 @@ fun FileItem(
                 ) {
                     Box {
                         Icon(
-                            modifier = Modifier.size(54.dp),
-                            imageVector = if (path.isRegularFile()) Icons.Default.Description else Icons.Default.Folder,
+                            modifier = Modifier.size(48.dp),
+                            imageVector = when {
+
+                                path.isRegularFile() -> when (dataType) {
+                                    "image"         -> Icons.Default.Image
+                                    "video"         -> Icons.Default.Movie
+                                    "audio"         -> Icons.Default.MusicNote
+                                    "text"          -> Icons.Default.Article
+                                    "font"          -> Icons.Default.TextFields
+                                    "application"   -> when {
+                                        dataFormat!!.contains(
+                                            listOf("zip", "7z", "rar", "tar")
+                                        ) -> Icons.Default.FolderZip
+
+                                        dataFormat == "java-archive" -> Icons.Default.Coffee
+                                        dataFormat == "ogg"          -> Icons.Default.MusicVideo
+
+                                        else -> Icons.Default.Description
+                                    }
+
+                                    else -> Icons.Default.Description
+                                }
+
+                                else -> Icons.Default.Folder
+                            },
                             tint = MaterialTheme.colorScheme.primary,
                             contentDescription = null
                         )
