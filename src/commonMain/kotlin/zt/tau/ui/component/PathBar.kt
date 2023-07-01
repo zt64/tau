@@ -21,13 +21,13 @@ fun PathBar(
     location: Path,
     onClickSegment: (Path) -> Unit
 ) {
-    val rootPath = remember { File.listRoots().first().toPath() }
+    val rootPath = currentLocation.root
 
     //var editing by remember { mutableStateOf(false) }
     val segments = remember(location) {
         location
             .absolutePathString()
-            .replace("C:\\", "")
+            .replace("""^[A-Z]:\\""".toRegex(), "")
             .split(File.separatorChar)
             .filter(String::isNotBlank)
     }
@@ -42,7 +42,7 @@ fun PathBar(
                     onClickSegment(rootPath)
                 }
             ) {
-                Text(rootPath.pathString)
+                Text(rootPath.absolutePathString())
             }
         }
 

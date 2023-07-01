@@ -8,6 +8,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import zt.tau.ui.component.sidepanel.Bookmark
+import zt.tau.ui.window.currentLocation
+import java.io.File
 
 @Composable
 fun SidePanel() {
@@ -19,7 +22,13 @@ fun SidePanel() {
             modifier = Modifier.width(120.dp), // eventually fetch from settings
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-
+            File.listRoots().forEach {
+                item {
+                    Bookmark(zt.tau.model.Bookmark(it.toPath(), it.absolutePath), ({
+                        currentLocation = it.toPath()
+                    }))
+                }
+            }
         }
     }
 }
