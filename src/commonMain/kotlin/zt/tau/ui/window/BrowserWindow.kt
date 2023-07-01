@@ -23,6 +23,7 @@ import zt.tau.ui.component.FileItem
 import zt.tau.ui.component.PathBar
 import zt.tau.ui.component.SidePanel
 import zt.tau.util.humanReadableSize
+import java.awt.Desktop
 import java.io.IOException
 import kotlin.io.path.*
 
@@ -138,20 +139,27 @@ fun BrowserWindow() {
                                         }
 
                                         path.isRegularFile() -> {
-
+                                            try {
+                                                Desktop.getDesktop().open(path.toFile())
+                                            } catch (io: IOException) {
+                                                // discard it, it just means we have no default association
+                                                // TODO: dialog that tells you that? application selector?
+                                            }
                                         }
 
                                         path.isExecutable() -> {
-
+                                            Desktop.getDesktop().open(path.toFile())
                                         }
                                     }
                                 },
                                 modifier = Modifier
                                     .background(
                                         if (path.toAbsolutePath() == selectedFile.toAbsolutePath()) {
-                                            MaterialTheme.colorScheme.onBackground
+                                            MaterialTheme.colorScheme.onSurface.copy(
+                                                alpha = 0.25f
+                                            )
                                         } else {
-                                            MaterialTheme.colorScheme.background
+                                            MaterialTheme.colorScheme.surface
                                         }
                                     )
                             )
