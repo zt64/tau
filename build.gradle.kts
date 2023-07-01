@@ -43,11 +43,11 @@ compose.desktop.application {
         targetFormats(TargetFormat.Deb, TargetFormat.Exe, TargetFormat.Msi)
 
         linux {
-            iconFile.set(file("resources/window-icon.png"))
+            iconFile = file("resources/window-icon.png")
         }
 
         windows {
-            iconFile.set(file("resources/window-icon.ico"))
+            iconFile = file("resources/window-icon.ico")
         }
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import zt.tau.ui.window.currentLocation
 import java.io.File
@@ -20,14 +21,16 @@ fun PathBar(
     location: Path,
     onClickSegment: (Path) -> Unit
 ) {
-    val rootPath = File.listRoots().first().toPath()
+    val rootPath = remember { File.listRoots().first().toPath() }
 
     //var editing by remember { mutableStateOf(false) }
-    val segments = location
-        .absolutePathString()
-        .replace("C:\\", "")
-        .split(File.separatorChar)
-        .filter(String::isNotBlank)
+    val segments = remember(location) {
+        location
+            .absolutePathString()
+            .replace("C:\\", "")
+            .split(File.separatorChar)
+            .filter(String::isNotBlank)
+    }
 
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(4.dp)

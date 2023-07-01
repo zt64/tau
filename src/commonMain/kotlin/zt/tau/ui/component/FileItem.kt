@@ -1,10 +1,7 @@
 package zt.tau.ui.component
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.ContextMenuArea
-import androidx.compose.foundation.ContextMenuItem
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.TooltipArea
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -38,8 +35,10 @@ import kotlin.io.path.name
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FileItem(
+    path: Path,
+    onClick: () -> Unit,
+    onDoubleClick: () -> Unit,
     modifier: Modifier = Modifier,
-    path: Path
 ) {
     var showProperties by remember { mutableStateOf(false) }
 
@@ -51,7 +50,12 @@ fun FileItem(
     }
 
     Column(
-        modifier = modifier,
+        modifier = Modifier
+            .combinedClickable(
+                onClick = onClick,
+                onDoubleClick = onDoubleClick
+            )
+            .then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val clipboardManager = LocalClipboardManager.current
@@ -130,7 +134,13 @@ fun FileItem(
 
 @Preview
 @Composable
-private fun FileItemPreview() = FileItem(path = File("/home/tau").toPath())
+private fun FileItemPreview() {
+    FileItem(
+        path = File("/home/tau").toPath(),
+        onClick = {},
+        onDoubleClick = {}
+    )
+}
 
 data class FileTransferable(private val listOfFiles: List<File>) : Transferable {
     override fun getTransferDataFlavors() = arrayOf(DataFlavor.javaFileListFlavor)
