@@ -1,6 +1,7 @@
 package zt.tau.ui.window
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -26,12 +27,12 @@ import java.io.IOException
 import kotlin.io.path.*
 
 var currentLocation by mutableStateOf(Path("/"))
+var selectedFile by mutableStateOf(Path("/"))
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun BrowserWindow() {
     Surface {
-        var selectedFile by remember { mutableStateOf(Path("/")) }
         var search by remember { mutableStateOf("") }
         val files by remember(currentLocation) {
             derivedStateOf {
@@ -144,7 +145,15 @@ fun BrowserWindow() {
 
                                         }
                                     }
-                                }
+                                },
+                                modifier = Modifier
+                                    .background(
+                                        if (path.toAbsolutePath() == selectedFile.toAbsolutePath()) {
+                                            MaterialTheme.colorScheme.onBackground
+                                        } else {
+                                            MaterialTheme.colorScheme.background
+                                        }
+                                    )
                             )
                         }
                     }
@@ -155,12 +164,13 @@ fun BrowserWindow() {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(4.dp),
+                                .padding(4.dp)
+                                .height(24.dp),
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             selectedFile.fileName?.let {
-                                Text(it.nameWithoutExtension, fontWeight = FontWeight.Bold)
+                                Text(it.nameWithoutExtension.take(30), fontWeight = FontWeight.Bold)
                                 Spacer(Modifier.width(16.dp))
                             }
 

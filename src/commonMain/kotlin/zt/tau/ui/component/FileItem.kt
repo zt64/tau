@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import zt.tau.ui.window.PropertiesWindow
+import zt.tau.ui.window.selectedFile
 import zt.tau.util.setContents
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
@@ -100,7 +101,7 @@ fun FileItem(
                         Icon(
                             modifier = Modifier.size(54.dp),
                             imageVector = if (path.isRegularFile()) Icons.Default.Description else Icons.Default.Folder,
-                            tint = MaterialTheme.colorScheme.tertiary,
+                            tint = MaterialTheme.colorScheme.primary,
                             contentDescription = null
                         )
 
@@ -113,16 +114,20 @@ fun FileItem(
                         if (icon != null) {
                             Icon(
                                 modifier = Modifier
-                                    .size(36.dp)
+                                    .size(28.dp)
                                     .align(Alignment.BottomEnd),
                                 imageVector = icon,
-                                tint = MaterialTheme.colorScheme.inversePrimary,
+                                tint = MaterialTheme.colorScheme.onPrimary,
                                 contentDescription = null
                             )
                         }
                     }
                     Text(
-                        text = path.name,
+                        text = if (path.name.length > 15 && (selectedFile != path) ) {
+                            path.name.take(15) + "..."
+                        } else {
+                            path.name
+                        },
                         style = MaterialTheme.typography.labelMedium.copy(
                             shadow = Shadow(
                                 color = MaterialTheme.colorScheme.outline,
