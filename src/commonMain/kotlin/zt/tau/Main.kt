@@ -4,6 +4,9 @@ import androidx.compose.foundation.DefaultContextMenuRepresentation
 import androidx.compose.foundation.LocalContextMenuRepresentation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyShortcut
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.MenuBar
 import androidx.compose.ui.window.Window
@@ -18,6 +21,8 @@ import zt.tau.ui.component.ThemeCheckboxItem
 import zt.tau.ui.theme.TauTheme
 import zt.tau.ui.window.BrowserWindow
 import zt.tau.ui.window.colorTheme
+import zt.tau.ui.window.selectedFile
+import zt.tau.util.copyToClipboard
 import java.awt.Dimension
 
 fun main(args: Array<String>) = Tau().main(args)
@@ -40,14 +45,29 @@ private class Tau : CliktCommand() {
                 onCloseRequest = ::exitApplication,
                 state = windowState
             ) {
+
                 MenuBar {
+                    Menu("File", mnemonic = 'F') {
+                        Item("Copy", onClick = {
+                            listOf(selectedFile.toFile()).copyToClipboard()
+                        }, shortcut = KeyShortcut(Key.C, ctrl = true))
+
+                        Item("Cut", onClick = {
+
+                        }, shortcut = KeyShortcut(Key.X, ctrl = true))
+
+                        Item("Delete", onClick = {
+
+                        }, shortcut = KeyShortcut(Key.Delete))
+                    }
                     Menu("Settings", mnemonic = 'S') {
                         Menu("Theme", mnemonic = 'T') {
-                            ThemeCheckboxItem("Dark")
-                            ThemeCheckboxItem("Light")
+                            ThemeCheckboxItem("Dark", mnemonic = 'D')
+                            ThemeCheckboxItem("Light", mnemonic = 'L')
                         }
                     }
                 }
+
                 window.minimumSize = Dimension(300, 400)
 
                 TauTheme {
