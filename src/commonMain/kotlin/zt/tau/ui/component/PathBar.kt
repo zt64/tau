@@ -8,18 +8,20 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import zt.tau.ui.window.currentLocation
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
-import kotlin.io.path.pathString
 
 @Composable
 fun PathBar(
     location: Path,
-    onClickSegment: (Path) -> Unit
+    onClickSegment: (Path) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val rootPath = currentLocation.root
 
@@ -33,6 +35,7 @@ fun PathBar(
     }
 
     LazyRow(
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         item {
@@ -46,14 +49,20 @@ fun PathBar(
             }
         }
 
-        itemsIndexed(segments) { index, segment ->
+        itemsIndexed(
+            items = segments,
+            key = { index, _ -> index }
+        ) { index, segment ->
             FilledTonalButton(
                 shape = RoundedCornerShape(16.dp),
                 onClick = { // this could be cleaner probably
                     onClickSegment(Path(currentLocation.toString().substringBefore(segment) + segment))
                 }
             ) {
-                Text(segment)
+                Text(
+                    text = segment,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
         }
     }
