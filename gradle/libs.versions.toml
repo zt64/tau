@@ -1,6 +1,8 @@
 [versions]
 kotlin = "1.8.20"
 compose = "1.4.1"
+decompose = "2.0.0"
+multiplatformsettings = "1.0.0"
 dbus-java = "4.3.0"
 compose-icons = "1.1.0"
 
@@ -9,6 +11,9 @@ clikt = "com.github.ajalt.clikt:clikt:3.5.4"
 dbus-java-core = { module = "com.github.hypfvieh:dbus-java-core", version.ref = "dbus-java" }
 dbus-java-transport-native-unixsocket = { module = "com.github.hypfvieh:dbus-java-transport-native-unixsocket", version.ref = "dbus-java" }
 tikaCore = "org.apache.tika:tika-core:2.8.0"
+
+multiplatformsettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformsettings" }
+multiplatformsettings-noarg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformsettings" }
 
 compose-icons = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "compose-icons" }
 

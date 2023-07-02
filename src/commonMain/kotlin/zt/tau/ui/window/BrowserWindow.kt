@@ -1,5 +1,7 @@
 package zt.tau.ui.window
 
+
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -26,9 +28,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.compose.ui.window.MenuBar
 import zt.tau.ui.component.FileItem
 import zt.tau.ui.component.PathBar
 import zt.tau.ui.component.SidePanel
+import zt.tau.ui.theme.settings
 import zt.tau.util.humanReadableSize
 import java.awt.Desktop
 import java.io.IOException
@@ -39,6 +43,7 @@ import kotlin.io.path.*
 
 var currentLocation by mutableStateOf(Path("/"))
 var selectedFile by mutableStateOf(Path("/"))
+var colorTheme by mutableStateOf(settings.getString("colorScheme", defaultValue = "dark"))
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
