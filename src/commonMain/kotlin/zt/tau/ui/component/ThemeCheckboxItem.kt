@@ -11,7 +11,7 @@ import androidx.compose.ui.window.MenuScope
 @Composable
 fun MenuScope.ThemeCheckboxItem(
     themeName: String,
-    modifier: Modifier = Modifier
+    mnemonic: Char? = null
 ) {
     val lower = themeName.lowercase()
 
@@ -21,7 +21,8 @@ fun MenuScope.ThemeCheckboxItem(
         onCheckedChange = {
             settings.putString("colorScheme", lower)
             colorTheme = lower
-        }
+        },
+        mnemonic = mnemonic
     )
 }
 

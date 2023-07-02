@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import org.apache.tika.Tika
 import zt.tau.ui.window.PropertiesWindow
 import zt.tau.util.contains
+import zt.tau.util.copyToClipboard
 import zt.tau.util.setContents
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
@@ -53,13 +54,24 @@ fun FileItem(
         )
     }
 
-    ContextMenuArea(
-        items = {
-            listOf(
-                ContextMenuItem("Copy") {
-                    clipboardManager.setContents(FileTransferable(listOf(path.toFile())), null)
-                },
-                ContextMenuItem("Cut") {
+    Column(
+        modifier = Modifier
+            .combinedClickable(
+                onClick = onClick,
+                onDoubleClick = onDoubleClick
+            )
+            .then(modifier),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val clipboardManager = LocalClipboardManager.current
+
+        ContextMenuArea(
+            items = {
+                listOf(
+                    ContextMenuItem("Copy") {
+                        listOf(path.toFile()).copyToClipboard()
+                    },
+                    ContextMenuItem("Cut") {
 
                 },
                 ContextMenuItem("Delete") {

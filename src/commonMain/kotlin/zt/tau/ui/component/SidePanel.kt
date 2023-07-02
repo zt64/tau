@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,9 +27,13 @@ fun SidePanel() {
         ) {
             File.listRoots().forEach {
                 item {
-                    Bookmark(zt.tau.model.Bookmark(it.toPath(), it.absolutePath), ({
-                        currentLocation = it.toPath()
-                    }))
+                    Bookmark(
+                        zt.tau.model.Bookmark(it.toPath(), it.absolutePath),
+                        icon = Icons.Default.Storage,
+                        onClick = {
+                            currentLocation = it.toPath()
+                        }
+                    )
                 }
             }
         }
