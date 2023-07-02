@@ -1,6 +1,5 @@
 package zt.tau.ui.window
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -19,35 +18,88 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import zt.tau.ui.component.FileItem
 import zt.tau.ui.component.PathBar
 import zt.tau.ui.component.SidePanel
 import zt.tau.util.humanReadableSize
 import java.awt.Desktop
 import java.io.IOException
+import java.nio.file.FileSystems
+import java.nio.file.Path
+import java.nio.file.StandardWatchEventKinds.*
 import kotlin.io.path.*
 
 var currentLocation by mutableStateOf(Path("/"))
 var selectedFile by mutableStateOf(Path("/"))
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BrowserWindow() {
-    Surface {
+    val snackbarData = remember { SnackbarHostState() }
+
+    val watcher = remember {
+        FileSystems.getDefault().newWatchService()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose(watcher::close)
+    }
+
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackbarData)
+        }
+    ) {
+        val coroutineScope = rememberCoroutineScope()
+
+        var files by remember { mutableStateOf(listOf<Path>()) }
         var search by remember { mutableStateOf("") }
-        val files by remember(currentLocation) {
-            derivedStateOf {
-                try {
-                    currentLocation.listDirectoryEntries()
-                        .filter { it.name.contains(search) }
-                        .sortedBy { it.nameWithoutExtension }
-                        .sortedBy { it.isRegularFile() }
-                        .sortedBy { it.startsWith(".") }
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                    emptyList()
-                }
+
+        // TODO: Move this to business logic
+        fun scanDir() {
+            files = try {
+                currentLocation.listDirectoryEntries()
+                    .filter { it.name.contains(search) }
+                    .sortedBy { it.nameWithoutExtension }
+                    .sortedBy { it.isRegularFile() }
+                    .sortedBy { it.startsWith(".") }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                emptyList()
             }
+        }
+
+        DisposableEffect(currentLocation) {
+            val watchKey = currentLocation.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY)
+
+            coroutineScope.launch(Dispatchers.IO) {
+                do {
+                    val key = try {
+                        watcher.take()
+                    } catch (e: InterruptedException) {
+                        e.printStackTrace()
+
+                        break
+                    }
+
+                    key.pollEvents()
+
+                    scanDir()
+
+                    key.reset()
+                } while (key.isValid)
+            }
+
+            onDispose {
+                watchKey.cancel()
+            }
+        }
+
+        LaunchedEffect(currentLocation) {
+            scanDir()
         }
 
         Column {
@@ -85,15 +137,15 @@ fun BrowserWindow() {
                     }
 
                     PathBar(
+                        modifier = Modifier.weight(1f, true),
                         location = currentLocation,
                         onClickSegment = { path -> currentLocation = path }
                     )
 
-                    Spacer(Modifier.weight(1f, true))
-
                     TextField(
                         modifier = Modifier.heightIn(min = 42.dp, max = 42.dp),
                         value = search,
+                        textStyle = MaterialTheme.typography.bodySmall,
                         onValueChange = { search = it },
                         trailingIcon = {
                             Icon(Icons.Default.Search, null)
@@ -141,9 +193,12 @@ fun BrowserWindow() {
                                         path.isRegularFile() -> {
                                             try {
                                                 Desktop.getDesktop().open(path.toFile())
-                                            } catch (io: IOException) {
-                                                // discard it, it just means we have no default association
-                                                // TODO: dialog that tells you that? application selector?
+                                            } catch (e: IOException) {
+                                                e.printStackTrace()
+
+                                                coroutineScope.launch {
+                                                    snackbarData.showSnackbar("No default application for ${path.name}")
+                                                }
                                             }
                                         }
 
