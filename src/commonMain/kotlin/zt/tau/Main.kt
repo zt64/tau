@@ -37,7 +37,6 @@ private class Tau : CliktCommand() {
     override fun run() {
         application {
             val windowState = rememberWindowState()
-            val settings: Settings = Settings()
 
             Window(
                 title = "tau",
