@@ -14,8 +14,13 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.isCtrlPressed
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -35,8 +40,7 @@ import kotlin.io.path.*
 var currentLocation by mutableStateOf(Path("/"))
 var selectedFile by mutableStateOf(Path("/"))
 
-
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun BrowserWindow() {
     val snackbarData = remember { SnackbarHostState() }
@@ -107,7 +111,7 @@ fun BrowserWindow() {
 
         Column {
             Surface(
-                tonalElevation = 5.dp,
+                tonalElevation = 5.dp
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
@@ -171,9 +175,20 @@ fun BrowserWindow() {
                 SidePanel()
 
                 Column {
+                    var scale by remember { mutableStateOf(78.dp) }
+
                     LazyVerticalGrid(
-                        modifier = Modifier.weight(1f, true),
-                        columns = GridCells.Adaptive(78.dp),
+                        modifier = Modifier
+                            .weight(1f, true)
+                            .onPointerEvent(
+                                eventType = PointerEventType.Scroll,
+                                pass = PointerEventPass.Initial
+                            ) { ev ->
+                                if (!ev.keyboardModifiers.isCtrlPressed) return@onPointerEvent
+
+                                scale += ev.changes.first().scrollDelta.y.dp
+                            },
+                        columns = GridCells.Adaptive(scale),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(12.dp),
@@ -183,10 +198,19 @@ fun BrowserWindow() {
                             key = { it.name }
                         ) { path ->
                             FileItem(
+                                modifier = Modifier
+                                    .defaultMinSize(scale, scale)
+                                    .background(
+                                        if (path.toAbsolutePath() == selectedFile.toAbsolutePath()) {
+                                            MaterialTheme.colorScheme.onSurface.copy(
+                                                alpha = 0.25f
+                                            )
+                                        } else {
+                                            MaterialTheme.colorScheme.surface
+                                        }
+                                    ),
                                 path = path,
-                                onClick = {
-                                    selectedFile = path
-                                },
+                                onClick = { selectedFile = path },
                                 onDoubleClick = {
                                     when {
                                         path.isDirectory() -> {
@@ -209,17 +233,7 @@ fun BrowserWindow() {
                                             Desktop.getDesktop().open(path.toFile())
                                         }
                                     }
-                                },
-                                modifier = Modifier
-                                    .background(
-                                        if (path.toAbsolutePath() == selectedFile.toAbsolutePath()) {
-                                            MaterialTheme.colorScheme.onSurface.copy(
-                                                alpha = 0.25f
-                                            )
-                                        } else {
-                                            MaterialTheme.colorScheme.surface
-                                        }
-                                    )
+                                }
                             )
                         }
                     }
