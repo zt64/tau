@@ -63,8 +63,6 @@ fun FileItem(
             .then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val clipboardManager = LocalClipboardManager.current
-
         ContextMenuArea(
             items = {
                 listOf(
@@ -189,7 +187,7 @@ fun FileItem(
             }
         }
     }
-}
+}}
 
 @Preview
 @Composable

@@ -28,8 +28,6 @@ kotlin {
                 implementation(libs.bundles.dbus.java)
 
                 implementation(libs.clikt)
-                implementation(libs.decompose)
-                implementation(libs.decompose.extensions.compose.jetbrains)
                 implementation(libs.tikaCore)
 
                 implementation(libs.multiplatformsettings)

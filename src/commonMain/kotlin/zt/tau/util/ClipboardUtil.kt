@@ -1,6 +1,5 @@
 package zt.tau.util
 
-import androidx.compose.ui.platform.LocalClipboardManager
 import zt.tau.ui.component.FileTransferable
 import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard

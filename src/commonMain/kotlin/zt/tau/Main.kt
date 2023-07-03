@@ -34,6 +34,7 @@ private class Tau : CliktCommand() {
         canBeFile = false
     ).optional()
 
+    @OptIn(ExperimentalComposeUiApi::class)
     override fun run() {
         application {
             val windowState = rememberWindowState()
