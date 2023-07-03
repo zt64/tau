@@ -98,7 +98,7 @@ fun BrowserWindow() {
             }
         }
 
-        LaunchedEffect(currentLocation) {
+        LaunchedEffect(currentLocation, search) {
             scanDir()
         }
 
