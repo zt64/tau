@@ -62,10 +62,12 @@ fun BrowserWindow() {
         fun scanDir() {
             files = try {
                 currentLocation.listDirectoryEntries()
-                    .filter { it.name.contains(search) }
+                    .asSequence()
+                    .filter { search in it.name }
                     .sortedBy { it.nameWithoutExtension }
-                    .sortedBy { it.isRegularFile() }
+                    .sortedBy { !it.isDirectory() }
                     .sortedBy { it.startsWith(".") }
+                    .toList()
             } catch (e: IOException) {
                 e.printStackTrace()
                 emptyList()
