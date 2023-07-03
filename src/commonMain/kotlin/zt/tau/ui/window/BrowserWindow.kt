@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -235,7 +236,11 @@ fun BrowserWindow() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             selectedFile.fileName?.let {
-                                Text(it.nameWithoutExtension.take(30), fontWeight = FontWeight.Bold)
+                                Text(
+                                    text = it.nameWithoutExtension,
+                                    fontWeight = FontWeight.Bold,
+                                    overflow = TextOverflow.Ellipsis
+                                )
                                 Spacer(Modifier.width(16.dp))
                             }
 
