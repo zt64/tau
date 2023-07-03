@@ -1,13 +1,19 @@
 [versions]
 kotlin = "1.8.20"
 compose = "1.4.1"
-decompose = "2.0.0"
+dbus-java = "4.3.0"
+compose-icons = "1.1.0"
 
 [libraries]
 clikt = "com.github.ajalt.clikt:clikt:3.5.4"
-decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
-decompose-extensions-compose-jetbrains = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose" }
+dbus-java-core = { module = "com.github.hypfvieh:dbus-java-core", version.ref = "dbus-java" }
+dbus-java-transport-native-unixsocket = { module = "com.github.hypfvieh:dbus-java-transport-native-unixsocket", version.ref = "dbus-java" }
 tikaCore = "org.apache.tika:tika-core:2.8.0"
+
+compose-icons = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "compose-icons" }
+
+[bundles]
+dbus-java = ["dbus-java-core", "dbus-java-transport-native-unixsocket"]
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

@@ -8,9 +8,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import com.arkivanov.decompose.ExperimentalDecomposeApi
-import com.arkivanov.decompose.extensions.compose.jetbrains.lifecycle.LifecycleController
-import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.optional
@@ -28,14 +25,9 @@ private class Tau : CliktCommand() {
         canBeFile = false
     ).optional()
 
-    @OptIn(ExperimentalDecomposeApi::class)
     override fun run() {
-        val lifecycle = LifecycleRegistry()
-
         application {
             val windowState = rememberWindowState()
-
-            LifecycleController(lifecycle, windowState)
 
             Window(
                 title = "tau",

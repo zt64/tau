@@ -1,3 +1,4 @@
+import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -17,17 +18,18 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
-            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            @OptIn(ExperimentalComposeLibrary::class)
             dependencies {
                 implementation(compose.material3)
                 implementation(compose.desktop.currentOs)
                 implementation(compose.materialIconsExtended)
                 implementation(compose.desktop.components.splitPane)
 
+                implementation(libs.bundles.dbus.java)
+
                 implementation(libs.clikt)
-                implementation(libs.decompose)
-                implementation(libs.decompose.extensions.compose.jetbrains)
                 implementation(libs.tikaCore)
+                implementation(libs.compose.icons)
             }
         }
     }
