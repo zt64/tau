@@ -16,7 +16,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.optional
 import com.github.ajalt.clikt.parameters.types.path
-import com.russhwolf.settings.Settings
+import dev.icerock.moko.resources.compose.stringResource
 import zt.tau.ui.component.ThemeCheckboxItem
 import zt.tau.ui.theme.TauTheme
 import zt.tau.ui.window.BrowserWindow
@@ -48,18 +48,31 @@ private class Tau : CliktCommand() {
 
                 MenuBar {
                     Menu("File", mnemonic = 'F') {
-                        Item("Copy", onClick = {
-                            listOf(selectedFile.toFile()).copyToClipboard()
-                        }, shortcut = KeyShortcut(Key.C, ctrl = true))
+                        Item(
+                            text = stringResource(R.strings.copy),
+                            onClick = {
+                                listOf(selectedFile.toFile()).copyToClipboard()
+                            },
+                            shortcut = KeyShortcut(Key.C, ctrl = true)
+                        )
 
-                        Item("Cut", onClick = {
+                        Item(
+                            text = stringResource(R.strings.cut),
+                            onClick = {
 
-                        }, shortcut = KeyShortcut(Key.X, ctrl = true))
+                            },
+                            shortcut = KeyShortcut(Key.X, ctrl = true)
+                        )
 
-                        Item("Delete", onClick = {
+                        Item(
+                            text = stringResource(R.strings.delete),
+                            onClick = {
 
-                        }, shortcut = KeyShortcut(Key.Delete))
+                            },
+                            shortcut = KeyShortcut(Key.Delete)
+                        )
                     }
+
                     Menu("Settings", mnemonic = 'S') {
                         Menu("Theme", mnemonic = 'T') {
                             ThemeCheckboxItem("Dark", mnemonic = 'D')

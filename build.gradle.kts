@@ -4,6 +4,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose)
+    alias(libs.plugins.resources)
 }
 
 repositories {
@@ -26,17 +27,21 @@ kotlin {
                 implementation(compose.desktop.components.splitPane)
 
                 implementation(libs.bundles.dbus.java)
+                implementation(libs.bundles.settings)
 
                 implementation(libs.clikt)
-                implementation(libs.tikaCore)
-
-                implementation(libs.multiplatformsettings)
-                implementation(libs.multiplatformsettings.noarg)
-
+                implementation(libs.tika.core)
                 implementation(libs.compose.icons)
+
+                api(libs.bundles.moko.resources)
             }
         }
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "zt.tau"
+    multiplatformResourcesClassName = "R"
 }
 
 compose.desktop.application {

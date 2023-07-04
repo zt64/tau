@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="copy">Copy</string>
+    <string name="cut">Cut</string>
+    <string name="delete">Delete</string>
+</resources>
