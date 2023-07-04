@@ -1,9 +1,9 @@
 package zt.tau.ui.component
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.window.MenuScope
 import zt.tau.ui.theme.settings
 import zt.tau.ui.window.colorTheme
-import androidx.compose.ui.window.MenuScope
 
 @Composable
 fun MenuScope.ThemeCheckboxItem(
@@ -13,7 +13,7 @@ fun MenuScope.ThemeCheckboxItem(
     val lower = themeName.lowercase()
 
     CheckboxItem(
-        themeName,
+        text = themeName,
         checked = colorTheme == lower,
         onCheckedChange = {
             settings.putString("colorScheme", lower)

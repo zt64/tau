@@ -8,15 +8,16 @@ import com.russhwolf.settings.Settings
 import zt.tau.ui.window.colorTheme
 
 val settings: Settings = Settings()
+
 @Composable
 fun TauTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
         colorScheme = when (colorTheme) {
-            "dark"  -> darkColorScheme()
+            "dark" -> darkColorScheme()
             "light" -> lightColorScheme()
-            else    -> darkColorScheme()
+            else -> darkColorScheme()
         },
         content = content
     )
