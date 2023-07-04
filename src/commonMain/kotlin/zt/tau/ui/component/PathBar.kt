@@ -1,10 +1,15 @@
 package zt.tau.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -45,6 +50,11 @@ fun PathBar(
                     onClickSegment(rootPath)
                 }
             ) {
+                Icon(
+                    imageVector = Icons.Default.Storage,
+                    null
+                )
+                Spacer(Modifier.width(2.dp))
                 Text(rootPath.absolutePathString())
             }
         }
