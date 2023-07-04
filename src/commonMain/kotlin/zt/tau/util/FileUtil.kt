@@ -1,7 +1,6 @@
 package zt.tau.util
 
 import java.io.File
-import kotlin.io.path.*
 
 fun File.moveTo(file: File, overwrite: Boolean = false) {
     try {

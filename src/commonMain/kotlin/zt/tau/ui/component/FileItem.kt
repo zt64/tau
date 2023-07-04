@@ -28,7 +28,6 @@ import org.apache.tika.Tika
 import zt.tau.ui.window.PropertiesWindow
 import zt.tau.util.contains
 import zt.tau.util.copyToClipboard
-import zt.tau.util.setContents
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.io.File

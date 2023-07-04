@@ -1,7 +1,6 @@
 package zt.tau.util
 
 import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.text.toLowerCase
 import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.ClipboardOwner

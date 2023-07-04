@@ -20,7 +20,6 @@ import dev.icerock.moko.resources.compose.stringResource
 import zt.tau.ui.component.ThemeCheckboxItem
 import zt.tau.ui.theme.TauTheme
 import zt.tau.ui.window.BrowserWindow
-import zt.tau.ui.window.colorTheme
 import zt.tau.ui.window.selectedFile
 import zt.tau.util.copyToClipboard
 import java.awt.Dimension

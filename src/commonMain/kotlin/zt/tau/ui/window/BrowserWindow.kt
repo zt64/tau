@@ -1,7 +1,5 @@
 package zt.tau.ui.window
 
-
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -28,7 +26,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import androidx.compose.ui.window.MenuBar
 import zt.tau.ui.component.FileItem
 import zt.tau.ui.component.PathBar
 import zt.tau.ui.component.SidePanel

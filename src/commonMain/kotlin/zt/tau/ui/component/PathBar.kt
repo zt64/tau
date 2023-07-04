@@ -62,7 +62,7 @@ fun PathBar(
         itemsIndexed(
             items = segments,
             key = { index, _ -> index }
-        ) { index, segment ->
+        ) { _, segment ->
             FilledTonalButton(
                 shape = RoundedCornerShape(16.dp),
                 onClick = { // this could be cleaner probably
