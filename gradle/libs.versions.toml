@@ -6,19 +6,26 @@ dbus-java = "4.3.0"
 compose-icons = "1.1.0"
 moko-resources = "0.23.0"
 
+detekt = "1.23.0"
+ktlint = "11.5.0"
+
 [libraries]
-clikt = "com.github.ajalt.clikt:clikt:3.5.4"
+clikt = "com.github.ajalt.clikt:clikt:4.0.0"
 dbus-java-core = { module = "com.github.hypfvieh:dbus-java-core", version.ref = "dbus-java" }
 dbus-java-transport-native-unixsocket = { module = "com.github.hypfvieh:dbus-java-transport-native-unixsocket", version.ref = "dbus-java" }
 tika-core = "org.apache.tika:tika-core:2.8.0"
 
+# multiplatformsettings
 settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformsettings" }
 settings-noarg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformsettings" }
 
 compose-icons = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "compose-icons" }
 
+# moko-resources
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
+
+ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.1.11" }
 
 [bundles]
 dbus-java = ["dbus-java-core", "dbus-java-transport-native-unixsocket"]
@@ -29,3 +36,6 @@ moko-resources = ["moko-resources", "moko-resources-compose"]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }
+
+# Linters
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }

@@ -5,11 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose)
     alias(libs.plugins.resources)
-}
-
-repositories {
-    mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    alias(libs.plugins.ktlint)
 }
 
 kotlin {
@@ -37,6 +33,10 @@ kotlin {
             }
         }
     }
+}
+
+dependencies {
+    ktlintRuleset(libs.ktlint.rules.compose)
 }
 
 multiplatformResources {
