@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.rememberWindowState
+import zt.tau.util.creationTime
+import zt.tau.util.humanFriendly
 import zt.tau.util.humanReadableSize
 import zt.tau.util.rememberVectorPainter
 import java.nio.file.Path
@@ -89,7 +91,7 @@ fun PropertiesWindow(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DetailsTab(path: Path) {
-    ListItem(
+    ListItem( // TODO: Why are the first 3 items not showing up?
         headlineText = {
             Text("Name")
         },
@@ -111,6 +113,14 @@ private fun DetailsTab(path: Path) {
         },
         trailingContent = {
             Text(path.toFile().humanReadableSize())
+        }
+    )
+    ListItem(
+        headlineText = {
+            Text("Created at")
+        },
+        trailingContent = {
+            Text(path.creationTime().humanFriendly())
         }
     )
 }

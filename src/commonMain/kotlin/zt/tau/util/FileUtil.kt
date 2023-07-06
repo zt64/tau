@@ -1,6 +1,13 @@
 package zt.tau.util
 
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.attribute.BasicFileAttributes
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+
 
 fun File.moveTo(file: File, overwrite: Boolean = false) {
     try {
@@ -21,3 +28,5 @@ fun File.humanReadableSize(): String {
         else -> "${bytes.toInt()} bytes"
     }
 }
+
+fun Path.creationTime(): Instant = Files.readAttributes(this, BasicFileAttributes::class.java).creationTime().toInstant()

@@ -26,7 +26,7 @@ fun Bookmark(
     ListItem(
         modifier = Modifier
             .combinedClickable(onClick = onClick)
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 4.dp)
             .widthIn(min = 120.dp),
         leadingContent = {
             Icon(

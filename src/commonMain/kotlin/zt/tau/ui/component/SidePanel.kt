@@ -25,7 +25,7 @@ fun SidePanel() {
         val roots = remember { File.listRoots() }
 
         LazyColumn(
-            modifier = Modifier.width(160.dp), // eventually fetch from settings
+            modifier = Modifier.width(120.dp), // eventually fetch from settings
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             items(
