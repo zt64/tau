@@ -30,7 +30,7 @@ fun SidePanel() {
         ) {
             items(
                 items = roots,
-                key = { it.name }
+                key = { it.toPath() }
             ) {
                 Bookmark(
                     zt.tau.model.Bookmark(it.toPath(), it.absolutePath),
