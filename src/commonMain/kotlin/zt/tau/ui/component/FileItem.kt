@@ -3,10 +3,7 @@ package zt.tau.ui.component
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Icon
@@ -69,124 +66,128 @@ fun FileItem(
                         listOf(path.toFile()).copyToClipboard()
                     },
                     ContextMenuItem("Cut") {
-
-                },
-                ContextMenuItem("Delete") {
-                    path.deleteIfExists()
-                },
-                ContextMenuItem("Properties") {
-                    showProperties = true
-                }
-            )
-        }
-    ) {
-        TooltipArea(
-            tooltip = {
-                Surface(
-                    shape = MaterialTheme.shapes.medium,
-                    tonalElevation = 6.dp,
-                    shadowElevation = 4.dp
-                ) {
-                    Text(
-                        modifier = Modifier.padding(10.dp),
-                        text = path.name
-                    )
-                }
+                    },
+                    ContextMenuItem("Delete") {
+                        try {
+                            path.deleteIfExists()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    },
+                    ContextMenuItem("Properties") {
+                        showProperties = true
+                    }
+                )
             }
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .combinedClickable(
-                        interactionSource = interactionSource,
-                        indication = LocalIndication.current,
-                        onClick = onClick,
-                        onDoubleClick = onDoubleClick
-                    )
-                    .then(modifier),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    val coroutineScope = rememberCoroutineScope { Dispatchers.IO }
-                    var fileIcon by remember {
-                        mutableStateOf(
-                            if (path.isDirectory()) Icons.Default.Folder else Icons.Default.Description
+            TooltipArea(
+                tooltip = {
+                    Surface(
+                        shape = MaterialTheme.shapes.medium,
+                        tonalElevation = 6.dp,
+                        shadowElevation = 4.dp
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(10.dp),
+                            text = path.name
                         )
                     }
+                }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .combinedClickable(
+                            interactionSource = interactionSource,
+                            indication = LocalIndication.current,
+                            onClick = onClick,
+                            onDoubleClick = onDoubleClick
+                        )
+                        .then(modifier),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        val coroutineScope = rememberCoroutineScope { Dispatchers.IO }
+                        var fileIcon by remember {
+                            mutableStateOf(
+                                if (path.isDirectory()) Icons.Default.Folder else Icons.Default.Description
+                            )
+                        }
 
-                    LaunchedEffect(Unit) {
-                        coroutineScope.launch {
-                            if (path.isDirectory()) return@launch
+                        LaunchedEffect(Unit) {
+                            coroutineScope.launch {
+                                if (path.isDirectory()) return@launch
 
-                            val (dataType, dataFormat) = runCatching {
-                                Tika()
-                                    .detect(path.inputStream(), path.fileName.toString())
-                                    .split("/")
-                            }.getOrNull() ?: return@launch
+                                val (dataType, dataFormat) = runCatching {
+                                    Tika()
+                                        .detect(path.inputStream(), path.fileName.toString())
+                                        .split("/")
+                                }.getOrNull() ?: return@launch
 
-                            fileIcon = when (dataType) {
-                                "image" -> Icons.Default.Image
-                                "video" -> Icons.Default.VideoFile
-                                "audio" -> Icons.Default.AudioFile
-                                "text" -> Icons.Default.Article
-                                "font" -> Icons.Default.TextFields
-                                "application" -> when {
-                                    dataFormat.contains("zip", "7z", "rar", "tar") -> Icons.Default.Archive
-                                    dataFormat == "java-archive" -> Icons.Default.Coffee
-                                    dataFormat == "ogg" -> Icons.Default.MusicVideo
+                                fileIcon = when (dataType) {
+                                    "image" -> Icons.Default.Image
+                                    "video" -> Icons.Default.VideoFile
+                                    "audio" -> Icons.Default.AudioFile
+                                    "text" -> Icons.Default.Article
+                                    "font" -> Icons.Default.TextFields
+                                    "application" -> when {
+                                        dataFormat.contains("zip", "7z", "rar", "tar") -> Icons.Default.Archive
+                                        dataFormat == "java-archive" -> Icons.Default.Coffee
+                                        dataFormat == "ogg" -> Icons.Default.MusicVideo
+
+                                        else -> Icons.Default.Description
+                                    }
 
                                     else -> Icons.Default.Description
                                 }
-
-                                else -> Icons.Default.Description
                             }
+                        }
+
+                        Icon(
+                            modifier = Modifier.size(48.dp),
+                            imageVector = fileIcon,
+                            tint = MaterialTheme.colorScheme.primary,
+                            contentDescription = null
+                        )
+
+                        val icon = when {
+                            path.isSymbolicLink() -> Icons.Default.Link
+                            !path.isReadable() -> Icons.Default.Lock
+                            else -> null
+                        }
+
+                        if (icon != null) {
+                            Icon(
+                                modifier = Modifier
+                                    .fillMaxSize(0.3f)
+                                    .align(Alignment.BottomEnd),
+                                imageVector = icon,
+                                tint = MaterialTheme.colorScheme.inversePrimary,
+                                contentDescription = null
+                            )
                         }
                     }
 
-                    Icon(
-                        modifier = Modifier.fillMaxSize(),
-                        imageVector = fileIcon,
-                        tint = MaterialTheme.colorScheme.primary,
-                        contentDescription = null
-                    )
-
-                    val icon = when {
-                        path.isSymbolicLink() -> Icons.Default.Link
-                        !path.isReadable() -> Icons.Default.Lock
-                        else -> null
-                    }
-
-                    if (icon != null) {
-                        Icon(
-                            modifier = Modifier
-                                .fillMaxSize(0.3f)
-                                .align(Alignment.BottomEnd),
-                            imageVector = icon,
-                            tint = MaterialTheme.colorScheme.tertiary,
-                            contentDescription = null
+                    Text(
+                        text = path.name,
+                        textAlign = TextAlign.Center,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 3,
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            shadow = Shadow(
+                                color = MaterialTheme.colorScheme.outline,
+                                offset = Offset.Zero,
+                                blurRadius = 0.75f
+                            )
                         )
-                    }
+                    )
                 }
-
-                Text(
-                    text = path.name,
-                    textAlign = TextAlign.Center,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 3,
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        shadow = Shadow(
-                            color = MaterialTheme.colorScheme.outline,
-                            offset = Offset.Zero,
-                            blurRadius = 0.75f
-                        )
-                    )
-                )
             }
         }
     }
-}}
+}
 
 @Preview
 @Composable

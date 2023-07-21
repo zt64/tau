@@ -30,7 +30,7 @@ fun PathBar(
 ) {
     val rootPath = currentLocation.root
 
-    //var editing by remember { mutableStateOf(false) }
+    // var editing by remember { mutableStateOf(false) }
     val segments = remember(location) {
         location
             .absolutePathString()
@@ -71,7 +71,7 @@ fun PathBar(
             ) {
                 Text(
                     text = segment,
-                    overflow = TextOverflow.Ellipsis,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

@@ -22,4 +22,3 @@ fun MenuScope.ThemeCheckboxItem(
         mnemonic = mnemonic
     )
 }
-

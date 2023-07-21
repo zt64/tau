@@ -1,16 +1,18 @@
 package zt.tau.ui.window
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowLeft
-import androidx.compose.material.icons.filled.ArrowRight
-import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -59,61 +61,63 @@ fun BrowserWindow() {
         snackbarHost = {
             SnackbarHost(snackbarData)
         }
-    ) {
-        val coroutineScope = rememberCoroutineScope()
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier.padding(paddingValues)
+        ) {
+            val coroutineScope = rememberCoroutineScope()
 
-        var files by remember { mutableStateOf(listOf<Path>()) }
-        var search by remember { mutableStateOf("") }
+            var files by remember { mutableStateOf(listOf<Path>()) }
+            var search by remember { mutableStateOf("") }
 
-        // TODO: Move this to business logic
-        fun scanDir() {
-            files = try {
-                currentLocation.listDirectoryEntries()
-                    .asSequence()
-                    .filter { search in it.name }
-                    .sortedBy { it.nameWithoutExtension }
-                    .sortedBy { !it.isDirectory() }
-                    .sortedBy { it.startsWith(".") }
-                    .toList()
-            } catch (e: IOException) {
-                e.printStackTrace()
-                emptyList()
-            }
-        }
-
-        DisposableEffect(currentLocation) {
-            val watchKey = currentLocation.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY)
-
-            coroutineScope.launch(Dispatchers.IO) {
-                do {
-                    val key = try {
-                        watcher.take()
-                    } catch (e: InterruptedException) {
-                        e.printStackTrace()
-
-                        break
-                    }
-
-                    key.pollEvents()
-
-                    scanDir()
-
-                    key.reset()
-                } while (key.isValid)
+            // TODO: Move this to business logic
+            fun scanDir() {
+                files = try {
+                    currentLocation.listDirectoryEntries()
+                        .asSequence()
+                        .filter { search in it.name }
+                        .sortedBy { it.nameWithoutExtension }
+                        .sortedBy { !it.isDirectory() }
+                        .sortedBy { it.startsWith(".") }
+                        .toList()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    emptyList()
+                }
             }
 
-            onDispose {
-                watchKey.cancel()
+            DisposableEffect(currentLocation) {
+                val watchKey = currentLocation.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY)
+
+                coroutineScope.launch(Dispatchers.IO) {
+                    do {
+                        val key = try {
+                            watcher.take()
+                        } catch (e: InterruptedException) {
+                            e.printStackTrace()
+
+                            break
+                        }
+
+                        key.pollEvents()
+
+                        scanDir()
+
+                        key.reset()
+                    } while (key.isValid)
+                }
+
+                onDispose {
+                    watchKey.cancel()
+                }
             }
-        }
 
-        LaunchedEffect(currentLocation, search) {
-            scanDir()
-        }
+            LaunchedEffect(currentLocation, search) {
+                scanDir()
+            }
 
-        Column {
             Surface(
-                tonalElevation = 5.dp
+                tonalElevation = 7.dp
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
@@ -127,19 +131,17 @@ fun BrowserWindow() {
                         Icon(Icons.Default.ArrowUpward, null)
                     }
 
-                    FilledIconButton(
+                    FilledTonalIconButton(
                         enabled = false,
                         onClick = {
-
                         }
                     ) {
                         Icon(Icons.Default.ArrowLeft, null)
                     }
 
-                    FilledIconButton(
+                    FilledTonalIconButton(
                         enabled = false,
                         onClick = {
-
                         }
                     ) {
                         Icon(Icons.Default.ArrowRight, null)
@@ -163,7 +165,7 @@ fun BrowserWindow() {
                         shape = CircleShape,
                         colors = TextFieldDefaults.textFieldColors(
                             focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
                         )
                     )
                 }
@@ -176,8 +178,63 @@ fun BrowserWindow() {
             ) {
                 SidePanel()
 
-                Column {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    val tabs = remember { mutableStateListOf<Path>(currentLocation, currentLocation) }
+                    var selectedTab by remember { mutableStateOf(0) }
                     var scale by remember { mutableStateOf(78.dp) }
+
+                    AnimatedVisibility(
+                        visible = tabs.size > 1,
+                        enter = expandVertically { it },
+                        exit = shrinkVertically { it }
+                    ) {
+                        ScrollableTabRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            selectedTabIndex = selectedTab,
+                            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
+                            edgePadding = 0.dp
+                        ) {
+                            tabs.forEachIndexed { index, title ->
+                                val interactionSource = remember { MutableInteractionSource() }
+
+                                Tab(
+                                    selected = selectedTab == index,
+                                    onClick = { selectedTab = index },
+                                    interactionSource = interactionSource
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .height(40.dp)
+                                            .padding(4.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        val isHovered by interactionSource.collectIsHoveredAsState()
+
+                                        Text(
+                                            text = title.pathString,
+                                            maxLines = 2,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+
+                                        AnimatedVisibility(visible = isHovered) {
+                                            IconButton(
+                                                onClick = { tabs.removeAt(index) }
+                                            ) {
+                                                Icon(
+                                                    modifier = Modifier.size(16.dp),
+                                                    imageVector = Icons.Default.Close,
+                                                    contentDescription = null
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     LazyVerticalGrid(
                         modifier = Modifier
@@ -190,10 +247,10 @@ fun BrowserWindow() {
 
                                 scale += ev.changes.first().scrollDelta.y.dp
                             },
-                        columns = GridCells.Adaptive(scale),
+                        columns = GridCells.FixedSize(scale),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(12.dp),
+                        contentPadding = PaddingValues(12.dp)
                     ) {
                         items(
                             items = files,
@@ -201,9 +258,9 @@ fun BrowserWindow() {
                         ) { path ->
                             FileItem(
                                 modifier = Modifier
-                                    .defaultMinSize(scale, scale)
+                                    .fillMaxSize()
                                     .background(
-                                        if (path.toAbsolutePath() == selectedFile.toAbsolutePath()) {
+                                        if (path == selectedFile) {
                                             MaterialTheme.colorScheme.onSurface.copy(
                                                 alpha = 0.25f
                                             )

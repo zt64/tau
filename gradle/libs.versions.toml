@@ -1,12 +1,11 @@
 [versions]
 kotlin = "1.9.0"
-compose = "1.4.1"
+compose = "1.5.0-dev1114"
 multiplatformsettings = "1.0.0"
 dbus-java = "4.3.0"
 compose-icons = "1.1.0"
 moko-resources = "0.23.0"
 
-detekt = "1.23.0"
 ktlint = "11.5.0"
 
 [libraries]

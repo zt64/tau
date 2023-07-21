@@ -20,7 +20,10 @@ import zt.tau.util.humanFriendly
 import zt.tau.util.humanReadableSize
 import zt.tau.util.rememberVectorPainter
 import java.nio.file.Path
-import kotlin.io.path.*
+import kotlin.io.path.getOwner
+import kotlin.io.path.isExecutable
+import kotlin.io.path.name
+import kotlin.io.path.pathString
 
 private enum class Tab(
     val label: String,
@@ -88,11 +91,10 @@ fun PropertiesWindow(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DetailsTab(path: Path) {
     ListItem( // TODO: Why are the first 3 items not showing up?
-        headlineText = {
+        headlineContent = {
             Text("Name")
         },
         trailingContent = {
@@ -100,7 +102,7 @@ private fun DetailsTab(path: Path) {
         }
     )
     ListItem(
-        headlineText = {
+        headlineContent = {
             Text("Location")
         },
         trailingContent = {
@@ -108,7 +110,7 @@ private fun DetailsTab(path: Path) {
         }
     )
     ListItem(
-        headlineText = {
+        headlineContent = {
             Text("Size")
         },
         trailingContent = {
@@ -116,7 +118,7 @@ private fun DetailsTab(path: Path) {
         }
     )
     ListItem(
-        headlineText = {
+        headlineContent = {
             Text("Created at")
         },
         trailingContent = {
@@ -134,7 +136,7 @@ private fun PermissionsTab(path: Path) {
         leadingContent = {
             Icon(Icons.Default.Person, "Owner")
         },
-        headlineText = {
+        headlineContent = {
             Text("Owner")
         },
         trailingContent = {
@@ -146,11 +148,10 @@ private fun PermissionsTab(path: Path) {
         leadingContent = {
             Icon(Icons.Default.Key, "Owner access")
         },
-        headlineText = {
+        headlineContent = {
             Text("Owner access")
         },
         trailingContent = {
-
         }
     )
 
@@ -160,11 +161,10 @@ private fun PermissionsTab(path: Path) {
         leadingContent = {
             Icon(Icons.Default.Group, "Group")
         },
-        headlineText = {
+        headlineContent = {
             Text("Group")
         },
         trailingContent = {
-
         }
     )
 
@@ -172,11 +172,10 @@ private fun PermissionsTab(path: Path) {
         leadingContent = {
             Icon(Icons.Default.Key, "Group access")
         },
-        headlineText = {
+        headlineContent = {
             Text("Group access")
         },
         trailingContent = {
-
         }
     )
 
@@ -186,7 +185,7 @@ private fun PermissionsTab(path: Path) {
         leadingContent = {
             Icon(Icons.Default.Public, "Global")
         },
-        headlineText = {
+        headlineContent = {
             Text("Global")
         }
     )
@@ -195,22 +194,20 @@ private fun PermissionsTab(path: Path) {
         leadingContent = {
             Icon(Icons.Default.Key, "Global access")
         },
-        headlineText = {
+        headlineContent = {
             Text("Global access")
         },
         trailingContent = {
-
         }
     )
 
     if (!isWindows) {
         ListItem(
-            headlineText = { Text("Execute") },
+            headlineContent = { Text("Execute") },
             trailingContent = {
                 Switch(
                     checked = path.isExecutable(),
                     onCheckedChange = {
-
                     }
                 )
             }

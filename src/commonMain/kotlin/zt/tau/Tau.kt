@@ -5,7 +5,6 @@ import androidx.compose.foundation.LocalContextMenuRepresentation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyShortcut
 import androidx.compose.ui.res.painterResource
@@ -21,7 +20,6 @@ import zt.tau.ui.window.selectedFile
 import zt.tau.util.copyToClipboard
 import java.awt.Dimension
 
-@OptIn(ExperimentalComposeUiApi::class)
 fun tau() = application {
     val windowState = rememberWindowState()
 
@@ -48,7 +46,6 @@ fun tau() = application {
                 Item(
                     text = stringResource(R.strings.cut),
                     onClick = {
-
                     },
                     shortcut = KeyShortcut(Key.X, ctrl = true)
                 )
@@ -56,7 +53,6 @@ fun tau() = application {
                 Item(
                     text = stringResource(R.strings.delete),
                     onClick = {
-
                     },
                     shortcut = KeyShortcut(Key.Delete)
                 )

@@ -1,8 +1,8 @@
 package zt.tau.ui.component
 
 // TODO: Make transparent
-//@Composable
-//fun DropTargetArea(
+// @Composable
+// fun DropTargetArea(
 //    modifier: Modifier = Modifier,
 //    dragEnter: (DropTargetDragEvent) -> Unit = { },
 //    dragOver: (DropTargetDragEvent) -> Unit = { },
@@ -10,7 +10,7 @@ package zt.tau.ui.component
 //    dragExit: (DropTargetEvent) -> Unit = { },
 //    drop: (DropTargetEvent) -> Unit = { },
 //    content: @Composable () -> Unit
-//) {
+// ) {
 //    Box(modifier) {
 //        SwingPanel(
 //            modifier = Modifier.matchParentSize(),
@@ -33,4 +33,4 @@ package zt.tau.ui.component
 //
 //        content()
 //    }
-//}
+// }

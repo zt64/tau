@@ -21,7 +21,7 @@ import zt.tau.model.Bookmark
 fun Bookmark(
     data: Bookmark,
     onClick: () -> Unit,
-    icon: ImageVector = Icons.Default.Folder,
+    icon: ImageVector = Icons.Default.Folder
 ) {
     ListItem(
         modifier = Modifier
@@ -34,7 +34,7 @@ fun Bookmark(
                 contentDescription = null
             )
         },
-        headlineText = {
+        headlineContent = {
             Text(data.displayName)
         }
     )

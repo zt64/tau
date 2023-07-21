@@ -32,6 +32,10 @@ kotlin {
                 api(libs.bundles.moko.resources)
             }
         }
+
+        val jvmMain by getting {
+            dependsOn(commonMain)
+        }
     }
 }
 
