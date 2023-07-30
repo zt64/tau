@@ -24,7 +24,7 @@ compose-icons = { module = "br.com.devsrsouza.compose.icons:font-awesome", versi
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
 
-ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.1.12" }
+ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.1.13" }
 
 [bundles]
 dbus-java = ["dbus-java-core", "dbus-java-transport-native-unixsocket"]
