@@ -4,6 +4,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
@@ -24,6 +27,7 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.isCtrlPressed
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
@@ -216,19 +220,20 @@ fun BrowserWindow() {
                                         Text(
                                             text = title.pathString,
                                             maxLines = 2,
-                                            overflow = TextOverflow.Ellipsis
+                                            overflow = TextOverflow.Ellipsis,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.width(60.dp)
                                         )
 
-                                        AnimatedVisibility(visible = isHovered) {
-                                            IconButton(
-                                                onClick = { tabs.removeAt(index) }
-                                            ) {
-                                                Icon(
-                                                    modifier = Modifier.size(16.dp),
-                                                    imageVector = Icons.Default.Close,
-                                                    contentDescription = null
-                                                )
-                                            }
+                                        IconButton(
+                                            onClick = { tabs.removeAt(index) },
+                                            modifier = Modifier.width(20.dp)
+                                        ) {
+                                            Icon(
+                                                modifier = Modifier.size(16.dp),
+                                                imageVector = Icons.Default.Close,
+                                                contentDescription = null
+                                            )
                                         }
                                     }
                                 }
@@ -310,7 +315,7 @@ fun BrowserWindow() {
                         ) {
                             selectedFile.fileName?.let {
                                 Text(
-                                    text = it.nameWithoutExtension,
+                                    text = it.name,
                                     fontWeight = FontWeight.Bold,
                                     overflow = TextOverflow.Ellipsis
                                 )
