@@ -30,7 +30,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import io.github.irgaly.kfswatch.KfsDirectoryWatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import zt.tau.ui.component.FileItem
 import zt.tau.ui.component.PathBar
@@ -39,32 +41,25 @@ import zt.tau.ui.theme.settings
 import zt.tau.util.humanReadableSize
 import java.awt.Desktop
 import java.io.IOException
-import java.nio.file.FileSystems
 import java.nio.file.Path
-import java.nio.file.StandardWatchEventKinds.*
 import kotlin.io.path.*
 
 var currentLocation by mutableStateOf(Path("/"))
 var selectedFile by mutableStateOf(Path("/"))
 var colorTheme by mutableStateOf(settings.getString("colorScheme", defaultValue = "dark"))
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun BrowserWindow() {
     val snackbarData = remember { SnackbarHostState() }
 
+    val scope = rememberCoroutineScope()
     val watcher = remember {
-        FileSystems.getDefault().newWatchService()
-    }
-
-    DisposableEffect(Unit) {
-        onDispose(watcher::close)
+        KfsDirectoryWatcher(scope)
     }
 
     Scaffold(
-        snackbarHost = {
-            SnackbarHost(snackbarData)
-        }
+        snackbarHost = { SnackbarHost(snackbarData) }
     ) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues)
@@ -91,28 +86,17 @@ fun BrowserWindow() {
             }
 
             DisposableEffect(currentLocation) {
-                val watchKey = currentLocation.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY)
-
                 coroutineScope.launch(Dispatchers.IO) {
-                    do {
-                        val key = try {
-                            watcher.take()
-                        } catch (e: InterruptedException) {
-                            e.printStackTrace()
-
-                            break
-                        }
-
-                        key.pollEvents()
-
+                    watcher.add(currentLocation.absolutePathString())
+                    watcher.onEventFlow.collectLatest {
                         scanDir()
-
-                        key.reset()
-                    } while (key.isValid)
+                    }
                 }
 
                 onDispose {
-                    watchKey.cancel()
+                    coroutineScope.launch {
+                        watcher.removeAll()
+                    }
                 }
             }
 
@@ -167,9 +151,9 @@ fun BrowserWindow() {
                         },
                         singleLine = true,
                         shape = CircleShape,
-                        colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
+                            unfocusedIndicatorColor = Color.Transparent,
                         )
                     )
                 }

@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.9.10"
+kotlin = "1.9.0"
 compose = "1.5.0-rc06"
 multiplatformsettings = "1.0.0"
 dbus-java = "4.3.0"
@@ -25,6 +25,8 @@ moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-re
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
 
 ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.2.1" }
+
+kfswatch = { module = "io.github.irgaly.kfswatch:kfswatch", version = "0.9.0" }
 
 [bundles]
 dbus-java = ["dbus-java-core", "dbus-java-transport-native-unixsocket"]

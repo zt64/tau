@@ -78,7 +78,7 @@ fun PropertiesWindow(
                 AnimatedContent(
                     targetState = selectedTab,
                     transitionSpec = {
-                        fadeIn() with fadeOut()
+                        fadeIn() togetherWith fadeOut()
                     }
                 ) { tab ->
                     when (tab) {
