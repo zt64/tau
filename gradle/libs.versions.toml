@@ -26,7 +26,7 @@ moko-resources-compose = { module = "dev.icerock.moko:resources-compose", versio
 
 ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.2.1" }
 
-kfswatch = { module = "io.github.irgaly.kfswatch:kfswatch", version = "0.9.0" }
+kfswatch = { module = "io.github.irgaly.kfswatch:kfswatch", version = "1.0.0" }
 
 [bundles]
 dbus-java = ["dbus-java-core", "dbus-java-transport-native-unixsocket"]
