@@ -24,7 +24,7 @@ compose-icons = { module = "br.com.devsrsouza.compose.icons:font-awesome", versi
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
 
-ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.2.2" }
+ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.2.3" }
 
 kfswatch = { module = "io.github.irgaly.kfswatch:kfswatch", version = "1.0.0" }
 
