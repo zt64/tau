@@ -64,9 +64,7 @@ compose.desktop.application {
             "java.instrument",
             "java.management",
             "java.prefs",
-            "java.sql",
             "jdk.unsupported",
-            "jdk.xml.dom"
         )
 
         targetFormats(TargetFormat.Deb, TargetFormat.Exe, TargetFormat.Msi)
