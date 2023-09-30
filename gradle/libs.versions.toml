@@ -21,7 +21,7 @@ settings-noarg = { module = "com.russhwolf:multiplatform-settings-no-arg", versi
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
 
-window-size = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.3.0"
+window-size = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.3.1"
 color-picker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
 material-kolor = "com.materialkolor:material-kolor:1.2.6"
 
