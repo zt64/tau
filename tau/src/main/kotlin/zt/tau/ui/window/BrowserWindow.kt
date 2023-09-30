@@ -4,9 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
@@ -22,10 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.isCtrlPressed
-import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,16 +31,14 @@ import kotlinx.coroutines.launch
 import zt.tau.ui.component.FileItem
 import zt.tau.ui.component.PathBar
 import zt.tau.ui.component.SidePanel
-import zt.tau.ui.theme.settings
 import zt.tau.util.humanReadableSize
 import java.awt.Desktop
 import java.io.IOException
 import java.nio.file.Path
 import kotlin.io.path.*
 
-var currentLocation by mutableStateOf(Path("/"))
-var selectedFile by mutableStateOf(Path("/"))
-var colorTheme by mutableStateOf(settings.getString("colorScheme", defaultValue = "dark"))
+var currentLocation by mutableStateOf(Path("/"), referentialEqualityPolicy())
+var selectedFile by mutableStateOf(Path("/"), referentialEqualityPolicy())
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -54,15 +46,13 @@ fun BrowserWindow() {
     val snackbarData = remember { SnackbarHostState() }
 
     val scope = rememberCoroutineScope()
-    val watcher = remember {
-        KfsDirectoryWatcher(scope)
-    }
+    val watcher = remember { KfsDirectoryWatcher(scope) }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarData) }
+        snackbarHost = { SnackbarHost(snackbarData) },
     ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues),
         ) {
             val coroutineScope = rememberCoroutineScope()
 
@@ -105,16 +95,16 @@ fun BrowserWindow() {
             }
 
             Surface(
-                tonalElevation = 7.dp
+                tonalElevation = 7.dp,
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     FilledIconButton(
                         enabled = currentLocation.parent != null,
-                        onClick = { currentLocation = currentLocation.parent }
+                        onClick = { currentLocation = currentLocation.parent },
                     ) {
                         Icon(Icons.Default.ArrowUpward, null)
                     }
@@ -122,7 +112,7 @@ fun BrowserWindow() {
                     FilledTonalIconButton(
                         enabled = false,
                         onClick = {
-                        }
+                        },
                     ) {
                         Icon(Icons.Default.ArrowLeft, null)
                     }
@@ -130,7 +120,7 @@ fun BrowserWindow() {
                     FilledTonalIconButton(
                         enabled = false,
                         onClick = {
-                        }
+                        },
                     ) {
                         Icon(Icons.Default.ArrowRight, null)
                     }
@@ -138,7 +128,7 @@ fun BrowserWindow() {
                     PathBar(
                         modifier = Modifier.weight(1f, true),
                         location = currentLocation,
-                        onClickSegment = { path -> currentLocation = path }
+                        onClickSegment = { path -> currentLocation = path },
                     )
 
                     TextField(
@@ -154,7 +144,7 @@ fun BrowserWindow() {
                         colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
-                        )
+                        ),
                     )
                 }
             }
@@ -162,27 +152,27 @@ fun BrowserWindow() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
+                    .weight(1f),
             ) {
                 SidePanel()
 
                 Column(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
-                    val tabs = remember { mutableStateListOf<Path>(currentLocation, currentLocation) }
+                    val tabs = remember { mutableStateListOf(currentLocation) }
                     var selectedTab by remember { mutableStateOf(0) }
                     var scale by remember { mutableStateOf(78.dp) }
 
                     AnimatedVisibility(
                         visible = tabs.size > 1,
                         enter = expandVertically { it },
-                        exit = shrinkVertically { it }
+                        exit = shrinkVertically { it },
                     ) {
                         ScrollableTabRow(
                             modifier = Modifier.fillMaxWidth(),
                             selectedTabIndex = selectedTab,
                             containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
-                            edgePadding = 0.dp
+                            edgePadding = 0.dp,
                         ) {
                             tabs.forEachIndexed { index, title ->
                                 val interactionSource = remember { MutableInteractionSource() }
@@ -190,14 +180,14 @@ fun BrowserWindow() {
                                 Tab(
                                     selected = selectedTab == index,
                                     onClick = { selectedTab = index },
-                                    interactionSource = interactionSource
+                                    interactionSource = interactionSource,
                                 ) {
                                     Row(
                                         modifier = Modifier
                                             .height(40.dp)
                                             .padding(4.dp),
                                         horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                        verticalAlignment = Alignment.CenterVertically,
                                     ) {
                                         val isHovered by interactionSource.collectIsHoveredAsState()
 
@@ -206,17 +196,17 @@ fun BrowserWindow() {
                                             maxLines = 2,
                                             overflow = TextOverflow.Ellipsis,
                                             textAlign = TextAlign.Center,
-                                            modifier = Modifier.width(60.dp)
+                                            modifier = Modifier.width(60.dp),
                                         )
 
                                         IconButton(
                                             onClick = { tabs.removeAt(index) },
-                                            modifier = Modifier.width(20.dp)
+                                            modifier = Modifier.width(20.dp),
                                         ) {
                                             Icon(
                                                 modifier = Modifier.size(16.dp),
                                                 imageVector = Icons.Default.Close,
-                                                contentDescription = null
+                                                contentDescription = null,
                                             )
                                         }
                                     }
@@ -230,7 +220,7 @@ fun BrowserWindow() {
                             .weight(1f, true)
                             .onPointerEvent(
                                 eventType = PointerEventType.Scroll,
-                                pass = PointerEventPass.Initial
+                                pass = PointerEventPass.Initial,
                             ) { ev ->
                                 if (!ev.keyboardModifiers.isCtrlPressed) return@onPointerEvent
 
@@ -239,11 +229,11 @@ fun BrowserWindow() {
                         columns = GridCells.FixedSize(scale),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(12.dp)
+                        contentPadding = PaddingValues(12.dp),
                     ) {
                         items(
                             items = files,
-                            key = { it.name }
+                            key = { it.name },
                         ) { path ->
                             FileItem(
                                 modifier = Modifier
@@ -251,18 +241,24 @@ fun BrowserWindow() {
                                     .background(
                                         if (path == selectedFile) {
                                             MaterialTheme.colorScheme.onSurface.copy(
-                                                alpha = 0.25f
+                                                alpha = 0.25f,
                                             )
                                         } else {
                                             MaterialTheme.colorScheme.surface
-                                        }
+                                        },
                                     ),
                                 path = path,
                                 onClick = { selectedFile = path },
                                 onDoubleClick = {
                                     when {
                                         path.isDirectory() -> {
-                                            if (path.isReadable()) currentLocation = path
+                                            if (path.isReadable()) {
+                                                currentLocation = path
+                                            } else {
+                                                coroutineScope.launch {
+                                                    snackbarData.showSnackbar("No permission to read ${path.name}")
+                                                }
+                                            }
                                         }
 
                                         path.isRegularFile() -> {
@@ -281,13 +277,13 @@ fun BrowserWindow() {
                                             Desktop.getDesktop().open(path.toFile())
                                         }
                                     }
-                                }
+                                },
                             )
                         }
                     }
 
                     Surface(
-                        tonalElevation = 1.dp
+                        tonalElevation = 1.dp,
                     ) {
                         Row(
                             modifier = Modifier
@@ -295,20 +291,20 @@ fun BrowserWindow() {
                                 .padding(4.dp)
                                 .height(24.dp),
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             selectedFile.fileName?.let {
                                 Text(
                                     text = it.name,
                                     fontWeight = FontWeight.Bold,
-                                    overflow = TextOverflow.Ellipsis
+                                    overflow = TextOverflow.Ellipsis,
                                 )
                                 Spacer(Modifier.width(16.dp))
                             }
 
-                            Text("Size: " + selectedFile.toFile().humanReadableSize())
+                            Text("Size: ${selectedFile.toFile().humanReadableSize()}")
                             Spacer(Modifier.weight(1f, true))
-                            Text("${files.count()} items")
+                            Text("${files.size} items")
                         }
                     }
                 }

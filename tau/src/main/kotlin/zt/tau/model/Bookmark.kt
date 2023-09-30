@@ -1,11 +1,10 @@
 package zt.tau.model
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import java.nio.file.Path
 import kotlin.io.path.name
 
+@Stable
 data class Bookmark(val path: Path, val name: String = path.name) {
     var displayName by mutableStateOf(name)
 }

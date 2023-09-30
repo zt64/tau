@@ -1,5 +1,6 @@
 package zt.tau.ui.component
 
+import androidx.compose.foundation.ContextMenuArea
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
@@ -46,9 +47,7 @@ fun PathBar(
         item {
             FilledTonalButton(
                 shape = RoundedCornerShape(16.dp),
-                onClick = {
-                    onClickSegment(rootPath)
-                }
+                onClick = { onClickSegment(rootPath) }
             ) {
                 Icon(
                     imageVector = Icons.Default.Storage,
@@ -63,16 +62,22 @@ fun PathBar(
             items = segments,
             key = { index, _ -> index }
         ) { _, segment ->
-            FilledTonalButton(
-                shape = RoundedCornerShape(16.dp),
-                onClick = { // this could be cleaner probably
-                    onClickSegment(Path(currentLocation.toString().substringBefore(segment) + segment))
+            ContextMenuArea(
+                items = {
+                    listOf()
                 }
             ) {
-                Text(
-                    text = segment,
-                    overflow = TextOverflow.Ellipsis
-                )
+                FilledTonalButton(
+                    shape = RoundedCornerShape(16.dp),
+                    onClick = { // this could be cleaner probably
+                        onClickSegment(Path(currentLocation.toString().substringBefore(segment) + segment))
+                    }
+                ) {
+                    Text(
+                        text = segment,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
     }

@@ -15,25 +15,20 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.rememberWindowState
+import zt.tau.R
 import zt.tau.util.creationTime
 import zt.tau.util.humanFriendly
 import zt.tau.util.humanReadableSize
 import zt.tau.util.rememberVectorPainter
 import java.nio.file.Path
-import kotlin.io.path.getOwner
-import kotlin.io.path.isExecutable
-import kotlin.io.path.name
-import kotlin.io.path.pathString
+import kotlin.io.path.*
+import kotlin.text.contains
 
-private enum class Tab(
-    val label: String,
-    val icon: ImageVector
-) {
-    DETAILS("Details", Icons.Default.Info),
-    PERMISSIONS("Permissions", Icons.Default.Lock)
+private enum class Tab(val label: String, val icon: ImageVector) {
+    DETAILS(R.strings.DETAILS, Icons.Default.Info),
+    PERMISSIONS(R.strings.PERMISSIONS, Icons.Default.Lock)
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PropertiesWindow(
     path: Path,

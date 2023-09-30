@@ -14,5 +14,5 @@ private class EntryPoint : CliktCommand() {
         canBeFile = false
     ).optional()
 
-    override fun run() = tau()
+    override fun run() = tau(path)
 }

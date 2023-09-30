@@ -3,10 +3,9 @@ kotlin = "1.9.10"
 compose = "1.5.2"
 multiplatformsettings = "1.0.0"
 dbus-java = "4.3.0"
-compose-icons = "1.1.0"
 moko-resources = "0.23.0"
-
 ktlint = "11.6.0"
+voyager = "1.0.0-rc05"
 
 [libraries]
 clikt = "com.github.ajalt.clikt:clikt:4.2.0"
@@ -18,15 +17,26 @@ tika-core = "org.apache.tika:tika-core:2.9.0"
 settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformsettings" }
 settings-noarg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformsettings" }
 
-compose-icons = { module = "br.com.devsrsouza.compose.icons:font-awesome", version.ref = "compose-icons" }
-
 # moko-resources
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
 
-ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.2.3" }
+window-size = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.3.0"
+color-picker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
+material-kolor = "com.materialkolor:material-kolor:1.2.6"
 
+ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.2.3" }
 kfswatch = { module = "io.github.irgaly.kfswatch:kfswatch", version = "1.0.0" }
+coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
+
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
+voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
+
+
+koin-compose = "io.insert-koin:koin-compose:1.1.0"
+koin-core = "io.insert-koin:koin-core:3.5.0"
 
 [bundles]
 dbus-java = ["dbus-java-core", "dbus-java-transport-native-unixsocket"]
@@ -35,6 +45,7 @@ moko-resources = ["moko-resources", "moko-resources-compose"]
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }
 

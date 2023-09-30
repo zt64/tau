@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import zt.tau.model.Bookmark
 import zt.tau.ui.component.sidepanel.Bookmark
 import zt.tau.ui.window.currentLocation
 import java.io.File
@@ -33,7 +34,7 @@ fun SidePanel() {
                 key = { it.hashCode() }
             ) {
                 Bookmark(
-                    zt.tau.model.Bookmark(it.toPath(), it.absolutePath),
+                    data = Bookmark(it.toPath(), it.absolutePath),
                     icon = Icons.Default.Storage,
                     onClick = {
                         currentLocation = it.toPath()

@@ -1,54 +1,41 @@
-import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.compose)
-    alias(libs.plugins.resources)
     alias(libs.plugins.ktlint)
 }
 
 kotlin {
     jvmToolchain(17)
-
-    jvm()
-
-    sourceSets {
-        commonMain {
-            @OptIn(ExperimentalComposeLibrary::class)
-            dependencies {
-                implementation(compose.material3)
-                implementation(compose.desktop.currentOs)
-                implementation(compose.materialIconsExtended)
-                implementation(compose.desktop.components.splitPane)
-
-                implementation(libs.bundles.dbus.java)
-                implementation(libs.bundles.settings)
-
-                implementation(libs.clikt)
-                implementation(libs.tika.core)
-                implementation(libs.kfswatch)
-                implementation(libs.compose.icons)
-
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-
-                api(libs.bundles.moko.resources)
-            }
-        }
-
-        val jvmMain by getting {
-            dependsOn(commonMain.get())
-        }
-    }
 }
 
+@OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
 dependencies {
     ktlintRuleset(libs.ktlint.rules.compose)
-}
 
-multiplatformResources {
-    multiplatformResourcesPackage = "zt.tau"
-    multiplatformResourcesClassName = "R"
+    implementation(compose.material3)
+    implementation(compose.desktop.currentOs)
+    implementation(compose.desktop.components.splitPane)
+    implementation(compose.materialIconsExtended)
+
+    implementation(libs.coroutines.core)
+    implementation(libs.material.kolor)
+    implementation(libs.color.picker)
+    implementation(libs.window.size)
+
+    implementation(libs.clikt)
+    implementation(libs.tika.core)
+    implementation(libs.kfswatch)
+
+    implementation(libs.bundles.dbus.java)
+    implementation(libs.bundles.settings)
+
+    implementation(libs.koin.core)
+    implementation(libs.koin.compose)
+
+    implementation(libs.voyager.navigator)
+    implementation(libs.voyager.transitions)
 }
 
 compose.desktop.application {
@@ -64,7 +51,6 @@ compose.desktop.application {
             "java.instrument",
             "java.management",
             "java.prefs",
-            "jdk.unsupported",
         )
 
         targetFormats(TargetFormat.Deb, TargetFormat.Exe, TargetFormat.Msi)
