@@ -29,6 +29,7 @@ import zt.tau.di.managerModule
 import zt.tau.domain.manager.PreferencesManager
 import zt.tau.model.Theme
 import zt.tau.ui.window.BrowserWindow
+import zt.tau.ui.window.PreferencesWindow
 import java.awt.Dimension
 import java.nio.file.Path
 import javax.swing.UIManager
@@ -71,42 +72,8 @@ fun tau(path: Path?) {
                     title = "",
                     resizable = false
                 ) {
-                    Surface {
-                        Column(
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(IntrinsicSize.Max)
-                                    .padding(8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Switch(
-                                    checked = preferencesManager.theme == Theme.DARK,
-                                    onCheckedChange = {
-                                        preferencesManager.theme = if (it) Theme.DARK else Theme.LIGHT
-                                    }
-                                )
 
-                                Text(
-                                    modifier = Modifier.clickable {
-                                        preferencesManager.clear()
-                                    },
-                                    text = R.strings.DARK
-                                )
-                            }
-
-                            HarmonyColorPicker(
-                                modifier = Modifier.weight(1f, true),
-                                harmonyMode = ColorHarmonyMode.NONE,
-                                color = updatedHsvColor,
-                                onColorChanged = { updatedHsvColor = it },
-                                showBrightnessBar = false
-                            )
-                        }
-                    }
+                    PreferencesWindow()
 
                     Window(
                         title = "tau",
