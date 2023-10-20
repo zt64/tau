@@ -11,7 +11,7 @@ voyager = "1.0.0-rc07"
 clikt = "com.github.ajalt.clikt:clikt:4.2.1"
 dbus-java-core = { module = "com.github.hypfvieh:dbus-java-core", version.ref = "dbus-java" }
 dbus-java-transport-native-unixsocket = { module = "com.github.hypfvieh:dbus-java-transport-native-unixsocket", version.ref = "dbus-java" }
-tika-core = "org.apache.tika:tika-core:2.9.0"
+tika-core = "org.apache.tika:tika-core:2.9.1"
 
 # multiplatformsettings
 settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformsettings" }
