@@ -5,7 +5,7 @@ multiplatformsettings = "1.1.0"
 dbus-java = "4.3.1"
 moko-resources = "0.23.0"
 ktlint = "11.6.1"
-voyager = "1.0.0-rc07"
+voyager = "1.0.0-rc08"
 
 [libraries]
 clikt = "com.github.ajalt.clikt:clikt:4.2.1"
