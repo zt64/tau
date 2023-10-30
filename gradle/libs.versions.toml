@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.9.10"
+kotlin = "1.9.20"
 compose = "1.5.3"
 multiplatformsettings = "1.1.0"
 dbus-java = "4.3.1"
