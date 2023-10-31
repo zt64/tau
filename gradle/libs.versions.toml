@@ -23,7 +23,7 @@ moko-resources-compose = { module = "dev.icerock.moko:resources-compose", versio
 
 window-size = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.3.1"
 color-picker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
-material-kolor = "com.materialkolor:material-kolor:1.2.7"
+material-kolor = "com.materialkolor:material-kolor:1.2.8"
 
 ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.2.3" }
 kfswatch = { module = "io.github.irgaly.kfswatch:kfswatch", version = "1.0.0" }
