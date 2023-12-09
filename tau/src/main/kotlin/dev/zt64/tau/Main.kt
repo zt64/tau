@@ -73,7 +73,8 @@ fun tau(path: Path?) {
                         onCloseRequest = { preferencesWindowVisible = false },
                         state = prefsWindowState,
                         title = R.Strings.SETTINGS,
-                        resizable = true
+                        resizable = true,
+                        icon = painterResource("window-icon.svg"),
                     ) {
                         PreferencesWindow()
                     }
