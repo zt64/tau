@@ -54,8 +54,11 @@ fun tau(path: Path?) {
             }
         ) {
             val windowState = rememberWindowState()
+            val prefsWindowState = rememberWindowState()
 
             val preferencesManager = koinInject<PreferencesManager>()
+
+            var preferencesWindowVisible by remember { mutableStateOf(false) }
 
             val updatedHsvColor by remember(preferencesManager.color) {
                 mutableStateOf(HsvColor.from(Color(preferencesManager.color)))
@@ -66,16 +69,16 @@ fun tau(path: Path?) {
                 useDarkTheme = preferencesManager.theme == Theme.DARK,
                 animationSpec = tween()
             ) {
-                DialogWindow(
-                    onCloseRequest = {},
-                    state = rememberDialogState(size = DpSize(120.dp, 240.dp)),
-                    title = "",
-                    resizable = false
-                ) {
-                    PreferencesWindow()
-
+                if (preferencesWindowVisible) {
+                    Window(
+                        onCloseRequest = { preferencesWindowVisible = false },
+                        state = prefsWindowState,
+                        title = R.Strings.SETTINGS,
+                        resizable = true
+                    ) {
+                        PreferencesWindow()
+                    }
                 }
-
                 Window(
                     title = "tau",
                     icon = painterResource("window-icon.svg"),
@@ -117,7 +120,17 @@ fun tau(path: Path?) {
 
                                             }
                                         )
+                                        DropdownMenuItem(
+                                            text = {
+                                                Text(R.Strings.SETTINGS)
+                                            },
+                                            onClick = {
+                                                preferencesWindowVisible = true
+                                                showFileDialog = false
+                                            }
+                                        )
                                     }
+
                                 }
 
                                 Box {

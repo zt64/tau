@@ -54,7 +54,7 @@ fun PreferencesWindow() {
                     .copy(value = 1f), // else every color becomes 0,0,0
                 onColorChanged = {
                     preferencesManager.color =
-                        it.toColor().toArgb() // TODO: This doesn't make the main window recompose!
+                        it.toColor().toArgb()
                 },
                 showBrightnessBar = false
             )
