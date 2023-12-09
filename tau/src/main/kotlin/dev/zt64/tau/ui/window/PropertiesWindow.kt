@@ -19,13 +19,14 @@ import dev.zt64.tau.util.creationTime
 import dev.zt64.tau.util.humanFriendly
 import dev.zt64.tau.util.humanReadableSize
 import dev.zt64.tau.util.rememberVectorPainter
+import dev.zt64.tau.R
 import java.nio.file.Path
 import kotlin.io.path.*
 import kotlin.text.contains
 
 private enum class Tab(val label: String, val icon: ImageVector) {
-    DETAILS(dev.zt64.tau.R.strings.DETAILS, Icons.Default.Info),
-    PERMISSIONS(dev.zt64.tau.R.strings.PERMISSIONS, Icons.Default.Lock)
+    DETAILS(R.strings.DETAILS, Icons.Default.Info),
+    PERMISSIONS(R.strings.PERMISSIONS, Icons.Default.Lock)
 }
 
 @Composable
