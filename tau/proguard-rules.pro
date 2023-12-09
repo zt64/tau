@@ -1,7 +1,7 @@
 -keepattributes Signature,LineNumberTable
 
--keep,includedescriptorclasses,allowoptimization class zt.tau.** { public protected *; }
--keep class zt.tau.MainKt {
+-keep,includedescriptorclasses,allowoptimization class dev.zt64.tau.** { public protected *; }
+-keep class dev.zt64.tau.MainKt {
     public static void main(java.lang.String[]);
 }
 -keep class 'module-info'

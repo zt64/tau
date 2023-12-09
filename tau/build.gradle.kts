@@ -35,11 +35,12 @@ dependencies {
     implementation(libs.koin.compose)
 
     implementation(libs.voyager.navigator)
+    implementation(libs.voyager.koin)
     implementation(libs.voyager.transitions)
 }
 
 compose.desktop.application {
-    mainClass = "zt.tau.MainKt"
+    mainClass = "dev.zt64.tau.MainKt"
 
     nativeDistributions {
         packageName = "tau"

@@ -1,7 +1,7 @@
 [versions]
-kotlin = "1.9.20"
-compose = "1.5.10"
-multiplatformsettings = "1.1.0"
+kotlin = "2.0.0-Beta1"
+compose = "1.6.0-alpha01"
+settings = "1.1.1"
 dbus-java = "4.3.1"
 moko-resources = "0.23.0"
 ktlint = "12.0.2"
@@ -14,8 +14,8 @@ dbus-java-transport-native-unixsocket = { module = "com.github.hypfvieh:dbus-jav
 tika-core = "org.apache.tika:tika-core:2.9.1"
 
 # multiplatformsettings
-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformsettings" }
-settings-noarg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformsettings" }
+settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "settings" }
+settings-noarg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "settings" }
 
 # moko-resources
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
@@ -33,7 +33,6 @@ voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.
 voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
-
 
 koin-compose = "io.insert-koin:koin-compose:1.1.0"
 koin-core = "io.insert-koin:koin-core:3.5.0"
