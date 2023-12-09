@@ -18,10 +18,10 @@ import dev.zt64.tau.model.Theme
 import org.koin.compose.koinInject
 
 @Composable
-fun ColorSchemePicker() {
+fun ColorSchemePicker(modifier: Modifier) {
     val preferencesManager = koinInject<PreferencesManager>()
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier
     ) {
         Row(
             modifier = Modifier
@@ -44,7 +44,7 @@ fun ColorSchemePicker() {
         }
 
         HarmonyColorPicker(
-            modifier = Modifier.weight(1f, true),
+            modifier = Modifier.fillMaxSize(),
             harmonyMode = ColorHarmonyMode.NONE,
             color = HsvColor.from(Color(preferencesManager.color))
                 .copy(value = 1f), // else every color becomes 0,0,0
