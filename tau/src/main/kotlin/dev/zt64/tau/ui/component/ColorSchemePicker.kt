@@ -18,7 +18,7 @@ import dev.zt64.tau.model.Theme
 import org.koin.compose.koinInject
 
 @Composable
-fun ColorSchemePicker(modifier: Modifier) {
+fun ColorSchemePicker(modifier: Modifier = Modifier) {
     val preferencesManager = koinInject<PreferencesManager>()
     Column(
         modifier = modifier
@@ -39,7 +39,7 @@ fun ColorSchemePicker(modifier: Modifier) {
             )
 
             Text(
-                text = R.strings.DARK
+                text = R.strings.DARKTHEME
             )
         }
 

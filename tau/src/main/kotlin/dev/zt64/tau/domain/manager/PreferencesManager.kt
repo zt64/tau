@@ -10,4 +10,7 @@ class PreferencesManager : BasePreferenceManager(Settings()) {
     var color: Int by preference(0x1ed760) // Spotify green
     var viewMode: ViewMode by preference(ViewMode.GRID)
     var scale: Int by preference(78)
+
+    var maxNameLines: Int by preference(2)
+    var truncateNames: Boolean by preference(true)
 }

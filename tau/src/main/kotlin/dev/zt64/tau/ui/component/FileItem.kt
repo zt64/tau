@@ -21,12 +21,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.R
+import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.util.contains
 import dev.zt64.tau.util.copyToClipboard
 import dev.zt64.ui.window.PropertiesWindow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.apache.tika.Tika
+import org.koin.compose.koinInject
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.io.File
@@ -44,6 +46,7 @@ fun FileItem(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 ) {
     var showProperties by remember { mutableStateOf(false) }
+    val preferencesManager = koinInject<PreferencesManager>()
 
     if (showProperties) {
         PropertiesWindow(
@@ -192,8 +195,16 @@ fun FileItem(
                 Text(
                     text = path.name,
                     textAlign = TextAlign.Center,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 3,
+                    overflow = if (preferencesManager.truncateNames) {
+                        TextOverflow.Ellipsis
+                    } else {
+                        TextOverflow.Visible
+                    },
+                    maxLines = if (preferencesManager.truncateNames) {
+                        preferencesManager.maxNameLines
+                    } else {
+                        999
+                    },
                     style = MaterialTheme.typography.labelMedium.copy(
                         shadow = Shadow(
                             color = MaterialTheme.colorScheme.outline,

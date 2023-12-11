@@ -13,6 +13,7 @@ object R {
         const val PASTE = "Paste"
         const val DELETE = "Delete"
 
+        const val DARKTHEME = "Use dark theme"
         const val DARK = "Dark"
         const val LIGHT = "Light"
 
@@ -28,5 +29,8 @@ object R {
         const val PROPERTIES = "Properties"
         const val DETAILS = "Details"
         const val PERMISSIONS = "Permissions"
+
+        const val TRUNCATEFILES = "Truncate long file names"
+        const val TRUNCATELINES = "lines"
     }
 }
