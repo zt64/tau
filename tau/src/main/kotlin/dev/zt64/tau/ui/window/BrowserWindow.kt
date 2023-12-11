@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
+import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.ui.component.FileItem
 import dev.zt64.tau.ui.component.SidePanel
 import dev.zt64.tau.ui.component.Toolbar
@@ -32,6 +33,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.splitpane.ExperimentalSplitPaneApi
 import org.jetbrains.compose.splitpane.HorizontalSplitPane
 import org.jetbrains.compose.splitpane.rememberSplitPaneState
+import org.koin.compose.koinInject
 import java.io.File
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
@@ -40,6 +42,7 @@ import kotlin.io.path.name
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalSplitPaneApi::class)
 @Composable
 fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
+    val preferencesManager = koinInject<PreferencesManager>()
     Scaffold(
         snackbarHost = { SnackbarHost(state.snackbarHostState) },
     ) { paddingValues ->
@@ -94,7 +97,7 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
 
                 second {
                     Column {
-                        var scale by rememberSaveable { mutableStateOf(78.dp) }
+                        var scale by rememberSaveable { mutableStateOf(preferencesManager.scale) }
 
                         TabsRow(state)
 
@@ -107,14 +110,18 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
                                 ) { ev ->
                                     if (!ev.keyboardModifiers.isCtrlPressed) return@onPointerEvent
 
-                                    scale += ev.changes.first().scrollDelta.y.dp
+                                    scale += ev.changes.first().scrollDelta.y.toInt()
+                                    if (scale <= 2) {
+                                        scale = 2
+                                    }
+                                    preferencesManager.scale = scale
                                 }
                                 .clickable(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null,
                                     onClick = state::clickGrid,
                                 ),
-                            columns = GridCells.FixedSize(scale),
+                            columns = GridCells.FixedSize(scale.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             contentPadding = PaddingValues(12.dp),

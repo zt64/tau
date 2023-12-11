@@ -9,4 +9,5 @@ class PreferencesManager : BasePreferenceManager(Settings()) {
     var theme: Theme by preference(Theme.DARK)
     var color: Int by preference(0x1ed760) // Spotify green
     var viewMode: ViewMode by preference(ViewMode.GRID)
+    var scale: Int by preference(78)
 }
