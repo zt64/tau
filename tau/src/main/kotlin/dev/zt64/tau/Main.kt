@@ -24,7 +24,7 @@ import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.Theme
 import dev.zt64.tau.ui.component.MiniTextButton
 import dev.zt64.tau.ui.window.BrowserWindow
-import dev.zt64.tau.ui.window.preferences.AppearancePreferences
+import dev.zt64.tau.ui.window.preferences.ParentWindow
 import org.jetbrains.skiko.setSystemLookAndFeel
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
@@ -76,7 +76,7 @@ fun tau(path: Path?) {
                         resizable = true,
                         icon = painterResource("window-icon.svg"),
                     ) {
-                        AppearancePreferences()
+                        ParentWindow()
                     }
                 }
                 Window(

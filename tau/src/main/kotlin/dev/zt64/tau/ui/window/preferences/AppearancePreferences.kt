@@ -39,7 +39,7 @@ fun AppearancePreferences() {
                 )
             }
             if (preferencesManager.truncateNames) {
-                TODO("Numerical input for lines to truncate")
+                //TODO Numerical input for lines to truncate
             }
 
         }
