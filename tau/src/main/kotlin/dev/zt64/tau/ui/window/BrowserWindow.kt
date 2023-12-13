@@ -18,15 +18,12 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import dev.zt64.tau.domain.manager.PreferencesManager
-import dev.zt64.tau.ui.component.FileItem
-import dev.zt64.tau.ui.component.SidePanel
-import dev.zt64.tau.ui.component.Toolbar
+import dev.zt64.tau.ui.component.*
 import dev.zt64.tau.ui.state.BrowserState
 import dev.zt64.tau.ui.state.rememberBrowserState
 import dev.zt64.tau.ui.viewmodel.BrowserScreenModel
 import dev.zt64.tau.util.humanReadableSize
 import dev.zt64.tau.util.moveTo
-import dev.zt64.ui.component.TabsRow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -37,7 +34,6 @@ import org.koin.compose.koinInject
 import java.io.File
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
-
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalSplitPaneApi::class)
 @Composable

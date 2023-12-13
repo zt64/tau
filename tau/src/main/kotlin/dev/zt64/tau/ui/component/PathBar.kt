@@ -1,17 +1,14 @@
-package dev.zt64.ui.component
+package dev.zt64.tau.ui.component
 
 import androidx.compose.foundation.ContextMenuArea
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.TooltipArea
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Storage
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -23,6 +20,7 @@ import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun PathBar(
     state: BrowserState,
@@ -47,7 +45,7 @@ fun PathBar(
     ) {
         item {
             FilledTonalButton(
-                shape = RoundedCornerShape(16.dp),
+                shape = MaterialTheme.shapes.large,
                 onClick = { onClickSegment(rootPath) }
             ) {
                 Icon(
@@ -63,21 +61,38 @@ fun PathBar(
             items = segments,
             key = { index, _ -> index }
         ) { _, segment ->
-            ContextMenuArea(
-                items = {
-                    listOf()
+            val fullPath = remember {
+                Path(state.currentLocation.toString().substringBefore(segment) + segment)
+            }
+
+            TooltipArea(
+                tooltip = {
+                    Surface(
+                        shape = MaterialTheme.shapes.medium,
+                        tonalElevation = 6.dp,
+                        shadowElevation = 4.dp
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(10.dp),
+                            text = fullPath.absolutePathString()
+                        )
+                    }
                 }
             ) {
-                FilledTonalButton(
-                    shape = RoundedCornerShape(16.dp),
-                    onClick = { // this could be cleaner probably
-                        onClickSegment(Path(state.currentLocation.toString().substringBefore(segment) + segment))
+                ContextMenuArea(
+                    items = {
+                        listOf()
                     }
                 ) {
-                    Text(
-                        text = segment,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    FilledTonalButton(
+                        shape = MaterialTheme.shapes.large,
+                        onClick = { onClickSegment(fullPath) }
+                    ) {
+                        Text(
+                            text = segment,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             }
         }

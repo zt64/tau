@@ -1,4 +1,4 @@
-package dev.zt64.ui.component
+package dev.zt64.tau.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically

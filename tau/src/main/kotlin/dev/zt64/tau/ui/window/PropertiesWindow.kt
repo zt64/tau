@@ -1,4 +1,4 @@
-package dev.zt64.ui.window
+package dev.zt64.tau.ui.window
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
@@ -15,11 +15,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.rememberWindowState
+import dev.zt64.tau.R
 import dev.zt64.tau.util.creationTime
 import dev.zt64.tau.util.humanFriendly
 import dev.zt64.tau.util.humanReadableSize
 import dev.zt64.tau.util.rememberVectorPainter
-import dev.zt64.tau.R
 import java.nio.file.Path
 import kotlin.io.path.*
 import kotlin.text.contains

@@ -15,7 +15,9 @@ dependencies {
     ktlintRuleset(libs.ktlint.rules.compose)
 
     implementation(compose.material3)
-    implementation(compose.desktop.currentOs)
+    implementation(compose.desktop.currentOs) {
+        exclude(group = "org.jetbrains.compose.material", module = "material")
+    }
     implementation(compose.desktop.components.splitPane)
     implementation(compose.materialIconsExtended)
 

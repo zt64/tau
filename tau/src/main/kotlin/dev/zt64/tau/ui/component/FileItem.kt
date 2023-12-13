@@ -5,6 +5,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Link
@@ -18,13 +19,12 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.R
 import dev.zt64.tau.domain.manager.PreferencesManager
+import dev.zt64.tau.ui.window.PropertiesWindow
 import dev.zt64.tau.util.contains
 import dev.zt64.tau.util.copyToClipboard
-import dev.zt64.ui.window.PropertiesWindow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.apache.tika.Tika
@@ -192,26 +192,44 @@ fun FileItem(
                     }
                 }
 
-                Text(
-                    text = path.name,
-                    textAlign = TextAlign.Center,
-                    overflow = if (preferencesManager.truncateNames) {
-                        TextOverflow.Ellipsis
-                    } else {
-                        TextOverflow.Visible
-                    },
-                    maxLines = if (preferencesManager.truncateNames) {
+                var fileName by remember(path) {
+                    mutableStateOf(path.name)
+                }
+
+                var renaming by remember { mutableStateOf(true) }
+
+                BasicTextField(
+                    modifier = Modifier,
+                    readOnly = !renaming,
+                    value = fileName,
+                    // textAlign = TextAlign.Center,
+                    // overflow = if (preferencesManager.truncateNames) {
+                    //     TextOverflow.Ellipsis
+                    // } else {
+                    //     TextOverflow.Visible
+                    // },
+                    maxLines = if (preferencesManager.truncateNames && !renaming) {
                         preferencesManager.maxNameLines
                     } else {
-                        999
+                        Int.MAX_VALUE
                     },
-                    style = MaterialTheme.typography.labelMedium.copy(
+                    textStyle = MaterialTheme.typography.labelMedium.copy(
+                        color = LocalContentColor.current,
                         shadow = Shadow(
                             color = MaterialTheme.colorScheme.outline,
                             offset = Offset.Zero,
                             blurRadius = 0.75f
-                        )
-                    )
+                        ),
+                        textAlign = TextAlign.Center,
+                    ),
+                    onValueChange = {
+                        // ensure that the file name is valid
+                        if (it.contains(Regex("[\\\\/:*?\"<>|]"))) {
+                            fileName = it
+                        }
+
+
+                    }
                 )
             }
         }

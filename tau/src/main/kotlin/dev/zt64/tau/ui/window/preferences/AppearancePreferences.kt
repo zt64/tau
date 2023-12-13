@@ -3,7 +3,6 @@ package dev.zt64.tau.ui.window.preferences
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -15,11 +14,13 @@ import org.koin.compose.koinInject
 @Composable
 fun AppearancePreferences() {
     val preferencesManager = koinInject<PreferencesManager>()
-    Surface (
+    Surface(
         modifier = Modifier.fillMaxSize()
     ) {
-        Column () {
-            Row() { ColorSchemePicker(modifier = Modifier.fillMaxSize(0.5f)) }
+        Column {
+            Row {
+                ColorSchemePicker(modifier = Modifier.fillMaxSize(0.5f))
+            }
             Divider()
             Row(
                 modifier = Modifier
@@ -39,11 +40,8 @@ fun AppearancePreferences() {
                 )
             }
             if (preferencesManager.truncateNames) {
-                //TODO Numerical input for lines to truncate
+                // TODO Numerical input for lines to truncate
             }
-
         }
-
     }
-
 }
