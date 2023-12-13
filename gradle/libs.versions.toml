@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.0.0-Beta1"
-compose = "1.6.0-dev1334"
+compose = "1.6.0-alpha01"
 settings = "1.1.1"
 dbus-java = "4.3.1"
 moko-resources = "0.23.0"
