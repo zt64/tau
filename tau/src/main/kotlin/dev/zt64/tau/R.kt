@@ -32,5 +32,8 @@ object R {
 
         const val TRUNCATEFILES = "Truncate long file names"
         const val TRUNCATELINES = "lines"
+
+        const val APPEARANCE = "Appearance"
+        const val BEHAVIOR = "Behavior"
     }
 }

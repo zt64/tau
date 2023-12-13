@@ -1,47 +1,65 @@
 package dev.zt64.tau.ui.window.preferences
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.splitpane.ExperimentalSplitPaneApi
-import org.jetbrains.compose.splitpane.HorizontalSplitPane
-import org.jetbrains.compose.splitpane.rememberSplitPaneState
+import dev.zt64.tau.R
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.*
 
-@OptIn(ExperimentalSplitPaneApi::class)
+
+private enum class SettingsPage(val label: String, val icon: ImageVector) {
+    APPEARANCE(R.strings.APPEARANCE, Icons.Default.Palette),
+    BEHAVIOR(R.strings.BEHAVIOR, Icons.Default.Settings)
+}
+
 @Composable
 fun ParentWindow() {
-    HorizontalSplitPane(
-        modifier = Modifier.fillMaxWidth(),
-        splitPaneState = rememberSplitPaneState(0.2f, moveEnabled = false)
-    ) {
-        first {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                tonalElevation = 4.dp
+
+    var selectedCategory by remember {
+        mutableStateOf(SettingsPage.APPEARANCE)
+    }
+
+    PermanentNavigationDrawer(
+        drawerContent = {
+            PermanentDrawerSheet (
+                modifier = Modifier.width(240.dp)
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.Top
-                ) {
-                    ListItem(
-                        modifier = Modifier.fillMaxWidth(),
-                        headlineContent = {
-                            Text(
-                                text = "Hi"
+                SettingsPage.values().forEach {
+                    NavigationDrawerItem(
+                        icon = { Icon(it.icon, "") },
+                        label = { Text(text = it.label) },
+                        selected = selectedCategory == it,
+                        onClick = {
+                            selectedCategory = it;
+                        },
+                        modifier = Modifier.padding(
+                            PaddingValues(
+                                start = 16.dp,
+                                top = 16.dp,
+                                end = 16.dp,
+                                bottom = 0.dp
                             )
-                        }
+                        )
                     )
                 }
             }
-        }
-        second {
-            AppearancePreferences()
+        },
+    ) {
+        when (selectedCategory) { // TODO: there has to be a better way without hardcoding :sob:
+            SettingsPage.APPEARANCE -> AppearancePreferences()
+            SettingsPage.BEHAVIOR -> BehaviorPreferences()
         }
     }
+}
+
+@Composable
+fun Placeholder() {
+    Surface (
+        modifier = Modifier.fillMaxSize()
+    ) {  }
 }
