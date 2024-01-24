@@ -35,7 +35,7 @@ voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", vers
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
 
 koin-compose = "io.insert-koin:koin-compose:1.1.0"
-koin-core = "io.insert-koin:koin-core:3.5.0"
+koin-core = "io.insert-koin:koin-core:3.5.3"
 
 [bundles]
 dbus-java = ["dbus-java-core", "dbus-java-transport-native-unixsocket"]
