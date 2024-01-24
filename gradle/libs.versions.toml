@@ -34,7 +34,7 @@ voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", v
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
 
-koin-compose = "io.insert-koin:koin-compose:1.1.0"
+koin-compose = "io.insert-koin:koin-compose:1.1.2"
 koin-core = "io.insert-koin:koin-core:3.5.0"
 
 [bundles]
