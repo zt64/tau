@@ -53,7 +53,7 @@ compose.desktop.application {
             "java.base",
             "java.instrument",
             "java.management",
-            "java.prefs",
+            "java.prefs"
         )
 
         targetFormats(TargetFormat.Deb, TargetFormat.Exe, TargetFormat.Msi)

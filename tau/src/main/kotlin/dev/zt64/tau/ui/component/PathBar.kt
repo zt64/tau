@@ -20,7 +20,7 @@ import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PathBar(
     state: BrowserState,
@@ -61,9 +61,10 @@ fun PathBar(
             items = segments,
             key = { index, _ -> index }
         ) { _, segment ->
-            val fullPath = remember {
-                Path(state.currentLocation.toString().substringBefore(segment) + segment)
-            }
+            val fullPath =
+                remember {
+                    Path(state.currentLocation.toString().substringBefore(segment) + segment)
+                }
 
             TooltipArea(
                 tooltip = {

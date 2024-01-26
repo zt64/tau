@@ -42,7 +42,7 @@ fun MiniTextButton(
     val tonalElevation = elevation?.tonalElevation(enabled, interactionSource)?.value ?: 0.dp
 
     CompositionLocalProvider(
-        LocalMinimumInteractiveComponentEnforcement provides false,
+        LocalMinimumInteractiveComponentEnforcement provides false
     ) {
         Surface(
             onClick = onClick,
@@ -63,8 +63,7 @@ fun MiniTextButton(
                             .defaultMinSize(
                                 minWidth = ButtonDefaults.MinWidth,
                                 minHeight = 28.dp
-                            )
-                            .padding(contentPadding),
+                            ).padding(contentPadding),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
                         content = content

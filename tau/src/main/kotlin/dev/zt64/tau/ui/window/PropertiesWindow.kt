@@ -24,7 +24,10 @@ import java.nio.file.Path
 import kotlin.io.path.*
 import kotlin.text.contains
 
-private enum class Tab(val label: String, val icon: ImageVector) {
+private enum class Tab(
+    val label: String,
+    val icon: ImageVector
+) {
     DETAILS(R.strings.DETAILS, Icons.Default.Info),
     PERMISSIONS(R.strings.PERMISSIONS, Icons.Default.Lock)
 }
@@ -40,7 +43,8 @@ fun PropertiesWindow(
         title = "${path.name} - Properties",
         icon = rememberVectorPainter(
             image = Icons.Default.Info,
-            tint = Color.White // TODO: respect dark mode
+            // TODO: respect dark mode
+            tint = Color.White
         ),
         state = windowState,
         onCloseRequest = onCloseRequest
@@ -122,7 +126,6 @@ private fun DetailsTab(path: Path) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PermissionsTab(path: Path) {
     val isWindows = remember { System.getProperty("os.name").contains("Windows") }

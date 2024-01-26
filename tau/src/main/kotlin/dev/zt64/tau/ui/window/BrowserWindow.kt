@@ -40,7 +40,7 @@ import kotlin.io.path.name
 fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
     val preferencesManager = koinInject<PreferencesManager>()
     Scaffold(
-        snackbarHost = { SnackbarHost(state.snackbarHostState) },
+        snackbarHost = { SnackbarHost(state.snackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -58,7 +58,7 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
                     dragData.readFiles().forEach { path ->
                         File(path).moveTo(currentLocation)
                     }
-                },
+                }
         ) {
             val watcher = state.watcher
 
@@ -102,29 +102,33 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
                                 .weight(1f, true)
                                 .onPointerEvent(
                                     eventType = PointerEventType.Scroll,
-                                    pass = PointerEventPass.Initial,
+                                    pass = PointerEventPass.Initial
                                 ) { ev ->
                                     if (!ev.keyboardModifiers.isCtrlPressed) return@onPointerEvent
 
-                                    scale += ev.changes.first().scrollDelta.y.toInt()
+                                    scale += ev
+                                        .changes
+                                        .first()
+                                        .scrollDelta
+                                        .y
+                                        .toInt()
                                     if (scale <= 2) {
                                         scale = 2
                                     }
                                     preferencesManager.scale = scale
-                                }
-                                .clickable(
+                                }.clickable(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null,
-                                    onClick = state::clickGrid,
+                                    onClick = state::clickGrid
                                 ),
                             columns = GridCells.FixedSize(scale.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(12.dp),
+                            contentPadding = PaddingValues(12.dp)
                         ) {
                             items(
                                 items = state.files,
-                                key = { it.name },
+                                key = { it.name }
                             ) { path ->
                                 FileItem(
                                     modifier = Modifier
@@ -134,12 +138,12 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
                                                 MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
                                             } else {
                                                 MaterialTheme.colorScheme.surface
-                                            },
+                                            }
                                         ),
                                     selected = path == state.selectedFile,
                                     path = path,
                                     onClick = { state.selectedFile = path },
-                                    onDoubleClick = { state.doubleClick(path) },
+                                    onDoubleClick = { state.doubleClick(path) }
                                 )
                             }
                         }
@@ -155,7 +159,7 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
 @Composable
 fun StatusBar(state: BrowserState) {
     Surface(
-        tonalElevation = 1.dp,
+        tonalElevation = 1.dp
     ) {
         state.selectedFile?.let { selectedFile ->
             Row(
@@ -163,12 +167,12 @@ fun StatusBar(state: BrowserState) {
                     .fillMaxWidth()
                     .padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = selectedFile.name,
                     fontWeight = FontWeight.Bold,
-                    overflow = TextOverflow.Ellipsis,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Spacer(Modifier.width(16.dp))
 
@@ -184,7 +188,5 @@ class Browser : Screen {
     @Composable
     override fun Content() {
         val screenModel = getScreenModel<BrowserScreenModel>()
-
-
     }
 }

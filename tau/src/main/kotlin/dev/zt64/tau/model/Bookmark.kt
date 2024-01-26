@@ -5,6 +5,9 @@ import java.nio.file.Path
 import kotlin.io.path.name
 
 @Stable
-data class Bookmark(val path: Path, val name: String = path.name) {
+data class Bookmark(
+    val path: Path,
+    val name: String = path.name
+) {
     var displayName by mutableStateOf(name)
 }

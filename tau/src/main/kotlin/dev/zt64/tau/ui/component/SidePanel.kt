@@ -27,7 +27,6 @@ fun SidePanel(state: BrowserState) {
     ) {
         val roots = remember { File.listRoots() }
 
-
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {

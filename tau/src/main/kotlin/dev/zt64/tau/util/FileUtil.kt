@@ -6,8 +6,10 @@ import java.nio.file.Path
 import java.nio.file.attribute.BasicFileAttributes
 import java.time.Instant
 
-
-fun File.moveTo(file: File, overwrite: Boolean = false) {
+fun File.moveTo(
+    file: File,
+    overwrite: Boolean = false
+) {
     try {
         copyTo(file, overwrite)
         deleteRecursively()

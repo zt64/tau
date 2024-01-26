@@ -11,7 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.*
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.optional
@@ -34,11 +36,12 @@ import java.nio.file.Path
 fun main(args: Array<String>) = EntryPoint().main(args)
 
 private class EntryPoint : CliktCommand() {
-    val path by argument().path(
-        mustExist = true,
-        mustBeReadable = true,
-        canBeFile = false
-    ).optional()
+    val path by argument()
+        .path(
+            mustExist = true,
+            mustBeReadable = true,
+            canBeFile = false
+        ).optional()
 
     override fun run() = tau(path)
 }
@@ -74,7 +77,7 @@ fun tau(path: Path?) {
                         state = prefsWindowState,
                         title = R.Strings.SETTINGS,
                         resizable = true,
-                        icon = painterResource("window-icon.svg"),
+                        icon = painterResource("window-icon.svg")
                     ) {
                         ParentWindow()
                     }
@@ -91,7 +94,7 @@ fun tau(path: Path?) {
 
                     Column {
                         Surface(
-                            tonalElevation = 0.dp,
+                            tonalElevation = 0.dp
                         ) {
                             Row(
                                 modifier = Modifier
@@ -117,7 +120,6 @@ fun tau(path: Path?) {
                                                 Text(R.Strings.COPY)
                                             },
                                             onClick = {
-
                                             }
                                         )
                                         DropdownMenuItem(
@@ -130,7 +132,6 @@ fun tau(path: Path?) {
                                             }
                                         )
                                     }
-
                                 }
 
                                 Box {
@@ -151,7 +152,6 @@ fun tau(path: Path?) {
                                                 Text(R.Strings.COPY)
                                             },
                                             onClick = {
-
                                             }
                                         )
                                     }
@@ -175,7 +175,6 @@ fun tau(path: Path?) {
                                                 Text(R.Strings.COPY)
                                             },
                                             onClick = {
-
                                             }
                                         )
                                     }

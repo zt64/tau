@@ -1,32 +1,33 @@
 package dev.zt64.tau.ui.window.preferences
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.R
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.*
 
-
-private enum class SettingsPage(val label: String, val icon: ImageVector) {
+private enum class SettingsPage(
+    val label: String,
+    val icon: ImageVector
+) {
     APPEARANCE(R.strings.APPEARANCE, Icons.Default.Palette),
     BEHAVIOR(R.strings.BEHAVIOR, Icons.Default.Settings)
 }
 
 @Composable
 fun ParentWindow() {
-
     var selectedCategory by remember {
         mutableStateOf(SettingsPage.APPEARANCE)
     }
 
     PermanentNavigationDrawer(
         drawerContent = {
-            PermanentDrawerSheet (
+            PermanentDrawerSheet(
                 modifier = Modifier.width(240.dp)
             ) {
                 SettingsPage.values().forEach {
@@ -35,7 +36,7 @@ fun ParentWindow() {
                         label = { Text(text = it.label) },
                         selected = selectedCategory == it,
                         onClick = {
-                            selectedCategory = it;
+                            selectedCategory = it
                         },
                         modifier = Modifier.padding(
                             PaddingValues(
@@ -48,7 +49,7 @@ fun ParentWindow() {
                     )
                 }
             }
-        },
+        }
     ) {
         when (selectedCategory) { // TODO: there has to be a better way without hardcoding :sob:
             SettingsPage.APPEARANCE -> AppearancePreferences()
@@ -59,7 +60,7 @@ fun ParentWindow() {
 
 @Composable
 fun Placeholder() {
-    Surface (
+    Surface(
         modifier = Modifier.fillMaxSize()
-    ) {  }
+    ) { }
 }

@@ -7,13 +7,19 @@ import java.awt.datatransfer.ClipboardOwner
 import java.awt.datatransfer.Transferable
 
 enum class OperatingSystem {
-    WINDOWS, LINUX, MAC, SOLARIS, UNKNOWN
+    WINDOWS,
+    LINUX,
+    MAC,
+    SOLARIS,
+    UNKNOWN
 }
 
 val ClipboardManager.systemClipboard: Clipboard by lazy { Toolkit.getDefaultToolkit().systemClipboard }
 
-fun ClipboardManager.setContents(content: Transferable, owner: ClipboardOwner?) =
-    systemClipboard.setContents(content, owner)
+fun ClipboardManager.setContents(
+    content: Transferable,
+    owner: ClipboardOwner?
+) = systemClipboard.setContents(content, owner)
 
 fun getOperatingSystem(): OperatingSystem {
     val os = System.getProperty("os.name").lowercase()

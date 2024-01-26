@@ -31,7 +31,8 @@ class BrowserState {
     // TODO: Move this to business logic
     fun scanDir() {
         files = try {
-            currentLocation.listDirectoryEntries()
+            currentLocation
+                .listDirectoryEntries()
                 .asSequence()
                 .filter { search in it.name }
                 .sortedBy { it.nameWithoutExtension }

@@ -24,10 +24,11 @@ fun ColorSchemePicker(modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Max)
-                .padding(8.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Max)
+                    .padding(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -46,8 +47,11 @@ fun ColorSchemePicker(modifier: Modifier = Modifier) {
         HarmonyColorPicker(
             modifier = Modifier.fillMaxSize(),
             harmonyMode = ColorHarmonyMode.NONE,
-            color = HsvColor.from(Color(preferencesManager.color))
-                .copy(value = 1f), // else every color becomes 0,0,0
+            color =
+                HsvColor
+                    .from(Color(preferencesManager.color))
+                    .copy(value = 1f),
+            // else every color becomes 0,0,0
             onColorChanged = {
                 preferencesManager.color =
                     it.toColor().toArgb()

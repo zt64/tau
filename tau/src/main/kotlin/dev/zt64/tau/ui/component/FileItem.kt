@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Lock
@@ -74,8 +75,7 @@ fun FileItem(
                     showProperties = true
                 },
                 ContextMenuItem(R.strings.OPEN_IN_NEW_TAB) {
-
-                },
+                }
             )
         }
     ) {
@@ -105,18 +105,15 @@ fun FileItem(
                             selected2 = !selected2
                         },
                         onDoubleClick = onDoubleClick
-                    )
-                    .semantics {
+                    ).semantics {
                         this.selected = selected2
-                    }
-                    .background(
+                    }.background(
                         if (selected2) {
                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
                         } else {
                             MaterialTheme.colorScheme.surface
-                        },
-                    )
-                    .then(modifier),
+                        }
+                    ).then(modifier),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
@@ -147,7 +144,7 @@ fun FileItem(
                                 "image" -> Icons.Default.Image
                                 "video" -> Icons.Default.VideoFile
                                 "audio" -> Icons.Default.AudioFile
-                                "text" -> Icons.Default.Article
+                                "text" -> Icons.AutoMirrored.Filled.Article
                                 "font" -> Icons.Default.TextFields
                                 "application" -> when {
                                     dataFormat.contains("zip", "7z", "rar", "tar") -> Icons.Default.Archive
@@ -220,15 +217,13 @@ fun FileItem(
                             offset = Offset.Zero,
                             blurRadius = 0.75f
                         ),
-                        textAlign = TextAlign.Center,
+                        textAlign = TextAlign.Center
                     ),
                     onValueChange = {
                         // ensure that the file name is valid
                         if (it.contains(Regex("[\\\\/:*?\"<>|]"))) {
                             fileName = it
                         }
-
-
                     }
                 )
             }
@@ -247,8 +242,12 @@ private fun FileItemPreview() {
     )
 }
 
-data class FileTransferable(private val listOfFiles: List<File>) : Transferable {
+data class FileTransferable(
+    private val listOfFiles: List<File>
+) : Transferable {
     override fun getTransferDataFlavors() = arrayOf(DataFlavor.javaFileListFlavor)
+
     override fun isDataFlavorSupported(flavor: DataFlavor) = DataFlavor.javaFileListFlavor == flavor
+
     override fun getTransferData(flavor: DataFlavor) = listOfFiles
 }

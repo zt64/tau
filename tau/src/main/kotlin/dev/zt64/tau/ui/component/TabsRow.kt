@@ -25,13 +25,13 @@ fun TabsRow(state: BrowserState) {
     AnimatedVisibility(
         visible = state.tabs.size > 1,
         enter = expandVertically { it },
-        exit = shrinkVertically { it },
+        exit = shrinkVertically { it }
     ) {
         ScrollableTabRow(
             modifier = Modifier.fillMaxWidth(),
             selectedTabIndex = state.currentTab,
             containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
-            edgePadding = 0.dp,
+            edgePadding = 0.dp
         ) {
             state.tabs.forEachIndexed { index, title ->
                 val interactionSource = remember { MutableInteractionSource() }
@@ -39,14 +39,14 @@ fun TabsRow(state: BrowserState) {
                 Tab(
                     selected = state.currentTab == index,
                     onClick = { state.currentTab = index },
-                    interactionSource = interactionSource,
+                    interactionSource = interactionSource
                 ) {
                     Row(
                         modifier = Modifier
                             .height(40.dp)
                             .padding(4.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         val isHovered by interactionSource.collectIsHoveredAsState()
 
@@ -55,17 +55,17 @@ fun TabsRow(state: BrowserState) {
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.width(60.dp),
+                            modifier = Modifier.width(60.dp)
                         )
 
                         IconButton(
                             onClick = { state.tabs.removeAt(index) },
-                            modifier = Modifier.width(20.dp),
+                            modifier = Modifier.width(20.dp)
                         ) {
                             Icon(
                                 modifier = Modifier.size(16.dp),
                                 imageVector = Icons.Default.Close,
-                                contentDescription = null,
+                                contentDescription = null
                             )
                         }
                     }

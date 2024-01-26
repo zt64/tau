@@ -5,8 +5,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.*
 
 @Composable
-fun rememberVectorPainter(image: ImageVector, tint: Color): VectorPainter {
-    return rememberVectorPainter(
+fun rememberVectorPainter(
+    image: ImageVector,
+    tint: Color
+): VectorPainter =
+    rememberVectorPainter(
         defaultWidth = image.defaultWidth,
         defaultHeight = image.defaultHeight,
         viewportWidth = image.viewportWidth,
@@ -17,4 +20,3 @@ fun rememberVectorPainter(image: ImageVector, tint: Color): VectorPainter {
         autoMirror = image.autoMirror,
         content = { _, _ -> RenderVectorGroup(group = image.root) }
     )
-}
