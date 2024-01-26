@@ -1,0 +1,4 @@
+* text eol=lf
+
+# gradlew.bat
+*.bat           text eol=crlf
