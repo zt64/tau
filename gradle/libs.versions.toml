@@ -4,7 +4,7 @@ compose = "1.6.0-beta01"
 settings = "1.1.1"
 dbus-java = "5.0.0"
 moko-resources = "0.24.0-alpha-2"
-koin = "3.6.0-wasm-alpha1"
+koin = "3.6.0-wasm-alpha2"
 voyager = "1.1.0-alpha02"
 ktlint = "12.1.0"
 
