@@ -29,3 +29,10 @@
 -dontwarn org.apache.tika.**
 -keep class com.sun.jna.** { *; }
 -keep class * implements com.sun.jna.** { *; }
+
+# https://github.com/ajalt/mordant/blob/master/mordant/src/jvmMain/resources/META-INF/proguard/mordant.pro
+-keep class com.sun.jna.** { *; }
+-keep class * implements com.sun.jna.** { *; }
+-keepattributes RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations,RuntimeVisibleTypeAnnotations,AnnotationDefault
+-dontwarn org.graalvm.**
+-dontwarn com.oracle.svm.core.annotate.Delete
