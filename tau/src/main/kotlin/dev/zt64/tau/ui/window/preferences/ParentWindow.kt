@@ -1,5 +1,6 @@
 package dev.zt64.tau.ui.window.preferences
 
+import Res
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Palette
@@ -9,14 +10,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import dev.zt64.tau.R
 
 private enum class SettingsPage(
     val label: String,
     val icon: ImageVector
 ) {
-    APPEARANCE(R.strings.APPEARANCE, Icons.Default.Palette),
-    BEHAVIOR(R.strings.BEHAVIOR, Icons.Default.Settings)
+    APPEARANCE(Res.string.appearance, Icons.Default.Palette),
+    BEHAVIOR(Res.string.behavior, Icons.Default.Settings)
 }
 
 @Composable

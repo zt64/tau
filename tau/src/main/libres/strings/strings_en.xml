@@ -3,7 +3,10 @@
     <string name="copy">Copy</string>
     <string name="cut">Cut</string>
     <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="view">View</string>
     <string name="file">File</string>
+    <string name="folder">Folder</string>
     <string name="paste">Paste</string>
     <string name="rename">Rename</string>
     <string name="settings">Settings</string>
@@ -22,9 +25,14 @@
     <string name="type">Type</string>
     <string name="name">Name</string>
     <string name="contents">Contents</string>
+    <string name="details">Details</string>
     <string name="permissions">Permissions</string>
     <string name="owner">Owner</string>
+    <string name="owner_access">Owner access</string>
     <string name="group">Group</string>
+    <string name="group_access">Group access</string>
+    <string name="global">Global</string>
+    <string name="global_access">Global access</string>
     <string name="unmount">Unmount</string>
     <string name="mount">Mount</string>
     <string name="eject">Eject</string>
@@ -38,4 +46,8 @@
     <string name="dark">Dark</string>
     <string name="system">System</string>
     <string name="behavior">Behavior</string>
+    <string name="execute">Execute</string>
+    <string name="appearance">Appearance</string>
+    <string name="unknown">Unknown</string>
+    <string name="truncate_filename">Truncate filename</string>
 </resources>

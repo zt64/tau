@@ -1,5 +1,6 @@
 package dev.zt64.tau.ui.component.sidepanel
 
+import Res
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -13,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import dev.zt64.tau.R
 import dev.zt64.tau.model.Bookmark
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -27,11 +27,11 @@ fun Bookmark(
         items = {
             listOf(
                 ContextMenuItem(
-                    label = R.strings.OPEN_IN_NEW_TAB,
+                    label = Res.string.open_in_tab,
                     onClick = { }
                 ),
                 ContextMenuItem(
-                    label = R.strings.OPEN_IN_NEW_WINDOW,
+                    label = Res.string.open_in_window,
                     onClick = { }
                 )
             )

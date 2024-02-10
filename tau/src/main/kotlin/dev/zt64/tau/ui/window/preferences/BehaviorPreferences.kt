@@ -1,5 +1,6 @@
 package dev.zt64.tau.ui.window.preferences
 
+import Res
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -8,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.zt64.tau.R
 import dev.zt64.tau.domain.manager.PreferencesManager
 import org.koin.compose.koinInject
 
@@ -34,7 +34,7 @@ fun BehaviorPreferences() {
                     modifier = Modifier.padding(8.dp)
                 )
                 Text(
-                    text = R.strings.TRUNCATEFILES
+                    text = Res.string.truncate_filename
                 )
             }
             if (preferencesManager.truncateNames) {

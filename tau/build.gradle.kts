@@ -4,10 +4,11 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.compose)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.libres)
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
@@ -39,6 +40,8 @@ dependencies {
     implementation(libs.voyager.navigator)
     implementation(libs.voyager.koin)
     implementation(libs.voyager.transitions)
+
+    implementation(libs.libres.compose)
 }
 
 compose.desktop.application {

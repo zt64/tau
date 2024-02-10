@@ -1,5 +1,6 @@
 package dev.zt64.tau.ui.component
 
+import Res
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -21,7 +22,6 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import dev.zt64.tau.R
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.ui.window.PropertiesWindow
 import dev.zt64.tau.util.contains
@@ -59,22 +59,22 @@ fun FileItem(
     ContextMenuArea(
         items = {
             listOf(
-                ContextMenuItem(R.strings.COPY) {
+                ContextMenuItem(Res.string.copy) {
                     listOf(path.toFile()).copyToClipboard()
                 },
-                ContextMenuItem(R.strings.CUT) {
+                ContextMenuItem(Res.string.cut) {
                 },
-                ContextMenuItem(R.strings.DELETE) {
+                ContextMenuItem(Res.string.delete) {
                     try {
                         path.deleteIfExists()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
                 },
-                ContextMenuItem(R.strings.PROPERTIES) {
+                ContextMenuItem(Res.string.properties) {
                     showProperties = true
                 },
-                ContextMenuItem(R.strings.OPEN_IN_NEW_TAB) {
+                ContextMenuItem(Res.string.open_in_tab) {
                 }
             )
         }

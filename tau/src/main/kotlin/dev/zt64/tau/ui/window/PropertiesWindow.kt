@@ -1,5 +1,6 @@
 package dev.zt64.tau.ui.window
 
+import Res
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +16,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.rememberWindowState
-import dev.zt64.tau.R
 import dev.zt64.tau.util.creationTime
 import dev.zt64.tau.util.humanFriendly
 import dev.zt64.tau.util.humanReadableSize
@@ -28,8 +28,8 @@ private enum class Tab(
     val label: String,
     val icon: ImageVector
 ) {
-    DETAILS(R.strings.DETAILS, Icons.Default.Info),
-    PERMISSIONS(R.strings.PERMISSIONS, Icons.Default.Lock)
+    DETAILS(Res.string.details, Icons.Default.Info),
+    PERMISSIONS(Res.string.permissions, Icons.Default.Lock)
 }
 
 @Composable
@@ -40,7 +40,7 @@ fun PropertiesWindow(
     val windowState = rememberWindowState(width = 300.dp, height = 400.dp)
 
     Window(
-        title = "${path.name} - Properties",
+        title = "${path.name} - ${Res.string.properties}",
         icon = rememberVectorPainter(
             image = Icons.Default.Info,
             // TODO: respect dark mode
@@ -94,7 +94,7 @@ fun PropertiesWindow(
 private fun DetailsTab(path: Path) {
     ListItem( // TODO: Why are the first 3 items not showing up?
         headlineContent = {
-            Text("Name")
+            Text(Res.string.name)
         },
         trailingContent = {
             Text(path.name)
@@ -102,7 +102,7 @@ private fun DetailsTab(path: Path) {
     )
     ListItem(
         headlineContent = {
-            Text("Location")
+            Text(Res.string.location)
         },
         trailingContent = {
             Text(path.pathString)
@@ -110,7 +110,7 @@ private fun DetailsTab(path: Path) {
     )
     ListItem(
         headlineContent = {
-            Text("Size")
+            Text(Res.string.size)
         },
         trailingContent = {
             Text(path.toFile().humanReadableSize())
@@ -118,7 +118,7 @@ private fun DetailsTab(path: Path) {
     )
     ListItem(
         headlineContent = {
-            Text("Created at")
+            Text(Res.string.date_created)
         },
         trailingContent = {
             Text(path.creationTime().humanFriendly())
@@ -132,68 +132,68 @@ private fun PermissionsTab(path: Path) {
 
     ListItem(
         leadingContent = {
-            Icon(Icons.Default.Person, "Owner")
+            Icon(Icons.Default.Person, Res.string.owner)
         },
         headlineContent = {
-            Text("Owner")
+            Text(Res.string.owner)
         },
         trailingContent = {
-            Text(path.getOwner()?.name ?: "Unknown")
+            Text(path.getOwner()?.name ?: Res.string.unknown)
         }
     )
 
     ListItem(
         leadingContent = {
-            Icon(Icons.Default.Key, "Owner access")
+            Icon(Icons.Default.Key, Res.string.owner_access)
         },
         headlineContent = {
-            Text("Owner access")
-        },
-        trailingContent = {
-        }
-    )
-
-    Divider(thickness = 1.dp)
-
-    ListItem(
-        leadingContent = {
-            Icon(Icons.Default.Group, "Group")
-        },
-        headlineContent = {
-            Text("Group")
+            Text(Res.string.owner_access)
         },
         trailingContent = {
         }
     )
 
+    HorizontalDivider(thickness = 1.dp)
+
     ListItem(
         leadingContent = {
-            Icon(Icons.Default.Key, "Group access")
+            Icon(Icons.Default.Group, Res.string.group)
         },
         headlineContent = {
-            Text("Group access")
+            Text(Res.string.group)
         },
         trailingContent = {
         }
     )
 
-    Divider(thickness = 1.dp)
+    ListItem(
+        leadingContent = {
+            Icon(Icons.Default.Key, Res.string.group_access)
+        },
+        headlineContent = {
+            Text(Res.string.group_access)
+        },
+        trailingContent = {
+        }
+    )
+
+    HorizontalDivider(thickness = 1.dp)
 
     ListItem(
         leadingContent = {
-            Icon(Icons.Default.Public, "Global")
+            Icon(Icons.Default.Public, Res.string.global)
         },
         headlineContent = {
-            Text("Global")
+            Text(Res.string.global)
         }
     )
 
     ListItem(
         leadingContent = {
-            Icon(Icons.Default.Key, "Global access")
+            Icon(Icons.Default.Key, Res.string.global_access)
         },
         headlineContent = {
-            Text("Global access")
+            Text(Res.string.global_access)
         },
         trailingContent = {
         }
@@ -201,7 +201,7 @@ private fun PermissionsTab(path: Path) {
 
     if (!isWindows) {
         ListItem(
-            headlineContent = { Text("Execute") },
+            headlineContent = { Text(Res.string.execute) },
             trailingContent = {
                 Switch(
                     checked = path.isExecutable(),

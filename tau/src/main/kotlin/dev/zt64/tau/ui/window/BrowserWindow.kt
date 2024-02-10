@@ -1,12 +1,9 @@
 package dev.zt64.tau.ui.window
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -39,6 +36,7 @@ import kotlin.io.path.name
 @Composable
 fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
     val preferencesManager = koinInject<PreferencesManager>()
+
     Scaffold(
         snackbarHost = { SnackbarHost(state.snackbarHostState) }
     ) { paddingValues ->
@@ -87,7 +85,7 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
                     .weight(1f, true),
                 splitPaneState = rememberSplitPaneState(0.2f)
             ) {
-                first {
+                first(minSize = 120.dp) {
                     SidePanel(state)
                 }
 
@@ -97,55 +95,65 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
 
                         TabsRow(state)
 
-                        LazyVerticalGrid(
-                            modifier = Modifier
-                                .weight(1f, true)
-                                .onPointerEvent(
-                                    eventType = PointerEventType.Scroll,
-                                    pass = PointerEventPass.Initial
-                                ) { ev ->
-                                    if (!ev.keyboardModifiers.isCtrlPressed) return@onPointerEvent
-
-                                    scale += ev
-                                        .changes
-                                        .first()
-                                        .scrollDelta
-                                        .y
-                                        .toInt()
-                                    if (scale <= 2) {
-                                        scale = 2
-                                    }
-                                    preferencesManager.scale = scale
-                                }.clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null,
-                                    onClick = state::clickGrid
-                                ),
-                            columns = GridCells.FixedSize(scale.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(12.dp)
+                        Box(
+                            modifier = Modifier.weight(1f, true)
                         ) {
-                            items(
-                                items = state.files,
-                                key = { it.name }
-                            ) { path ->
-                                FileItem(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(
-                                            if (path == state.selectedFile) {
-                                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
-                                            } else {
-                                                MaterialTheme.colorScheme.surface
-                                            }
-                                        ),
-                                    selected = path == state.selectedFile,
-                                    path = path,
-                                    onClick = { state.selectedFile = path },
-                                    onDoubleClick = { state.doubleClick(path) }
-                                )
+                            val gridState = rememberLazyGridState()
+                            LazyVerticalGrid(
+                                modifier = Modifier
+                                    .onPointerEvent(
+                                        eventType = PointerEventType.Scroll,
+                                        pass = PointerEventPass.Initial
+                                    ) { ev ->
+                                        if (!ev.keyboardModifiers.isCtrlPressed) return@onPointerEvent
+
+                                        scale += ev
+                                            .changes
+                                            .first()
+                                            .scrollDelta
+                                            .y
+                                            .toInt()
+                                        if (scale <= 2) {
+                                            scale = 2
+                                        }
+                                        preferencesManager.scale = scale
+                                    }.clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null,
+                                        onClick = state::clickGrid
+                                    ),
+                                state = gridState,
+                                columns = GridCells.FixedSize(scale.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                contentPadding = PaddingValues(12.dp)
+                            ) {
+                                items(
+                                    items = state.files,
+                                    key = { it.name }
+                                ) { path ->
+                                    FileItem(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .background(
+                                                if (path == state.selectedFile) {
+                                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
+                                                } else {
+                                                    MaterialTheme.colorScheme.surface
+                                                }
+                                            ),
+                                        selected = path == state.selectedFile,
+                                        path = path,
+                                        onClick = { state.selectedFile = path },
+                                        onDoubleClick = { state.doubleClick(path) }
+                                    )
+                                }
                             }
+
+                            VerticalScrollbar(
+                                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                                adapter = rememberScrollbarAdapter(gridState)
+                            )
                         }
 
                         StatusBar(state)

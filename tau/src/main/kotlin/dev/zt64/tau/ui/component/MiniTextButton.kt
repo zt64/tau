@@ -33,7 +33,6 @@ fun MiniTextButton(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable RowScope.() -> Unit
 ) {
-
     CompositionLocalProvider(
         LocalMinimumInteractiveComponentEnforcement provides false
     ) {
