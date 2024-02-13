@@ -23,9 +23,9 @@ dependencies {
     implementation(compose.materialIconsExtended)
 
     implementation(libs.coroutines.core)
-    implementation(libs.material.kolor)
-    implementation(libs.color.picker)
-    implementation(libs.window.size)
+    implementation(libs.materialKolor)
+    implementation(libs.colorPicker)
+    implementation(libs.windowSize)
 
     implementation(libs.clikt)
     implementation(libs.tika.core)

@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.0.0-Beta1"
-compose = "1.6.0-beta02"
+compose = "1.6.0-rc01"
 settings = "1.1.1"
 dbus-java = "5.0.0"
 koin = "3.6.0-wasm-alpha2"
@@ -18,9 +18,9 @@ tika-core = "org.apache.tika:tika-core:2.9.1"
 settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "settings" }
 settings-noarg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "settings" }
 
-window-size = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0-beta01"
-color-picker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
-material-kolor = "com.materialkolor:material-kolor:1.4.0-alpha07"
+windowSize = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0-beta01"
+colorPicker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
+materialKolor = "com.materialkolor:material-kolor:1.4.0-alpha08"
 
 kfswatch = { module = "io.github.irgaly.kfswatch:kfswatch", version = "1.0.0" }
 coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"

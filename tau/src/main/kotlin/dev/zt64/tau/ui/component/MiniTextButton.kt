@@ -36,7 +36,7 @@ fun MiniTextButton(
     CompositionLocalProvider(
         LocalMinimumInteractiveComponentEnforcement provides false
     ) {
-        ProvideTextStyle(value = MaterialTheme.typography.labelMedium) {
+        ProvideTextStyle(MaterialTheme.typography.labelMedium) {
             Button(
                 onClick = onClick,
                 modifier = modifier.heightIn(28.dp),

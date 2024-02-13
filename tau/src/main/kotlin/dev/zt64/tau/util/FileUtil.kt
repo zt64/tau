@@ -15,12 +15,12 @@ fun File.moveTo(
         deleteRecursively()
     } catch (e: FileAlreadyExistsException) {
         // prompt user if they want to overwrite
-//         moveTo(this, true)
+        // moveTo(this, true)
     }
 }
 
 fun File.humanReadableSize(): String {
-    val bytes = length().toDouble() // this absolutely shits itself at Longs, so..
+    val bytes = length().toDouble() // this absolutely shits itself at Longs, so...
     return when {
         bytes >= 1 shl 30 -> "%.1f GB".format(bytes / (1 shl 30))
         bytes >= 1 shl 20 -> "%.1f MB".format(bytes / (1 shl 20))
@@ -29,5 +29,6 @@ fun File.humanReadableSize(): String {
     }
 }
 
-fun Path.creationTime(): Instant =
-    Files.readAttributes(this, BasicFileAttributes::class.java).creationTime().toInstant()
+fun Path.creationTime(): Instant {
+    return Files.readAttributes(this, BasicFileAttributes::class.java).creationTime().toInstant()
+}

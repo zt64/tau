@@ -36,7 +36,7 @@ import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.*
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FileItem(
     path: Path,
@@ -101,13 +101,10 @@ fun FileItem(
                     .combinedClickable(
                         interactionSource = interactionSource,
                         indication = LocalIndication.current,
-                        onClick = {
-                            selected2 = !selected2
-                        },
+                        onClick = { selected2 = !selected2 },
                         onDoubleClick = onDoubleClick
-                    ).semantics {
-                        this.selected = selected2
-                    }.background(
+                    ).semantics { this.selected = selected2 }
+                    .background(
                         if (selected2) {
                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
                         } else {

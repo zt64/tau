@@ -1,7 +1,9 @@
 package dev.zt64.tau.ui.window.preferences
 
 import Res
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Settings
@@ -30,21 +32,17 @@ fun ParentWindow() {
             PermanentDrawerSheet(
                 modifier = Modifier.width(240.dp)
             ) {
-                SettingsPage.values().forEach {
+                SettingsPage.entries.forEach {
                     NavigationDrawerItem(
-                        icon = { Icon(it.icon, "") },
+                        icon = { Icon(it.icon, null) },
                         label = { Text(text = it.label) },
                         selected = selectedCategory == it,
-                        onClick = {
-                            selectedCategory = it
-                        },
+                        onClick = { selectedCategory = it },
                         modifier = Modifier.padding(
-                            PaddingValues(
-                                start = 16.dp,
-                                top = 16.dp,
-                                end = 16.dp,
-                                bottom = 0.dp
-                            )
+                            start = 16.dp,
+                            top = 16.dp,
+                            end = 16.dp,
+                            bottom = 0.dp
                         )
                     )
                 }

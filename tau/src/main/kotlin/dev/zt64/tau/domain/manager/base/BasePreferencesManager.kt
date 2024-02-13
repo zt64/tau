@@ -6,11 +6,17 @@ import androidx.compose.runtime.setValue
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.get
 import com.russhwolf.settings.set
+import kotlin.enums.enumEntries
 import kotlin.reflect.KProperty
 
 private typealias Getter<T> = (key: String, defaultValue: T) -> T
 private typealias Setter<T> = (key: String, newValue: T) -> Unit
 
+/**
+ * Base class for managing preferences.
+ *
+ * @property settings
+ */
 @Suppress("SameParameterValue", "MemberVisibilityCanBePrivate")
 abstract class BasePreferenceManager(
     protected val settings: Settings
@@ -110,6 +116,15 @@ abstract class BasePreferenceManager(
         }
     }
 
+    /**
+     * Provides a delegate for a property that is backed by a preference.
+     *
+     * @param T
+     * @property key
+     * @property defaultValue
+     * @property getter
+     * @property setter
+     */
     protected class PreferenceProvider<T>(
         private val key: String?,
         private val defaultValue: T,
@@ -119,20 +134,23 @@ abstract class BasePreferenceManager(
         operator fun provideDelegate(
             thisRef: Any,
             property: KProperty<*>
-        ): Preferences<T> = Preferences(key ?: property.name, defaultValue, getter, setter)
+        ) = Preferences(key ?: property.name, defaultValue, getter, setter)
     }
 
     fun clear() = settings.clear()
 }
 
+@OptIn(ExperimentalStdlibApi::class)
 inline fun <reified E : Enum<E>> Settings.getEnum(
     key: String,
     defaultValue: E
-): E = enumValueOf(getString(key, defaultValue.name))
+): E {
+    return enumEntries<E>()[(getInt(key, defaultValue.ordinal))]
+}
 
 inline fun <reified E : Enum<E>> Settings.putEnum(
     key: String,
     value: E
 ) {
-    putString(key, value.name)
+    putInt(key, value.ordinal)
 }

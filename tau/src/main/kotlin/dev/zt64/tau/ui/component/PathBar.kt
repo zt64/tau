@@ -20,6 +20,14 @@ import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 
+/**
+ * Path bar component.
+ *
+ * @param state
+ * @param location
+ * @param onClickSegment
+ * @param modifier
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PathBar(

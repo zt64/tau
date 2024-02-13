@@ -36,9 +36,7 @@ fun ColorSchemePicker(modifier: Modifier = Modifier) {
                 }
             )
 
-            Text(
-                text = Res.string.dark
-            )
+            Text(Res.string.dark)
         }
 
         HarmonyColorPicker(

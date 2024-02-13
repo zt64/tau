@@ -1,5 +1,8 @@
 package dev.zt64.tau.ui.component
 
+import Res
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -16,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.ui.state.BrowserState
 
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun Toolbar(state: BrowserState) {
     LaunchedEffect(state.search) {
@@ -30,25 +34,49 @@ fun Toolbar(state: BrowserState) {
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            FilledIconButton(
-                enabled = state.canGoUp,
-                onClick = state::navigateUp
+            TooltipArea(
+                tooltip = {
+                    RichTooltip {
+                        Text(Res.string.goto_parent_folder)
+                    }
+                }
             ) {
-                Icon(Icons.Default.ArrowUpward, null)
+                FilledIconButton(
+                    enabled = state.canGoUp,
+                    onClick = state::navigateUp
+                ) {
+                    Icon(Icons.Default.ArrowUpward, null)
+                }
             }
 
-            FilledTonalIconButton(
-                enabled = state.canGoBack,
-                onClick = state::navigateBack
+            TooltipArea(
+                tooltip = {
+                    RichTooltip {
+                        Text(Res.string.back)
+                    }
+                }
             ) {
-                Icon(Icons.AutoMirrored.Filled.ArrowLeft, null)
+                FilledTonalIconButton(
+                    enabled = state.canGoBack,
+                    onClick = state::navigateBack
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowLeft, Res.string.back)
+                }
             }
 
-            FilledTonalIconButton(
-                enabled = state.canGoForward,
-                onClick = state::navigateForward
+            TooltipArea(
+                tooltip = {
+                    RichTooltip {
+                        Text(Res.string.forward)
+                    }
+                }
             ) {
-                Icon(Icons.AutoMirrored.Filled.ArrowRight, null)
+                FilledTonalIconButton(
+                    enabled = state.canGoForward,
+                    onClick = state::navigateForward
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowRight, Res.string.forward)
+                }
             }
 
             PathBar(
@@ -64,7 +92,7 @@ fun Toolbar(state: BrowserState) {
                 textStyle = MaterialTheme.typography.bodySmall,
                 onValueChange = state::search::set,
                 trailingIcon = {
-                    Icon(Icons.Default.Search, null)
+                    Icon(Icons.Default.Search, Res.string.search)
                 },
                 singleLine = true,
                 shape = CircleShape,

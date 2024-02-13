@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.materialkolor.AnimatedDynamicMaterialTheme
+import com.materialkolor.DynamicMaterialTheme
 
 @Composable
 fun Theme(
@@ -15,9 +15,10 @@ fun Theme(
     isDarkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
-    AnimatedDynamicMaterialTheme(
+    DynamicMaterialTheme(
         seedColor = seedColor,
         useDarkTheme = isDarkTheme,
+        animate = true,
         animationSpec = tween()
     ) {
         CompositionLocalProvider(

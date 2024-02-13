@@ -1,14 +1,11 @@
 package dev.zt64.tau.ui.window
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.*
-import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -91,70 +88,12 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
 
                 second {
                     Column {
-                        var scale by rememberSaveable { mutableStateOf(preferencesManager.scale) }
-
                         TabsRow(state)
 
-                        Box(
-                            modifier = Modifier.weight(1f, true)
-                        ) {
-                            val gridState = rememberLazyGridState()
-                            LazyVerticalGrid(
-                                modifier = Modifier
-                                    .onPointerEvent(
-                                        eventType = PointerEventType.Scroll,
-                                        pass = PointerEventPass.Initial
-                                    ) { ev ->
-                                        if (!ev.keyboardModifiers.isCtrlPressed) return@onPointerEvent
-
-                                        scale += ev
-                                            .changes
-                                            .first()
-                                            .scrollDelta
-                                            .y
-                                            .toInt()
-                                        if (scale <= 2) {
-                                            scale = 2
-                                        }
-                                        preferencesManager.scale = scale
-                                    }.clickable(
-                                        interactionSource = remember { MutableInteractionSource() },
-                                        indication = null,
-                                        onClick = state::clickGrid
-                                    ),
-                                state = gridState,
-                                columns = GridCells.FixedSize(scale.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                contentPadding = PaddingValues(12.dp)
-                            ) {
-                                items(
-                                    items = state.files,
-                                    key = { it.name }
-                                ) { path ->
-                                    FileItem(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .background(
-                                                if (path == state.selectedFile) {
-                                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
-                                                } else {
-                                                    MaterialTheme.colorScheme.surface
-                                                }
-                                            ),
-                                        selected = path == state.selectedFile,
-                                        path = path,
-                                        onClick = { state.selectedFile = path },
-                                        onDoubleClick = { state.doubleClick(path) }
-                                    )
-                                }
-                            }
-
-                            VerticalScrollbar(
-                                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                                adapter = rememberScrollbarAdapter(gridState)
-                            )
-                        }
+                        FileGrid(
+                            modifier = Modifier.weight(1f, true),
+                            state = state
+                        )
 
                         StatusBar(state)
                     }
@@ -169,7 +108,7 @@ fun StatusBar(state: BrowserState) {
     Surface(
         tonalElevation = 1.dp
     ) {
-        state.selectedFile?.let { selectedFile ->
+        if (state.selected.isNotEmpty()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -177,16 +116,22 @@ fun StatusBar(state: BrowserState) {
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = selectedFile.name,
-                    fontWeight = FontWeight.Bold,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(Modifier.width(16.dp))
+                if (state.selected.size == 1) {
+                    state.selected.single().let { selectedFile ->
+                        Text(
+                            text = selectedFile.name,
+                            fontWeight = FontWeight.Bold,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Spacer(Modifier.width(16.dp))
 
-                Text("Size: ${selectedFile.toFile().humanReadableSize()}")
-                Spacer(Modifier.weight(1f, true))
-                Text("${state.files.size} items")
+                        Text("Size: ${selectedFile.toFile().humanReadableSize()}")
+                        Spacer(Modifier.weight(1f, true))
+                        Text("${state.files.size} items")
+                    }
+                } else {
+                    Text("${state.selected.size} items selected")
+                }
             }
         }
     }

@@ -15,8 +15,7 @@ import kotlin.io.path.*
 class BrowserState {
     var currentLocation by mutableStateOf(Path("/"), referentialEqualityPolicy())
         private set
-    var selectedFile by mutableStateOf<Path?>(null, referentialEqualityPolicy())
-
+    val selected = mutableStateListOf<Path>()
     private var forwardStack = mutableStateListOf<Path>()
     private var backwardStack = mutableStateListOf<Path>()
 
@@ -46,7 +45,7 @@ class BrowserState {
     }
 
     fun clickGrid() {
-        selectedFile = null
+        selected.clear()
     }
 
     fun doubleClick(path: Path) {
@@ -110,6 +109,11 @@ class BrowserState {
             forwardStack.add(currentLocation)
             updateCurrentLocation(backwardStack.removeLast())
         }
+    }
+
+    fun selectFiles(vararg paths: Path) {
+        selected.clear()
+        selected += paths
     }
 
     private fun updateCurrentLocation(path: Path) {

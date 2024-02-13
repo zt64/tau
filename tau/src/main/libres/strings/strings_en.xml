@@ -19,6 +19,7 @@
     <string name="open_with">Open with</string>
     <string name="location">Location</string>
     <string name="size">Size</string>
+    <string name="search">Search</string>
     <string name="date_modified">Date modified</string>
     <string name="date_created">Date created</string>
     <string name="date_accessed">Date accessed</string>
@@ -50,4 +51,8 @@
     <string name="appearance">Appearance</string>
     <string name="unknown">Unknown</string>
     <string name="truncate_filename">Truncate filename</string>
+    <string name="show_hidden_files">Show hidden files</string>
+    <string name="forward">Forward</string>
+    <string name="back">Back</string>
+    <string name="goto_parent_folder">Go to parent folder</string>
 </resources>
