@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.*
+import androidx.compose.ui.input.key.*
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -18,6 +20,7 @@ import dev.zt64.tau.ui.state.rememberBrowserState
 import dev.zt64.tau.ui.viewmodel.BrowserScreenModel
 import dev.zt64.tau.util.humanReadableSize
 import dev.zt64.tau.util.moveTo
+import dev.zt64.tau.util.setContents
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -33,8 +36,77 @@ import kotlin.io.path.name
 @Composable
 fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
     val preferencesManager = koinInject<PreferencesManager>()
+    val clipboardManager = LocalClipboardManager.current
 
     Scaffold(
+        modifier = Modifier.onKeyEvent {
+            if (it.type != KeyEventType.KeyUp) return@onKeyEvent false
+
+            when {
+                it.isCtrlPressed -> {
+                    when (it.key) {
+                        Key.C -> {
+                            val selectedFiles = state.selected
+                            val files = selectedFiles.map { it.toFile() }
+
+                            clipboardManager.setContents(FileTransferable(files), null)
+                            // Copy
+                        }
+
+                        Key.V -> {
+
+                            // Paste
+                        }
+
+                        Key.X -> {
+                            // Cut
+                        }
+
+                        Key.A -> {
+                            // state.selectAll()
+                        }
+
+                        Key.R -> {
+                            state.scanDir()
+                        }
+
+                        Key.H -> {
+                            preferencesManager.showHiddenFiles = !preferencesManager.showHiddenFiles
+                            state.scanDir()
+                        }
+
+                        Key.F -> {
+                            // state.focusSearch()
+                        }
+
+                        Key.T -> {
+                            state.tabs.add(state.currentLocation)
+                            state.currentTab = state.tabs.size - 1
+                        }
+
+                        Key.W -> {
+                            state.tabs.removeAt(state.currentTab)
+                            state.currentTab = (state.currentTab - 1).coerceAtLeast(0)
+                        }
+
+                        Key.N -> {
+                            // Open new window
+                        }
+
+
+                        else -> return@onKeyEvent false
+                    }
+                }
+
+                it.key == Key.Enter -> {
+                    // Open file
+                }
+
+                else -> return@onKeyEvent false
+            }
+
+            true
+        },
         snackbarHost = { SnackbarHost(state.snackbarHostState) }
     ) { paddingValues ->
         Column(

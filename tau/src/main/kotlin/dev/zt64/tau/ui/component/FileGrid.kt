@@ -12,7 +12,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
@@ -59,11 +58,11 @@ fun FileGrid(
                 .drawWithCache {
                     this.onDrawWithContent {
                         drawContent()
-                        drawRect(
-                            color = Color.Red.copy(alpha = 0.3f),
-                            size = size,
-                            topLeft = topLeftOffset
-                        )
+                        // drawRect(
+                        //     color = Color.Red.copy(alpha = 0.3f),
+                        //     size = size,
+                        //     topLeft = topLeftOffset
+                        // )
                     }
                 }
                 .onDrag(

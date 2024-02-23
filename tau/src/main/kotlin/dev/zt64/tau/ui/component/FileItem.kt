@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -25,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.ui.window.PropertiesWindow
 import dev.zt64.tau.util.contains
-import dev.zt64.tau.util.copyToClipboard
+import dev.zt64.tau.util.setContents
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.apache.tika.Tika
@@ -56,11 +57,13 @@ fun FileItem(
         )
     }
 
+    val clipboardManager = LocalClipboardManager.current
+
     ContextMenuArea(
         items = {
             listOf(
                 ContextMenuItem(Res.string.copy) {
-                    listOf(path.toFile()).copyToClipboard()
+                    clipboardManager.setContents(FileTransferable(listOf(path.toFile())), null)
                 },
                 ContextMenuItem(Res.string.cut) {
                 },
