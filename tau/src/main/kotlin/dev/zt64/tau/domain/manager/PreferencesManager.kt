@@ -13,4 +13,5 @@ class PreferencesManager : BasePreferenceManager(Settings()) {
 
     var maxNameLines: Int by preference(2)
     var truncateNames: Boolean by preference(true)
+    var showHiddenFiles by preference(false)
 }

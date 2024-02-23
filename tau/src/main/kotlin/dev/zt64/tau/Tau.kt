@@ -18,7 +18,7 @@ import dev.zt64.tau.model.Theme
 import dev.zt64.tau.ui.component.MiniTextButton
 import dev.zt64.tau.ui.theme.Theme
 import dev.zt64.tau.ui.window.BrowserWindow
-import dev.zt64.tau.ui.window.preferences.ParentWindow
+import dev.zt64.tau.ui.window.preferences.PreferencesWindow
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 import java.awt.Dimension
@@ -45,14 +45,9 @@ fun Tau(
             var preferencesWindowVisible by remember { mutableStateOf(false) }
 
             if (preferencesWindowVisible) {
-                Window(
-                    onCloseRequest = { preferencesWindowVisible = false },
-                    title = Res.string.settings,
-                    resizable = true,
-                    icon = painterResource("window-icon.svg")
-                ) {
-                    ParentWindow()
-                }
+                PreferencesWindow(
+                    onCloseRequest = { preferencesWindowVisible = false }
+                )
             }
 
             Window(
