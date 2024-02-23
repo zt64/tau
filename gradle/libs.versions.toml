@@ -4,7 +4,7 @@ compose = "1.6.0-rc03"
 settings = "1.1.1"
 dbus-java = "5.0.0"
 koin = "3.6.0-wasm-alpha2"
-voyager = "1.1.0-alpha02"
+voyager = "1.1.0-alpha03"
 libres = "1.2.2"
 ktlint = "12.1.0"
 
