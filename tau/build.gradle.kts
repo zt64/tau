@@ -42,6 +42,10 @@ dependencies {
     implementation(libs.voyager.transitions)
 
     implementation(libs.libres.compose)
+
+
+    testImplementation(compose.uiTest)
+    testImplementation(kotlin("test"))
 }
 
 compose.desktop.application {
