@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.0-Beta4"
+kotlin = "2.0.0-Beta5"
 compose = "1.6.1"
 settings = "1.1.1"
 dbus-java = "5.0.0"
