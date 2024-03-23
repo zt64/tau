@@ -14,7 +14,9 @@ enum class OperatingSystem {
     UNKNOWN
 }
 
-val ClipboardManager.systemClipboard: Clipboard by lazy { Toolkit.getDefaultToolkit().systemClipboard }
+val ClipboardManager.systemClipboard: Clipboard by lazy {
+    Toolkit.getDefaultToolkit().systemClipboard
+}
 
 fun ClipboardManager.setContents(
     content: Transferable,

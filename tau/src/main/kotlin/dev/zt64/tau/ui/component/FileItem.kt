@@ -142,13 +142,25 @@ fun FileItem(
 
                             fileIcon = when (dataType) {
                                 "image" -> Icons.Default.Image
+
                                 "video" -> Icons.Default.VideoFile
+
                                 "audio" -> Icons.Default.AudioFile
+
                                 "text" -> Icons.AutoMirrored.Filled.Article
+
                                 "font" -> Icons.Default.TextFields
+
                                 "application" -> when {
-                                    dataFormat.contains("zip", "7z", "rar", "tar") -> Icons.Default.Archive
+                                    dataFormat.contains(
+                                        "zip",
+                                        "7z",
+                                        "rar",
+                                        "tar"
+                                    ) -> Icons.Default.Archive
+
                                     dataFormat == "java-archive" -> Icons.Default.Coffee
+
                                     dataFormat == "ogg" -> Icons.Default.MusicVideo
 
                                     else -> Icons.Default.Description
@@ -242,9 +254,7 @@ private fun FileItemPreview() {
     )
 }
 
-data class FileTransferable(
-    private val listOfFiles: List<File>
-) : Transferable {
+data class FileTransferable(private val listOfFiles: List<File>) : Transferable {
     override fun getTransferDataFlavors() = arrayOf(DataFlavor.javaFileListFlavor)
 
     override fun isDataFlavorSupported(flavor: DataFlavor) = DataFlavor.javaFileListFlavor == flavor

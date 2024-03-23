@@ -30,8 +30,8 @@ fun FileGrid(
         var scale by remember { mutableStateOf(preferencesManager.scale) }
         val gridState = rememberLazyGridState()
 
-        var topLeftOffset by mutableStateOf(Offset(0f, 0f))
-        var offset by mutableStateOf(Offset(0f, 0f))
+        var topLeftOffset by remember { mutableStateOf(Offset(0f, 0f)) }
+        var offset by remember { mutableStateOf(Offset(0f, 0f)) }
 
         LazyVerticalGrid(
             modifier = Modifier
@@ -54,8 +54,7 @@ fun FileGrid(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
                     onClick = state::clickGrid
-                )
-                .drawWithCache {
+                ).drawWithCache {
                     this.onDrawWithContent {
                         drawContent()
                         // drawRect(
@@ -64,8 +63,7 @@ fun FileGrid(
                         //     topLeft = topLeftOffset
                         // )
                     }
-                }
-                .onDrag(
+                }.onDrag(
                     onDragStart = {
                         topLeftOffset = it
                     },

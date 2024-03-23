@@ -15,10 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 
-private enum class SettingsPage(
-    val label: String,
-    val icon: ImageVector
-) {
+private enum class SettingsPage(val label: String, val icon: ImageVector) {
     APPEARANCE(Res.string.appearance, Icons.Default.Palette),
     BEHAVIOR(Res.string.behavior, Icons.Default.Settings)
 }
@@ -62,6 +59,7 @@ fun PreferencesWindow(onCloseRequest: () -> Unit) {
             ) {
                 when (selectedCategory) { // TODO: there has to be a better way without hardcoding :sob:
                     SettingsPage.APPEARANCE -> AppearancePreferences()
+
                     SettingsPage.BEHAVIOR -> BehaviorPreferences()
                 }
             }

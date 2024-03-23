@@ -18,9 +18,7 @@ private typealias Setter<T> = (key: String, newValue: T) -> Unit
  * @property settings
  */
 @Suppress("SameParameterValue", "MemberVisibilityCanBePrivate")
-abstract class BasePreferenceManager(
-    protected val settings: Settings
-) {
+abstract class BasePreferenceManager(protected val settings: Settings) {
     protected fun preference(
         key: String?,
         defaultValue: String
@@ -91,7 +89,9 @@ abstract class BasePreferenceManager(
         setter = settings::putEnum
     )
 
-    protected inline fun <reified E : Enum<E>> preference(defaultValue: E) = preference(null, defaultValue)
+    protected inline fun <reified E : Enum<E>> preference(defaultValue: E): PreferenceProvider<E> {
+        return preference(null, defaultValue)
+    }
 
     protected class Preferences<T>(
         private val key: String,

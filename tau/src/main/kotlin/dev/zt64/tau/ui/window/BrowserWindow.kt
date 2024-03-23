@@ -54,7 +54,6 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
                         }
 
                         Key.V -> {
-
                             // Paste
                         }
 
@@ -92,7 +91,6 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
                         Key.N -> {
                             // Open new window
                         }
-
 
                         else -> return@onKeyEvent false
                     }

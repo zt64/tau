@@ -24,9 +24,7 @@ import org.koin.compose.koinInject
 import java.awt.Dimension
 
 @Composable
-fun Tau(
-    onCloseRequest: () -> Unit
-) {
+fun Tau(onCloseRequest: () -> Unit) {
     KoinApplication(
         application = {
             modules(managerModule, screenModelModule)

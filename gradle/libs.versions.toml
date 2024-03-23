@@ -6,7 +6,8 @@ dbus-java = "5.0.0"
 koin = "3.6.0-wasm-alpha2"
 voyager = "1.1.0-alpha03"
 libres = "1.2.2"
-ktlint = "12.1.0"
+ktlintPlugin = "12.1.0"
+ktlint = "1.2.1"
 
 [libraries]
 clikt = "com.github.ajalt.clikt:clikt:4.2.2"
@@ -38,6 +39,8 @@ libres-compose = { module = "io.github.skeptick.libres:libres-compose", version.
 ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.3.11" }
 
 [bundles]
+voyager = ["voyager-navigator", "voyager-tabNavigator", "voyager-transitions", "voyager-koin"]
+koin = ["koin-compose", "koin-core"]
 dbus-java = ["dbus-java-core", "dbus-java-transport-native-unixsocket"]
 settings = ["settings", "settings-noarg"]
 
@@ -48,4 +51,4 @@ compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 libres = { id = "io.github.skeptick.libres", version.ref = "libres" }
 
 # Linters
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintPlugin" }

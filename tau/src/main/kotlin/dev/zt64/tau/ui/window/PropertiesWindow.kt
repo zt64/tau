@@ -24,10 +24,7 @@ import java.nio.file.Path
 import kotlin.io.path.*
 import kotlin.text.contains
 
-private enum class Tab(
-    val label: String,
-    val icon: ImageVector
-) {
+private enum class Tab(val label: String, val icon: ImageVector) {
     DETAILS(Res.string.details, Icons.Default.Info),
     PERMISSIONS(Res.string.permissions, Icons.Default.Lock)
 }

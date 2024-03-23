@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
@@ -9,8 +10,28 @@ plugins {
 }
 
 allprojects {
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    apply {
+        plugin("org.jlleitschuh.gradle.ktlint")
+    }
+
     configure<KtlintExtension> {
-        version = "1.1.0"
+        version = rootProject.libs.versions.ktlint
+    }
+
+    group = "dev.zt64"
+    version = "1.0.0"
+}
+
+subprojects {
+    tasks.withType<KotlinCompile>().configureEach {
+        kotlinOptions {
+            jvmTarget = "21"
+        }
+    }
+
+    dependencies {
+        val ktlintRuleset by configurations
+
+        ktlintRuleset(rootProject.libs.ktlint.rules.compose)
     }
 }

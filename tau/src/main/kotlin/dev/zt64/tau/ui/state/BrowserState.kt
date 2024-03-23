@@ -122,8 +122,14 @@ class BrowserState {
     }
 
     val canGoUp by derivedStateOf { currentLocation.parent != null }
-    val canGoForward by derivedStateOf { forwardStack.isNotEmpty() && currentLocation != forwardStack.first() }
-    val canGoBack by derivedStateOf { backwardStack.isNotEmpty() && currentLocation != backwardStack.first() }
+    val canGoForward by derivedStateOf {
+        forwardStack.isNotEmpty() &&
+            currentLocation != forwardStack.first()
+    }
+    val canGoBack by derivedStateOf {
+        backwardStack.isNotEmpty() &&
+            currentLocation != backwardStack.first()
+    }
 }
 
 @Composable

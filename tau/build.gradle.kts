@@ -1,3 +1,4 @@
+import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -7,11 +8,7 @@ plugins {
     alias(libs.plugins.libres)
 }
 
-kotlin {
-    jvmToolchain(21)
-}
-
-@OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+@OptIn(ExperimentalComposeLibrary::class)
 dependencies {
     ktlintRuleset(libs.ktlint.rules.compose)
 
@@ -31,18 +28,12 @@ dependencies {
     implementation(libs.tika.core)
     implementation(libs.kfswatch)
 
+    implementation(libs.bundles.voyager)
+    implementation(libs.bundles.koin)
     implementation(libs.bundles.dbus.java)
     implementation(libs.bundles.settings)
 
-    implementation(libs.koin.core)
-    implementation(libs.koin.compose)
-
-    implementation(libs.voyager.navigator)
-    implementation(libs.voyager.koin)
-    implementation(libs.voyager.transitions)
-
     implementation(libs.libres.compose)
-
 
     testImplementation(compose.uiTest)
     testImplementation(kotlin("test"))
@@ -77,5 +68,11 @@ compose.desktop.application {
             configurationFiles.from(project.file("proguard-rules.pro"))
             obfuscate = true
         }
+    }
+}
+
+ktlint {
+    filter {
+        exclude("**/libres/**.kt")
     }
 }
