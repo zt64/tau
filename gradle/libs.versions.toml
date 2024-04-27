@@ -10,7 +10,7 @@ ktlintPlugin = "12.1.0"
 ktlint = "1.2.1"
 
 [libraries]
-clikt = "com.github.ajalt.clikt:clikt:4.3.0"
+clikt = "com.github.ajalt.clikt:clikt:4.4.0"
 dbus-java-core = { module = "com.github.hypfvieh:dbus-java-core", version.ref = "dbus-java" }
 dbus-java-transport-native-unixsocket = { module = "com.github.hypfvieh:dbus-java-transport-native-unixsocket", version.ref = "dbus-java" }
 tika-core = "org.apache.tika:tika-core:2.9.2"
