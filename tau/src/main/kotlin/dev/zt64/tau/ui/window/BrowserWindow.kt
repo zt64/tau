@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.ui.component.*
 import dev.zt64.tau.ui.state.BrowserState
@@ -210,6 +210,6 @@ fun StatusBar(state: BrowserState) {
 class Browser : Screen {
     @Composable
     override fun Content() {
-        val screenModel = getScreenModel<BrowserScreenModel>()
+        val screenModel = koinScreenModel<BrowserScreenModel>()
     }
 }

@@ -1,4 +1,7 @@
 -keepattributes Signature,LineNumberTable
+#-repackageclasses
+#-optimizationpasses 5
+#-allowaccessmodification
 
 -keep,includedescriptorclasses,allowoptimization class dev.zt64.tau.** { public protected *; }
 -keep class dev.zt64.tau.MainKt {
@@ -31,8 +34,7 @@
 -keep class * implements com.sun.jna.** { *; }
 
 # https://github.com/ajalt/mordant/blob/master/mordant/src/jvmMain/resources/META-INF/proguard/mordant.pro
--keep class com.sun.jna.** { *; }
--keep class * implements com.sun.jna.** { *; }
 -keepattributes RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations,RuntimeVisibleTypeAnnotations,AnnotationDefault
 -dontwarn org.graalvm.**
 -dontwarn com.oracle.svm.core.annotate.Delete
+-dontwarn com.github.ajalt.mordant.internal.nativeimage.**
