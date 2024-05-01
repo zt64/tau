@@ -26,7 +26,7 @@ jobs:
             arch: x64
             os: ubuntu-latest
             shell: bash
-            build: packageReleaseUberJarForCurrentOS packageDeb
+            build: packageReleaseUberJarForCurrentOS packageReleaseDeb
 
           - runtime: win-x64
             arch: x64
@@ -59,10 +59,8 @@ jobs:
         with:
           name: runner-package-${{ matrix.runtime }}
           path: |
-            desktop/build/compose/binaries/main/*/
-            desktop/build/compose/binaries/main-release/*/
-            desktop/build/compose/jars/
-            !desktop/build/compose/binaries/main/app/
+            tau/build/compose/binaries/main-release/
+            tau/build/compose/jars/
 
       # Upload runner errors
       - name: Upload error logs
@@ -71,4 +69,4 @@ jobs:
         with:
           name: runner-errors-${{ matrix.runtime }}
           path: |
-            desktop/build/compose/logs/
+            tau/build/compose/logs/
