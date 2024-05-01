@@ -4,9 +4,21 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '**.gradle.kts'
+      - 'gradle.properties'
+      - '.github/workflows/*'
+      - 'gradle/**'
+      - 'tau/**'
   pull_request:
     branches:
       - main
+    paths:
+      - '**.gradle.kts'
+      - 'gradle.properties'
+      - '.github/workflows/*'
+      - 'gradle/**'
+      - 'tau/**'
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
