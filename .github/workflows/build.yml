@@ -47,11 +47,11 @@ jobs:
           java-version: '17'
           architecture: ${{ matrix.arch }}
 
-      - name: Build
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: >
-            ${{ matrix.build }}
+
+      - name: Build
+        run: ${{ matrix.build }}
 
       # Upload runner package tar.gz/zip as artifact
       - name: Publish Artifact
