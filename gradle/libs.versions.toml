@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.0.0-RC2"
-compose = "1.6.10-beta03"
+compose = "1.6.10-rc01"
 settings = "1.1.1"
 dbus-java = "5.0.0"
 koin = "3.6.0-wasm-alpha2"
