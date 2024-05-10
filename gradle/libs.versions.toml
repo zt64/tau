@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.0-RC2"
+kotlin = "2.0.0-RC3"
 compose = "1.6.10-rc01"
 settings = "1.1.1"
 dbus-java = "5.0.0"
@@ -24,7 +24,7 @@ colorPicker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
 materialKolor = "com.materialkolor:material-kolor:1.4.4"
 
 kfswatch = { module = "io.github.irgaly.kfswatch:kfswatch", version = "1.0.0" }
-coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"
+coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
