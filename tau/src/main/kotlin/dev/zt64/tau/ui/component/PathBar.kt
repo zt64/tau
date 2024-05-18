@@ -1,6 +1,5 @@
 package dev.zt64.tau.ui.component
 
-import androidx.compose.foundation.ContextMenuArea
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.layout.*
@@ -14,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import dev.zt64.tau.ui.component.menu.FolderContextMenu
 import dev.zt64.tau.ui.state.BrowserState
 import java.io.File
 import java.nio.file.Path
@@ -88,11 +88,7 @@ fun PathBar(
                     }
                 }
             ) {
-                ContextMenuArea(
-                    items = {
-                        listOf()
-                    }
-                ) {
+                FolderContextMenu {
                     FilledTonalButton(
                         shape = MaterialTheme.shapes.large,
                         onClick = { onClickSegment(fullPath) }
