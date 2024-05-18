@@ -2,14 +2,16 @@ package dev.zt64.tau.ui.window
 
 import Res
 import androidx.compose.animation.*
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -34,23 +36,25 @@ fun PropertiesWindow(
     path: Path,
     onCloseRequest: () -> Unit
 ) {
-    val windowState = rememberWindowState(width = 300.dp, height = 400.dp)
+    val windowState = rememberWindowState(width = 450.dp, height = 400.dp)
+
+    val icon = rememberVectorPainter(
+        image = Icons.Default.Info,
+        tint = if (isSystemInDarkTheme()) Color.White else Color.Black
+    )
 
     Window(
         title = "${path.name} - ${Res.string.properties}",
-        icon = rememberVectorPainter(
-            image = Icons.Default.Info,
-            // TODO: respect dark mode
-            tint = Color.White
-        ),
+        icon = icon,
         state = windowState,
+        resizable = false,
         onCloseRequest = onCloseRequest
     ) {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
             Column {
-                var selectedTab by rememberSaveable { mutableStateOf(Tab.DETAILS) }
+                var selectedTab by remember { mutableStateOf(Tab.DETAILS) }
 
                 TabRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -77,9 +81,13 @@ fun PropertiesWindow(
                         fadeIn() togetherWith fadeOut()
                     }
                 ) { tab ->
-                    when (tab) {
-                        Tab.DETAILS -> DetailsTab(path)
-                        Tab.PERMISSIONS -> PermissionsTab(path)
+                    Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState())
+                    ) {
+                        when (tab) {
+                            Tab.DETAILS -> DetailsTab(path)
+                            Tab.PERMISSIONS -> PermissionsTab(path)
+                        }
                     }
                 }
             }
@@ -121,6 +129,29 @@ private fun DetailsTab(path: Path) {
             Text(path.creationTime().humanFriendly())
         }
     )
+    ListItem(
+        headlineContent = {
+            Text(Res.string.date_modified)
+        },
+        trailingContent = {
+            Text(path.getLastModifiedTime().toInstant().humanFriendly())
+        }
+    )
+
+    if (!path.isRegularFile()) {
+        ListItem(
+            headlineContent = {
+                Text(Res.string.contents)
+            },
+            trailingContent = {
+                val entries = remember {
+                    path.listDirectoryEntries()
+                }
+
+                Text("${entries.size} ${Res.string.items}")
+            }
+        )
+    }
 }
 
 @Composable
