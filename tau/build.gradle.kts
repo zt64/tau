@@ -40,34 +40,36 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
-compose.desktop.application {
-    mainClass = "dev.zt64.tau.MainKt"
+compose {
+    desktop.application {
+        mainClass = "dev.zt64.tau.MainKt"
 
-    nativeDistributions {
-        packageName = "tau"
-        description = "Compose file manager"
-        packageVersion = "1.0.0"
+        nativeDistributions {
+            packageName = "tau"
+            description = "Compose file manager"
+            packageVersion = "1.0.0"
 
-        modules(
-            "java.base",
-            "java.instrument",
-            "java.management",
-            "java.prefs"
-        )
+            modules(
+                "java.base",
+                "java.instrument",
+                "java.management",
+                "java.prefs"
+            )
 
-        targetFormats(TargetFormat.Deb, TargetFormat.Exe, TargetFormat.Msi)
+            targetFormats(TargetFormat.Deb, TargetFormat.Exe, TargetFormat.Msi)
 
-        linux {
-            iconFile = rootProject.file("resources/window-icon.png")
-        }
+            linux {
+                iconFile = rootProject.file("resources/window-icon.png")
+            }
 
-        windows {
-            iconFile = rootProject.file("resources/window-icon.ico")
-        }
+            windows {
+                iconFile = rootProject.file("resources/window-icon.ico")
+            }
 
-        buildTypes.release.proguard {
-            configurationFiles.from(project.file("proguard-rules.pro"))
-            obfuscate = true
+            buildTypes.release.proguard {
+                configurationFiles.from(project.file("proguard-rules.pro"))
+                obfuscate = true
+            }
         }
     }
 }
