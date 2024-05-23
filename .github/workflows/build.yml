@@ -5,20 +5,20 @@ on:
     branches:
       - main
     paths:
-      - '**.gradle.kts'
+      - '**.kt'
+      - '**.kts'
       - 'gradle.properties'
-      - '.github/workflows/*'
+      - '.github/workflows/check.yml'
       - 'gradle/**'
-      - 'tau/**'
   pull_request:
     branches:
       - main
     paths:
-      - '**.gradle.kts'
+      - '**.kt'
+      - '**.kts'
       - 'gradle.properties'
-      - '.github/workflows/*'
+      - '.github/workflows/check.yml'
       - 'gradle/**'
-      - 'tau/**'
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
@@ -55,8 +55,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: ${{ vars.JVM_DISTRIBUTION }}
+          java-version: ${{ vars.JVM_VERSION }}
           architecture: ${{ matrix.arch }}
 
       - name: Setup Gradle
