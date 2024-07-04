@@ -30,6 +30,10 @@ fun SidePanel(state: BrowserState) {
             SystemInfo().operatingSystem.fileSystem.getFileStores(true)
         }
 
+        for (root in roots) {
+            println("Desc: ${root.description} | Volume name: ${root.volume} | Mtpt: ${root.mount} | Name: ${root.name} | Label: ${root.label}")
+        }
+
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
@@ -38,7 +42,7 @@ fun SidePanel(state: BrowserState) {
                 key = { it }
             ) {
                 Bookmark(
-                    data = Bookmark(Path(it.mount), it.label.ifEmpty { it.name }),
+                    data = Bookmark(Path(it.mount), "${it.label.ifEmpty { it.description }} (${it.mount})"),
                     icon = Icons.Default.Storage,
                     onClick = { state.navigate(Path(it.mount)) }
                 )
