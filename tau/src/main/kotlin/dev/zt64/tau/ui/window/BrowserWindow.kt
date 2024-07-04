@@ -66,12 +66,12 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
                         }
 
                         Key.R -> {
-                            state.scanDir()
+                            state.scanDir(preferencesManager.showHiddenFiles)
                         }
 
                         Key.H -> {
                             preferencesManager.showHiddenFiles = !preferencesManager.showHiddenFiles
-                            state.scanDir()
+                            state.scanDir(preferencesManager.showHiddenFiles)
                         }
 
                         Key.F -> {
@@ -133,7 +133,7 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
                 coroutineScope.launch(Dispatchers.IO) {
                     watcher.add(state.currentLocation.absolutePathString())
                     watcher.onEventFlow.collectLatest {
-                        state.scanDir()
+                        state.scanDir(preferencesManager.showHiddenFiles)
                     }
                 }
 

@@ -28,13 +28,17 @@ import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
+import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.ui.state.BrowserState
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun Toolbar(state: BrowserState) {
+    val preferencesManager = koinInject<PreferencesManager>()
+
     LaunchedEffect(state.search) {
-        state.scanDir()
+        state.scanDir(preferencesManager.showHiddenFiles)
     }
 
     Surface(

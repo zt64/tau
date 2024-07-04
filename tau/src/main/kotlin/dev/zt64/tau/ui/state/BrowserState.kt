@@ -27,12 +27,20 @@ class BrowserState {
 
     var files by mutableStateOf(listOf<Path>())
 
+
     // TODO: Move this to business logic
-    fun scanDir() {
+    fun scanDir(showHiddenFiles: Boolean = false) {
         files = try {
             currentLocation
                 .listDirectoryEntries()
                 .asSequence()
+                .filter {
+                    if (it.isHidden()) { // TODO: This feels really hacky. - keli5
+                        if (showHiddenFiles) true else false
+                    } else {
+                        true
+                    }
+                }
                 .filter { search in it.name }
                 .sortedBy { it.nameWithoutExtension }
                 .sortedBy { !it.isDirectory() }
@@ -118,7 +126,7 @@ class BrowserState {
 
     private fun updateCurrentLocation(path: Path) {
         currentLocation = path
-        scanDir()
+        scanDir(showHiddenFiles = true)
     }
 
     val canGoUp by derivedStateOf { currentLocation.parent != null }

@@ -171,11 +171,17 @@ fun FileItem(
                         }
                     }
 
+                    val tint = if (path.isHidden()) {
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                    } else {
+                        MaterialTheme.colorScheme.primary
+                    }
+
                     Icon(
                         modifier = Modifier.size(48.dp),
                         imageVector = fileIcon,
-                        tint = MaterialTheme.colorScheme.primary,
-                        contentDescription = null
+                        tint = tint,
+                        contentDescription = null,
                     )
 
                     val icon = when {
