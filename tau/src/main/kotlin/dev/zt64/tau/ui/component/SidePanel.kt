@@ -15,7 +15,8 @@ import androidx.compose.ui.unit.dp
 import dev.zt64.tau.model.Bookmark
 import dev.zt64.tau.ui.component.sidepanel.Bookmark
 import dev.zt64.tau.ui.state.BrowserState
-import java.io.File
+import oshi.SystemInfo
+import kotlin.io.path.Path
 
 @Composable
 fun SidePanel(state: BrowserState) {
@@ -25,19 +26,21 @@ fun SidePanel(state: BrowserState) {
             .fillMaxWidth(),
         tonalElevation = 5.dp
     ) {
-        val roots = remember { File.listRoots() }
+        val roots = remember {
+            SystemInfo().operatingSystem.fileSystem.getFileStores(true)
+        }
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             items(
                 items = roots,
-                key = { it.path }
+                key = { it }
             ) {
                 Bookmark(
-                    data = Bookmark(it.toPath(), it.absolutePath),
+                    data = Bookmark(Path(it.mount), it.label.ifEmpty { it.name }),
                     icon = Icons.Default.Storage,
-                    onClick = { state.navigate(it.toPath()) }
+                    onClick = { state.navigate(Path(it.mount)) }
                 )
             }
         }

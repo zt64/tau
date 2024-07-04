@@ -38,7 +38,6 @@ fun PathBar(
 ) {
     val rootPath = location.root
 
-    // var editing by remember { mutableStateOf(false) }
     val segments = remember(location) {
         location
             .absolutePathString()

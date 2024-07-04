@@ -29,6 +29,9 @@ dependencies {
     implementation(libs.tika.core)
     implementation(libs.kfswatch)
 
+    implementation(libs.io)
+    implementation(libs.oshi)
+
     implementation(libs.bundles.voyager)
     implementation(libs.bundles.koin)
     implementation(libs.bundles.dbus.java)

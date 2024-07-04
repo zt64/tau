@@ -1,21 +1,32 @@
 package dev.zt64.tau.ui.component
 
 import Res
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.TooltipArea
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.ui.state.BrowserState
 
@@ -34,6 +45,8 @@ fun Toolbar(state: BrowserState) {
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            var searching by rememberSaveable { mutableStateOf(false) }
+
             TooltipArea(
                 tooltip = {
                     RichTooltip {
@@ -79,28 +92,133 @@ fun Toolbar(state: BrowserState) {
                 }
             }
 
-            PathBar(
-                state = state,
-                modifier = Modifier.weight(1f, true),
-                location = state.currentLocation,
-                onClickSegment = state::navigate
-            )
+            Crossfade(
+                targetState = searching,
+                animationSpec = tween(200)
+            ) {
+                if (it) {
+                    DisposableEffect(Unit) {
+                        onDispose {
+                            state.search = ""
+                        }
+                    }
 
-            TextField(
-                modifier = Modifier.heightIn(min = 42.dp, max = 42.dp),
-                value = state.search,
-                textStyle = MaterialTheme.typography.bodySmall,
-                onValueChange = state::search::set,
-                trailingIcon = {
-                    Icon(Icons.Default.Search, Res.string.search)
-                },
-                singleLine = true,
-                shape = CircleShape,
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
+                    SearchField(
+                        modifier = Modifier
+                            .width(400.dp)
+                            .heightIn(min = 42.dp, max = 42.dp),
+                        value = state.search,
+                        textStyle = MaterialTheme.typography.bodyMedium,
+                        onValueChange = state::search::set,
+                        placeholder = {
+                            Text(
+                                text = Res.string.search,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    )
+                } else {
+                    PathBar(
+                        state = state,
+                        modifier = Modifier.weight(1f, true),
+                        location = state.currentLocation,
+                        onClickSegment = state::navigate
+                    )
+                }
+            }
+
+            Spacer(Modifier.weight(1f, true))
+
+            FilledTonalIconToggleButton(
+                checked = searching,
+                onCheckedChange = { searching = it }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = Res.string.search
                 )
-            )
+            }
         }
+    }
+}
+
+@Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    readOnly: Boolean = false,
+    textStyle: TextStyle = LocalTextStyle.current,
+    label: @Composable (() -> Unit)? = null,
+    placeholder: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    prefix: @Composable (() -> Unit)? = null,
+    suffix: @Composable (() -> Unit)? = null,
+    supportingText: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    colors: TextFieldColors = TextFieldDefaults.colors(
+        focusedIndicatorColor = Color.Transparent,
+        unfocusedIndicatorColor = Color.Transparent
+    )
+) {
+    val textColor = textStyle.color.takeOrElse {
+        colors.textColor(enabled, isError, interactionSource).value
+    }
+    val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
+
+    CompositionLocalProvider(LocalTextSelectionColors provides colors.textSelectionColors) {
+        BasicTextField(
+            value = value,
+            modifier = modifier
+                .defaultMinSize(
+                    minWidth = TextFieldDefaults.MinWidth,
+                    minHeight = TextFieldDefaults.MinHeight
+                ),
+            onValueChange = onValueChange,
+            enabled = enabled,
+            readOnly = readOnly,
+            textStyle = mergedTextStyle,
+            cursorBrush = SolidColor(colors.cursorColor(isError).value),
+            visualTransformation = visualTransformation,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search,
+                capitalization = KeyboardCapitalization.None,
+                autoCorrect = false
+            ),
+            keyboardActions = KeyboardActions.Default,
+            interactionSource = interactionSource,
+            singleLine = true,
+            maxLines = 1,
+            minLines = 1,
+            decorationBox = @Composable { innerTextField ->
+                // places leading icon, text field with label and placeholder, trailing icon
+                TextFieldDefaults.DecorationBox(
+                    value = value,
+                    visualTransformation = visualTransformation,
+                    innerTextField = innerTextField,
+                    placeholder = placeholder,
+                    label = label,
+                    leadingIcon = leadingIcon,
+                    trailingIcon = trailingIcon,
+                    prefix = prefix,
+                    suffix = suffix,
+                    supportingText = supportingText,
+                    shape = CircleShape,
+                    singleLine = true,
+                    enabled = enabled,
+                    isError = isError,
+                    interactionSource = interactionSource,
+                    colors = colors,
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
+                )
+            }
+        )
     }
 }
