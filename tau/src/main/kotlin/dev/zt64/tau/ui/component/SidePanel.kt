@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Storage
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -27,7 +27,7 @@ fun SidePanel(state: BrowserState) {
         tonalElevation = 5.dp
     ) {
         val roots = remember {
-            SystemInfo().operatingSystem.fileSystem.getFileStores(true)
+            SystemInfo().operatingSystem.fileSystem.getFileStores(false)
         }
 
         for (root in roots) {
@@ -43,7 +43,15 @@ fun SidePanel(state: BrowserState) {
             ) {
                 Bookmark(
                     data = Bookmark(Path(it.mount), "${it.label.ifEmpty { it.description }} (${it.mount})"),
-                    icon = Icons.Default.Storage,
+                    icon = when (it.description.lowercase()) {
+                        "removable drive" -> Icons.Default.Usb
+                        "fixed drive" -> Icons.Default.Storage
+                        "local disk" -> Icons.Default.Storage // only linux seems to do this one?
+                        "network drive" -> Icons.Default.Lan
+                        "ram disk" -> Icons.Default.Memory
+                        "mount point" -> Icons.Default.Folder
+                        else -> Icons.Default.DisabledByDefault
+                    },
                     onClick = { state.navigate(Path(it.mount)) }
                 )
             }
