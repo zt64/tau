@@ -4,8 +4,8 @@ import Res
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
@@ -21,6 +21,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -32,7 +33,11 @@ import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.ui.state.BrowserState
 import org.koin.compose.koinInject
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterial3Api::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun Toolbar(state: BrowserState) {
     val preferencesManager = koinInject<PreferencesManager>()
@@ -51,9 +56,11 @@ fun Toolbar(state: BrowserState) {
         ) {
             var searching by rememberSaveable { mutableStateOf(false) }
 
-            TooltipArea(
+            TooltipBox(
+                positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+                state = rememberTooltipState(),
                 tooltip = {
-                    RichTooltip {
+                    PlainTooltip {
                         Text(Res.string.goto_parent_folder)
                     }
                 }
@@ -66,9 +73,11 @@ fun Toolbar(state: BrowserState) {
                 }
             }
 
-            TooltipArea(
+            TooltipBox(
+                positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+                state = rememberTooltipState(),
                 tooltip = {
-                    RichTooltip {
+                    PlainTooltip {
                         Text(Res.string.back)
                     }
                 }
@@ -81,9 +90,11 @@ fun Toolbar(state: BrowserState) {
                 }
             }
 
-            TooltipArea(
+            TooltipBox(
+                positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+                state = rememberTooltipState(),
                 tooltip = {
-                    RichTooltip {
+                    PlainTooltip {
                         Text(Res.string.forward)
                     }
                 }
@@ -172,7 +183,8 @@ fun SearchField(
     )
 ) {
     val textColor = textStyle.color.takeOrElse {
-        colors.textColor(enabled, isError, interactionSource).value
+        val focused = interactionSource.collectIsFocusedAsState().value
+        colors.textColor(enabled, isError, focused)
     }
     val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
 
@@ -188,7 +200,7 @@ fun SearchField(
             enabled = enabled,
             readOnly = readOnly,
             textStyle = mergedTextStyle,
-            cursorBrush = SolidColor(colors.cursorColor(isError).value),
+            cursorBrush = SolidColor(colors.cursorColor(isError)),
             visualTransformation = visualTransformation,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,

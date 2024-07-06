@@ -35,9 +35,11 @@ fun Bookmark(
             )
         }
     ) {
-        TooltipArea(
+        TooltipBox(
+            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+            state = rememberTooltipState(),
             tooltip = {
-                RichTooltip {
+                PlainTooltip {
                     Text(text = data.displayName)
                 }
             }

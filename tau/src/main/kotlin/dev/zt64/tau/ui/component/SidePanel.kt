@@ -30,10 +30,6 @@ fun SidePanel(state: BrowserState) {
             SystemInfo().operatingSystem.fileSystem.getFileStores(false)
         }
 
-        for (root in roots) {
-            println("Desc: ${root.description} | Volume name: ${root.volume} | Mtpt: ${root.mount} | Name: ${root.name} | Label: ${root.label}")
-        }
-
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
@@ -42,11 +38,15 @@ fun SidePanel(state: BrowserState) {
                 key = { it }
             ) {
                 Bookmark(
-                    data = Bookmark(Path(it.mount), "${it.label.ifEmpty { it.description }} (${it.mount})"),
+                    data = Bookmark(
+                        Path(it.mount),
+                        "${it.label.ifEmpty { it.description }} (${it.mount})"
+                    ),
                     icon = when (it.description.lowercase()) {
                         "removable drive" -> Icons.Default.Usb
                         "fixed drive" -> Icons.Default.Storage
-                        "local disk" -> Icons.Default.Storage // only linux seems to do this one?
+                        "local disk" -> Icons.Default.Storage
+                        // only linux seems to do this one?
                         "network drive" -> Icons.Default.Lan
                         "ram disk" -> Icons.Default.Memory
                         "mount point" -> Icons.Default.Folder

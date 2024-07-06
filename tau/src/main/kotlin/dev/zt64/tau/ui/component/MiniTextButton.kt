@@ -11,6 +11,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 val ButtonDefaults.MiniTextButtonContentPadding: PaddingValues
@@ -34,21 +35,20 @@ fun MiniTextButton(
     content: @Composable RowScope.() -> Unit
 ) {
     CompositionLocalProvider(
-        LocalMinimumInteractiveComponentEnforcement provides false
+        LocalMinimumInteractiveComponentSize provides Dp.Unspecified,
+        LocalTextStyle provides MaterialTheme.typography.labelMedium
     ) {
-        ProvideTextStyle(MaterialTheme.typography.labelMedium) {
-            Button(
-                onClick = onClick,
-                modifier = modifier.heightIn(28.dp),
-                enabled = enabled,
-                shape = shape,
-                colors = colors,
-                elevation = elevation,
-                border = border,
-                contentPadding = contentPadding,
-                interactionSource = interactionSource,
-                content = content
-            )
-        }
+        Button(
+            onClick = onClick,
+            modifier = modifier.heightIn(28.dp),
+            enabled = enabled,
+            shape = shape,
+            colors = colors,
+            elevation = elevation,
+            border = border,
+            contentPadding = contentPadding,
+            interactionSource = interactionSource,
+            content = content
+        )
     }
 }
