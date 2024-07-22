@@ -42,7 +42,7 @@ koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-com
 
 io = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "io" }
 
-oshi = "com.github.oshi:oshi-core:6.6.1"
+oshi = "com.github.oshi:oshi-core:6.6.2"
 
 libres-compose = { module = "io.github.skeptick.libres:libres-compose", version.ref = "libres" }
 
