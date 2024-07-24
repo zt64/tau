@@ -20,7 +20,8 @@ dependencies {
     implementation(compose.desktop.components.splitPane)
     implementation(compose.materialIconsExtended)
 
-    implementation(libs.coroutines.core)
+    implementation(libs.bundles.coroutines)
+    implementation(libs.viewmodel)
     implementation(libs.materialKolor)
     implementation(libs.colorPicker)
     implementation(libs.windowSize)
@@ -32,7 +33,6 @@ dependencies {
     implementation(libs.io)
     implementation(libs.oshi)
 
-    implementation(libs.bundles.voyager)
     implementation(libs.bundles.koin)
     implementation(libs.bundles.dbus.java)
     implementation(libs.bundles.settings)
@@ -40,7 +40,7 @@ dependencies {
     implementation(libs.libres.compose)
 
     testImplementation(compose.uiTest)
-    testImplementation(kotlin("test"))
+    testImplementation(libs.kotlin.test)
 }
 
 compose {

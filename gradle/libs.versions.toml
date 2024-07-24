@@ -4,9 +4,10 @@ compose = "1.7.0-alpha01"
 
 settings = "1.1.1"
 dbus-java = "5.0.0"
+coroutines = "1.8.1"
 
 koin = "3.5.6"
-koin-compose = "1.1.5"
+koin-compose = "1.2.0-Beta4"
 
 voyager = "1.1.0-beta02"
 libres = "1.2.2"
@@ -25,12 +26,14 @@ tika-core = "org.apache.tika:tika-core:2.9.2"
 settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "settings" }
 settings-noarg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "settings" }
 
+viewmodel = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0"
 windowSize = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0"
 colorPicker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
 materialKolor = "com.materialkolor:material-kolor:1.7.0"
 
 kfswatch = { module = "io.github.irgaly.kfswatch:kfswatch", version = "1.3.0" }
-coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
@@ -39,6 +42,7 @@ voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voy
 
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin-compose" }
 
 io = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "io" }
 
@@ -46,11 +50,14 @@ oshi = "com.github.oshi:oshi-core:6.6.2"
 
 libres-compose = { module = "io.github.skeptick.libres:libres-compose", version.ref = "libres" }
 
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+
 ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.5" }
 
 [bundles]
 voyager = ["voyager-navigator", "voyager-tabNavigator", "voyager-transitions", "voyager-koin"]
-koin = ["koin-compose", "koin-core"]
+coroutines = ["coroutines-core", "coroutines-swing"]
+koin = ["koin-core", "koin-compose", "koin-compose-viewmodel"]
 dbus-java = ["dbus-java-core", "dbus-java-transport-native-unixsocket"]
 settings = ["settings", "settings-noarg"]
 
