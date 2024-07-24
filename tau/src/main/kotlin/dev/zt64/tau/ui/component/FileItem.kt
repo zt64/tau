@@ -24,6 +24,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
+import dev.zt64.tau.model.OpenItemAction
 import dev.zt64.tau.ui.window.PropertiesWindow
 import dev.zt64.tau.util.contains
 import dev.zt64.tau.util.setContents
@@ -98,22 +99,46 @@ fun FileItem(
         ) {
             var selected2 by remember { mutableStateOf(false) }
 
+            val onClick = remember {
+                {
+                    selected2 = !selected2
+                }
+            }
+
+            val currentAction by rememberUpdatedState(preferencesManager.openItemAction)
+
+            val onClickLambda = remember(currentAction) {
+                when (currentAction) {
+                    OpenItemAction.SINGLE_CLICK -> onDoubleClick
+                    OpenItemAction.DOUBLE_CLICK -> onClick
+                }
+            }
+
+            val onDoubleClickLambda = remember(currentAction) {
+                when (currentAction) {
+                    OpenItemAction.SINGLE_CLICK -> onClick
+                    OpenItemAction.DOUBLE_CLICK -> onDoubleClick
+                }
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .combinedClickable(
                         interactionSource = interactionSource,
                         indication = LocalIndication.current,
-                        onClick = { selected2 = !selected2 },
-                        onDoubleClick = onDoubleClick
-                    ).semantics { this.selected = selected2 }
+                        onClick = onClickLambda,
+                        onDoubleClick = onDoubleClickLambda
+                    )
+                    .semantics { this.selected = selected2 }
                     .background(
                         if (selected2) {
                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
                         } else {
                             MaterialTheme.colorScheme.surface
                         }
-                    ).then(modifier),
+                    )
+                    .then(modifier),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
@@ -142,15 +167,10 @@ fun FileItem(
 
                             fileIcon = when (dataType) {
                                 "image" -> Icons.Default.Image
-
                                 "video" -> Icons.Default.VideoFile
-
                                 "audio" -> Icons.Default.AudioFile
-
                                 "text" -> Icons.AutoMirrored.Filled.Article
-
                                 "font" -> Icons.Default.TextFields
-
                                 "application" -> when {
                                     dataFormat.contains(
                                         "zip",
@@ -158,14 +178,10 @@ fun FileItem(
                                         "rar",
                                         "tar"
                                     ) -> Icons.Default.Archive
-
                                     dataFormat == "java-archive" -> Icons.Default.Coffee
-
                                     dataFormat == "ogg" -> Icons.Default.MusicVideo
-
                                     else -> Icons.Default.Description
                                 }
-
                                 else -> Icons.Default.Description
                             }
                         }
@@ -181,7 +197,7 @@ fun FileItem(
                         modifier = Modifier.size(48.dp),
                         imageVector = fileIcon,
                         tint = tint,
-                        contentDescription = null,
+                        contentDescription = null
                     )
 
                     val icon = when {

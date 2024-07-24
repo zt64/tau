@@ -20,7 +20,6 @@ val ButtonDefaults.MiniTextButtonContentPadding: PaddingValues
         vertical = 4.dp
     )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MiniTextButton(
     onClick: () -> Unit,
