@@ -14,12 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.model.Bookmark
 import dev.zt64.tau.ui.component.sidepanel.Bookmark
-import dev.zt64.tau.ui.state.BrowserState
+import dev.zt64.tau.ui.viewmodel.BrowserViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import oshi.SystemInfo
 import kotlin.io.path.Path
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
-fun SidePanel(state: BrowserState) {
+fun SidePanel() {
+    val viewModel = koinViewModel<BrowserViewModel>()
+
     Surface(
         modifier = Modifier
             .fillMaxHeight()
@@ -52,7 +57,7 @@ fun SidePanel(state: BrowserState) {
                         "mount point" -> Icons.Default.Folder
                         else -> Icons.Default.DisabledByDefault
                     },
-                    onClick = { state.navigate(Path(it.mount)) }
+                    onClick = { viewModel.navigate(Path(it.mount)) }
                 )
             }
         }

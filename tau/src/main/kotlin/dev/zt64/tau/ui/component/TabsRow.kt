@@ -17,28 +17,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import dev.zt64.tau.ui.state.BrowserState
+import dev.zt64.tau.ui.viewmodel.BrowserViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import kotlin.io.path.pathString
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
-fun TabsRow(state: BrowserState) {
+fun TabsRow() {
+    val viewModel = koinViewModel<BrowserViewModel>()
+
     AnimatedVisibility(
-        visible = state.tabs.size > 1,
+        visible = viewModel.tabs.size > 1,
         enter = expandVertically { it },
         exit = shrinkVertically { it }
     ) {
         ScrollableTabRow(
             modifier = Modifier.fillMaxWidth(),
-            selectedTabIndex = state.currentTab,
+            selectedTabIndex = viewModel.currentTabIndex,
             containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
             edgePadding = 0.dp
         ) {
-            state.tabs.forEachIndexed { index, title ->
+            viewModel.tabs.forEachIndexed { index, title ->
                 val interactionSource = remember { MutableInteractionSource() }
 
                 Tab(
-                    selected = state.currentTab == index,
-                    onClick = { state.currentTab = index },
+                    selected = viewModel.currentTabIndex == index,
+                    onClick = { viewModel.currentTabIndex = index },
                     interactionSource = interactionSource
                 ) {
                     Row(
@@ -59,7 +64,7 @@ fun TabsRow(state: BrowserState) {
                         )
 
                         IconButton(
-                            onClick = { state.tabs.removeAt(index) },
+                            onClick = { viewModel.closeTab(index) },
                             modifier = Modifier.width(20.dp)
                         ) {
                             Icon(

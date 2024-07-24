@@ -15,9 +15,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 
-private enum class SettingsPage(val label: String, val icon: ImageVector) {
-    APPEARANCE(Res.string.appearance, Icons.Default.Palette),
-    BEHAVIOR(Res.string.behavior, Icons.Default.Settings)
+private enum class SettingsPage(
+    val label: String,
+    val icon: ImageVector,
+    val content: @Composable () -> Unit
+) {
+    APPEARANCE(Res.string.appearance, Icons.Default.Palette, { AppearancePreferences() }),
+    BEHAVIOR(Res.string.behavior, Icons.Default.Settings, { BehaviorPreferences() })
 }
 
 @Composable
@@ -55,14 +59,9 @@ fun PreferencesWindow(onCloseRequest: () -> Unit) {
             }
         ) {
             Surface(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                when (selectedCategory) { // TODO: there has to be a better way without hardcoding :sob:
-                    SettingsPage.APPEARANCE -> AppearancePreferences()
-
-                    SettingsPage.BEHAVIOR -> BehaviorPreferences()
-                }
-            }
+                modifier = Modifier.fillMaxSize(),
+                content = selectedCategory.content
+            )
         }
     }
 }

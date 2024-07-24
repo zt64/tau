@@ -1,3 +1,5 @@
+@file:OptIn(KoinExperimentalAPI::class)
+
 package dev.zt64.tau.ui.window
 
 import androidx.compose.foundation.layout.*
@@ -11,13 +13,9 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.koinScreenModel
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.ui.component.*
-import dev.zt64.tau.ui.state.BrowserState
-import dev.zt64.tau.ui.state.rememberBrowserState
-import dev.zt64.tau.ui.viewmodel.BrowserScreenModel
+import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import dev.zt64.tau.util.humanReadableSize
 import dev.zt64.tau.util.moveTo
 import dev.zt64.tau.util.setContents
@@ -28,13 +26,17 @@ import org.jetbrains.compose.splitpane.ExperimentalSplitPaneApi
 import org.jetbrains.compose.splitpane.HorizontalSplitPane
 import org.jetbrains.compose.splitpane.rememberSplitPaneState
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import java.io.File
+import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalSplitPaneApi::class)
 @Composable
-fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
+fun BrowserWindow() {
+    val viewModel = koinViewModel<BrowserViewModel>()
     val preferencesManager = koinInject<PreferencesManager>()
     val clipboardManager = LocalClipboardManager.current
 
@@ -46,66 +48,51 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
                 it.isCtrlPressed -> {
                     when (it.key) {
                         Key.C -> {
-                            val selectedFiles = state.selected
-                            val files = selectedFiles.map { it.toFile() }
+                            val selectedFiles = viewModel.selected
+                            val files = selectedFiles.map(Path::toFile)
 
                             clipboardManager.setContents(FileTransferable(files), null)
                             // Copy
                         }
-
                         Key.V -> {
                             // Paste
                         }
-
                         Key.X -> {
                             // Cut
                         }
-
                         Key.A -> {
-                            // state.selectAll()
                         }
-
                         Key.R -> {
-                            state.scanDir(preferencesManager.showHiddenFiles)
+                            viewModel.refresh()
                         }
-
                         Key.H -> {
                             preferencesManager.showHiddenFiles = !preferencesManager.showHiddenFiles
-                            state.scanDir(preferencesManager.showHiddenFiles)
+                            viewModel.refresh()
                         }
-
                         Key.F -> {
                             // state.focusSearch()
                         }
-
                         Key.T -> {
-                            state.tabs.add(state.currentLocation)
-                            state.currentTab = state.tabs.size - 1
+                            viewModel.newTab()
                         }
-
                         Key.W -> {
-                            state.tabs.removeAt(state.currentTab)
-                            state.currentTab = (state.currentTab - 1).coerceAtLeast(0)
+                            viewModel.closeTab()
                         }
-
                         Key.N -> {
                             // Open new window
                         }
-
                         else -> return@onKeyEvent false
                     }
                 }
-
                 it.key == Key.Enter -> {
                     // Open file
                 }
-
                 else -> return@onKeyEvent false
             }
 
             true
         },
-        snackbarHost = { SnackbarHost(state.snackbarHostState) }
+        snackbarHost = { SnackbarHost(viewModel.snackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -118,22 +105,22 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
                         return@onExternalDrag
                     }
 
-                    val currentLocation = state.currentLocation.toFile()
+                    val currentLocation = viewModel.currentLocation.toFile()
 
                     dragData.readFiles().forEach { path ->
                         File(path).moveTo(currentLocation)
                     }
                 }
         ) {
-            val watcher = state.watcher
+            val watcher = viewModel.watcher
 
             val coroutineScope = rememberCoroutineScope()
 
-            DisposableEffect(state.currentLocation) {
+            DisposableEffect(viewModel.currentLocation) {
                 coroutineScope.launch(Dispatchers.IO) {
-                    watcher.add(state.currentLocation.absolutePathString())
+                    watcher.add(viewModel.currentLocation.absolutePathString())
                     watcher.onEventFlow.collectLatest {
-                        state.scanDir(preferencesManager.showHiddenFiles)
+                        viewModel.refresh()
                     }
                 }
 
@@ -144,7 +131,7 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
                 }
             }
 
-            Toolbar(state)
+            Toolbar()
 
             HorizontalSplitPane(
                 modifier = Modifier
@@ -153,19 +140,18 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
                 splitPaneState = rememberSplitPaneState(0.2f)
             ) {
                 first(minSize = 120.dp) {
-                    SidePanel(state)
+                    SidePanel()
                 }
 
                 second {
                     Column {
-                        TabsRow(state)
+                        TabsRow()
 
                         FileGrid(
-                            modifier = Modifier.weight(1f, true),
-                            state = state
+                            modifier = Modifier.weight(1f, true)
                         )
 
-                        StatusBar(state)
+                        StatusBar()
                     }
                 }
             }
@@ -174,11 +160,13 @@ fun BrowserWindow(state: BrowserState = rememberBrowserState()) {
 }
 
 @Composable
-fun StatusBar(state: BrowserState) {
+fun StatusBar() {
+    val viewModel = koinViewModel<BrowserViewModel>()
+
     Surface(
         tonalElevation = 1.dp
     ) {
-        if (state.selected.isNotEmpty()) {
+        if (viewModel.selected.isNotEmpty()) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -186,8 +174,8 @@ fun StatusBar(state: BrowserState) {
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (state.selected.size == 1) {
-                    state.selected.single().let { selectedFile ->
+                if (viewModel.selected.size == 1) {
+                    viewModel.selected.single().let { selectedFile ->
                         Text(
                             text = selectedFile.name,
                             fontWeight = FontWeight.Bold,
@@ -197,19 +185,12 @@ fun StatusBar(state: BrowserState) {
 
                         Text("Size: ${selectedFile.toFile().humanReadableSize()}")
                         Spacer(Modifier.weight(1f, true))
-                        Text("${state.files.size} items")
+                        Text("${viewModel.files.size} items")
                     }
                 } else {
-                    Text("${state.selected.size} items selected")
+                    Text("${viewModel.selected.size} items selected")
                 }
             }
         }
-    }
-}
-
-class Browser : Screen {
-    @Composable
-    override fun Content() {
-        val screenModel = koinScreenModel<BrowserScreenModel>()
     }
 }

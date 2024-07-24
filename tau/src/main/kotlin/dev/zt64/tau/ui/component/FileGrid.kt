@@ -15,16 +15,21 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
-import dev.zt64.tau.ui.state.BrowserState
+import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import kotlin.io.path.name
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalComposeUiApi::class,
+    ExperimentalFoundationApi::class,
+    KoinExperimentalAPI::class
+)
 @Composable
-fun FileGrid(
-    state: BrowserState,
-    modifier: Modifier = Modifier
-) {
+fun FileGrid(modifier: Modifier = Modifier) {
+    val viewModel = koinViewModel<BrowserViewModel>()
+
     ContextMenuArea(
         items = {
             listOf(
@@ -63,7 +68,7 @@ fun FileGrid(
                     }.clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
-                        onClick = state::clickGrid
+                        onClick = viewModel::clearSelection
                     ).drawWithCache {
                         this.onDrawWithContent {
                             drawContent()
@@ -92,11 +97,11 @@ fun FileGrid(
                 contentPadding = PaddingValues(12.dp)
             ) {
                 items(
-                    items = state.files,
+                    items = viewModel.files,
                     key = { it.name }
                 ) { path ->
-                    val selected by remember(state.selected) {
-                        derivedStateOf { path in state.selected }
+                    val selected by remember(viewModel.selected) {
+                        derivedStateOf { path in viewModel.selected }
                     }
 
                     FileItem(
@@ -111,8 +116,8 @@ fun FileGrid(
                             ),
                         selected = selected,
                         path = path,
-                        onClick = { state.selectFiles(path) },
-                        onDoubleClick = { state.doubleClick(path) }
+                        onClick = { viewModel.selectItems(path) },
+                        onDoubleClick = { viewModel.doubleClick(path) }
                     )
                 }
             }

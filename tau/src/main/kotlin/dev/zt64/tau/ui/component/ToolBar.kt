@@ -29,22 +29,20 @@ import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
-import dev.zt64.tau.domain.manager.PreferencesManager
-import dev.zt64.tau.ui.state.BrowserState
-import org.koin.compose.koinInject
+import dev.zt64.tau.ui.component.tooltip.PlainTooltipBox
+import dev.zt64.tau.ui.viewmodel.BrowserViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(
     ExperimentalFoundationApi::class,
     ExperimentalMaterial3Api::class,
-    ExperimentalComposeUiApi::class
+    ExperimentalComposeUiApi::class,
+    KoinExperimentalAPI::class
 )
 @Composable
-fun Toolbar(state: BrowserState) {
-    val preferencesManager = koinInject<PreferencesManager>()
-
-    LaunchedEffect(state.search) {
-        state.scanDir(preferencesManager.showHiddenFiles)
-    }
+fun Toolbar() {
+    val viewModel = koinViewModel<BrowserViewModel>()
 
     Surface(
         tonalElevation = 7.dp
@@ -55,53 +53,44 @@ fun Toolbar(state: BrowserState) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             var searching by rememberSaveable { mutableStateOf(false) }
+            var operations = remember {
+                mutableStateListOf<Unit>()
+            }
 
-            TooltipBox(
-                positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
-                state = rememberTooltipState(),
-                tooltip = {
-                    PlainTooltip {
-                        Text(Res.string.goto_parent_folder)
-                    }
+            PlainTooltipBox(
+                tooltipContent = {
+                    Text(Res.string.goto_parent_folder)
                 }
             ) {
                 FilledIconButton(
-                    enabled = state.canGoUp,
-                    onClick = state::navigateUp
+                    enabled = viewModel.canGoUp,
+                    onClick = viewModel::navigateUp
                 ) {
                     Icon(Icons.Default.ArrowUpward, null)
                 }
             }
 
-            TooltipBox(
-                positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
-                state = rememberTooltipState(),
-                tooltip = {
-                    PlainTooltip {
-                        Text(Res.string.back)
-                    }
+            PlainTooltipBox(
+                tooltipContent = {
+                    Text(Res.string.back)
                 }
             ) {
                 FilledTonalIconButton(
-                    enabled = state.canGoBack,
-                    onClick = state::navigateBack
+                    enabled = viewModel.canGoBack,
+                    onClick = viewModel::navigateBack
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ArrowLeft, Res.string.back)
                 }
             }
 
-            TooltipBox(
-                positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
-                state = rememberTooltipState(),
-                tooltip = {
-                    PlainTooltip {
-                        Text(Res.string.forward)
-                    }
+            PlainTooltipBox(
+                tooltipContent = {
+                    Text(Res.string.forward)
                 }
             ) {
                 FilledTonalIconButton(
-                    enabled = state.canGoForward,
-                    onClick = state::navigateForward
+                    enabled = viewModel.canGoForward,
+                    onClick = viewModel::navigateForward
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ArrowRight, Res.string.forward)
                 }
@@ -114,7 +103,7 @@ fun Toolbar(state: BrowserState) {
                 if (it) {
                     DisposableEffect(Unit) {
                         onDispose {
-                            state.search = ""
+                            viewModel.clearSearch()
                         }
                     }
 
@@ -122,9 +111,9 @@ fun Toolbar(state: BrowserState) {
                         modifier = Modifier
                             .width(400.dp)
                             .heightIn(min = 42.dp, max = 42.dp),
-                        value = state.search,
+                        value = viewModel.search,
                         textStyle = MaterialTheme.typography.bodyMedium,
-                        onValueChange = state::search::set,
+                        onValueChange = viewModel::search,
                         placeholder = {
                             Text(
                                 text = Res.string.search,
@@ -134,10 +123,9 @@ fun Toolbar(state: BrowserState) {
                     )
                 } else {
                     PathBar(
-                        state = state,
                         modifier = Modifier.weight(1f, true),
-                        location = state.currentLocation,
-                        onClickSegment = state::navigate
+                        location = viewModel.currentLocation,
+                        onClickSegment = viewModel::navigate
                     )
                 }
             }
@@ -152,6 +140,17 @@ fun Toolbar(state: BrowserState) {
                     imageVector = Icons.Default.Search,
                     contentDescription = Res.string.search
                 )
+            }
+
+            if (operations.isNotEmpty()) {
+                FilledTonalIconButton(
+                    onClick = {
+                    }
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
     }
@@ -203,10 +202,10 @@ fun SearchField(
             cursorBrush = SolidColor(colors.cursorColor(isError)),
             visualTransformation = visualTransformation,
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Search,
                 capitalization = KeyboardCapitalization.None,
-                autoCorrect = false
+                autoCorrectEnabled = false,
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search
             ),
             keyboardActions = KeyboardActions.Default,
             interactionSource = interactionSource,

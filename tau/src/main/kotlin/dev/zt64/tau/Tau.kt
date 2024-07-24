@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import com.godaddy.android.colorpicker.HsvColor
 import dev.zt64.tau.di.managerModule
-import dev.zt64.tau.di.screenModelModule
+import dev.zt64.tau.di.viewModelModule
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.Theme
 import dev.zt64.tau.ui.component.MiniTextButton
@@ -30,7 +30,7 @@ import java.awt.Dimension
 fun Tau(onCloseRequest: () -> Unit) {
     KoinApplication(
         application = {
-            modules(managerModule, screenModelModule)
+            modules(managerModule, viewModelModule)
         }
     ) {
         val preferencesManager = koinInject<PreferencesManager>()

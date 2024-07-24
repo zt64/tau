@@ -8,97 +8,63 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.ui.component.menu.FolderContextMenu
-import dev.zt64.tau.ui.state.BrowserState
-import java.io.File
 import java.nio.file.Path
-import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.name
 
 /**
  * Path bar component.
  *
- * @param state
  * @param location
  * @param onClickSegment
  * @param modifier
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PathBar(
-    state: BrowserState,
     location: Path,
     onClickSegment: (Path) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val rootPath = location.root
+    var currentSegments by remember { mutableStateOf(emptyList<Path>()) }
+    var currentSegmentIndex by rememberSaveable(currentSegments) {
+        mutableIntStateOf(currentSegments.lastIndex)
+    }
 
-    val segments = remember(location) {
-        location
-            .absolutePathString()
-            .replace("""^[A-Z]:\\""".toRegex(), "")
-            .split(File.separatorChar)
-            .filter(String::isNotBlank)
+    LaunchedEffect(location) {
+        if (location !in currentSegments) {
+            currentSegments = getPathSegments(location)
+        }
     }
 
     LazyRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        item {
-            FilledTonalButton(
-                shape = MaterialTheme.shapes.large,
-                onClick = { onClickSegment(rootPath) }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Storage,
-                    null
-                )
-                Spacer(Modifier.width(2.dp))
-                Text(rootPath.absolutePathString())
-            }
-        }
-
         itemsIndexed(
-            items = segments,
-            key = { index, _ -> index }
-        ) { _, segment ->
-            val fullPath =
-                remember {
-                    Path(state.currentLocation.toString().substringBefore(segment) + segment)
-                }
-
-            TooltipArea(
-                tooltip = {
-                    Surface(
-                        shape = MaterialTheme.shapes.medium,
-                        tonalElevation = 6.dp,
-                        shadowElevation = 4.dp
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(10.dp),
-                            text = fullPath.absolutePathString()
-                        )
+            currentSegments,
+            key = { _, path -> path.absolutePathString() }
+        ) { index, segment ->
+            Segment(
+                segment = segment,
+                selected = currentSegmentIndex == index,
+                leadingIcon = if (index == 0) {
+                    {
+                        Icon(Icons.Default.Storage, contentDescription = null)
                     }
+                } else {
+                    null
+                },
+                onClick = {
+                    currentSegmentIndex = index
+                    onClickSegment(segment)
                 }
-            ) {
-                FolderContextMenu {
-                    FilledTonalButton(
-                        shape = MaterialTheme.shapes.large,
-                        onClick = { onClickSegment(fullPath) }
-                    ) {
-                        Text(
-                            text = segment,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
-            }
+            )
         }
     }
 
@@ -145,4 +111,60 @@ fun PathBar(
     //            }
     //        }
     //    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun Segment(
+    segment: Path,
+    selected: Boolean,
+    leadingIcon: (@Composable () -> Unit)? = null,
+    onClick: () -> Unit
+) {
+    TooltipArea(
+        tooltip = {
+            Surface(
+                shape = MaterialTheme.shapes.medium,
+                tonalElevation = 6.dp,
+                shadowElevation = 4.dp
+            ) {
+                Text(
+                    modifier = Modifier.padding(10.dp),
+                    text = segment.toString()
+                )
+            }
+        }
+    ) {
+        FolderContextMenu {
+            FilledTonalButton(
+                shape = MaterialTheme.shapes.large,
+                onClick = onClick,
+                colors = if (selected) {
+                    ButtonDefaults.filledTonalButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    )
+                } else {
+                    ButtonDefaults.filledTonalButtonColors()
+                }
+            ) {
+                leadingIcon?.let {
+                    it()
+                    Spacer(Modifier.width(2.dp))
+                }
+
+                Text(
+                    text = segment.name,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+    }
+}
+
+fun getPathSegments(path: Path): List<Path> = buildList {
+    add(path.root ?: Path.of(""))
+
+    path.fold(this) { acc, part ->
+        acc.apply { add(last().resolve(part)) }
+    }
 }
