@@ -52,6 +52,7 @@
     <string name="dark">Dark</string>
     <string name="system">System</string>
     <string name="behavior">Behavior</string>
+    <string name="shortcuts">Shortcuts</string>
     <string name="execute">Execute</string>
     <string name="appearance">Appearance</string>
     <string name="unknown">Unknown</string>
@@ -88,4 +89,6 @@
     <string name="bookmark_remove">Remove bookmark</string>
     <string name="bookmark_edit">Edit bookmark</string>
     <string name="open_item_action">Action to open items</string>
+    <string name="single_click">Single click</string>
+    <string name="double_click">Double click</string>
 </resources>

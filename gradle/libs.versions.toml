@@ -2,51 +2,60 @@
 kotlin = "2.0.0"
 compose = "1.7.0-alpha01"
 
-settings = "1.1.1"
+clikt = "4.4.0"
+tika-core = "2.9.2"
+datetime = "0.6.0"
+humanReadable = "1.8.1"
+viewmodel = "2.8.0"
+kfswatch = "1.3.0"
+oshi = "6.6.2"
+io = "0.5.1"
+
+windowSize = "0.5.0"
+colorPicker = "0.7.0"
+materialKolor = "1.7.0"
+
 dbus-java = "5.0.0"
 coroutines = "1.8.1"
+settings = "1.1.1"
 
 koin = "3.5.6"
 koin-compose = "1.2.0-Beta4"
 
-voyager = "1.1.0-beta02"
 libres = "1.2.2"
-io = "0.5.1"
 
 ktlintPlugin = "12.1.1"
 ktlint = "1.3.1"
 
 [libraries]
-clikt = "com.github.ajalt.clikt:clikt:4.4.0"
+clikt = { module = "com.github.ajalt.clikt:clikt", version.ref = "clikt" }
+tika-core = { module = "org.apache.tika:tika-core", version.ref = "tika-core" }
+datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
+humanReadable = { module = "nl.jacobras:Human-Readable", version.ref = "humanReadable" }
+viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "viewmodel" }
+kfswatch = { module = "io.github.irgaly.kfswatch:kfswatch", version.ref = "kfswatch" }
+oshi = { module = "com.github.oshi:oshi-core", version.ref = "oshi" }
+io = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "io" }
+
+windowSize = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version.ref = "windowSize" }
+colorPicker = { module = "com.godaddy.android.colorpicker:compose-color-picker", version.ref = "colorPicker" }
+materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
+
 dbus-java-core = { module = "com.github.hypfvieh:dbus-java-core", version.ref = "dbus-java" }
 dbus-java-transport-native-unixsocket = { module = "com.github.hypfvieh:dbus-java-transport-native-unixsocket", version.ref = "dbus-java" }
-tika-core = "org.apache.tika:tika-core:2.9.2"
 
-# multiplatformsettings
+# Settings
 settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "settings" }
 settings-noarg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "settings" }
 
-viewmodel = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0"
-windowSize = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0"
-colorPicker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
-materialKolor = "com.materialkolor:material-kolor:1.7.0"
-
-kfswatch = { module = "io.github.irgaly.kfswatch:kfswatch", version = "1.3.0" }
+# Coroutines
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 
-voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
-voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
-voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
-voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
-
+# Koin
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin-compose" }
-
-io = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "io" }
-
-oshi = "com.github.oshi:oshi-core:6.6.2"
 
 libres-compose = { module = "io.github.skeptick.libres:libres-compose", version.ref = "libres" }
 
@@ -55,17 +64,20 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.5" }
 
 [bundles]
-voyager = ["voyager-navigator", "voyager-tabNavigator", "voyager-transitions", "voyager-koin"]
 coroutines = ["coroutines-core", "coroutines-swing"]
 koin = ["koin-core", "koin-compose", "koin-compose-viewmodel"]
 dbus-java = ["dbus-java-core", "dbus-java-transport-native-unixsocket"]
 settings = ["settings", "settings-noarg"]
 
 [plugins]
+# Kotlin
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+# Compose
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+
 libres = { id = "io.github.skeptick.libres", version.ref = "libres" }
 
 # Linters

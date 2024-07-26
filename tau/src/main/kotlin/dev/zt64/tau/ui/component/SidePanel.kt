@@ -16,11 +16,9 @@ import dev.zt64.tau.model.Bookmark
 import dev.zt64.tau.ui.component.sidepanel.Bookmark
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 import oshi.SystemInfo
 import kotlin.io.path.Path
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun SidePanel() {
     val viewModel = koinViewModel<BrowserViewModel>()

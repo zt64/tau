@@ -1,6 +1,5 @@
 package dev.zt64.tau.ui.component
 
-import Res
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,9 +24,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.OpenItemAction
+import dev.zt64.tau.ui.component.menu.FolderContextMenu
 import dev.zt64.tau.ui.window.PropertiesWindow
 import dev.zt64.tau.util.contains
-import dev.zt64.tau.util.setContents
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.apache.tika.Tika
@@ -38,13 +37,12 @@ import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.*
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FileItem(
     path: Path,
     selected: Boolean,
-    onClick: () -> Unit,
-    onDoubleClick: () -> Unit,
+    onSelect: () -> Unit,
+    onOpen: () -> Unit,
     modifier: Modifier = Modifier,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 ) {
@@ -60,29 +58,7 @@ fun FileItem(
 
     val clipboardManager = LocalClipboardManager.current
 
-    ContextMenuArea(
-        items = {
-            listOf(
-                ContextMenuItem(Res.string.copy) {
-                    clipboardManager.setContents(FileTransferable(listOf(path.toFile())), null)
-                },
-                ContextMenuItem(Res.string.cut) {
-                },
-                ContextMenuItem(Res.string.delete) {
-                    try {
-                        path.deleteIfExists()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                },
-                ContextMenuItem(Res.string.properties) {
-                    showProperties = true
-                },
-                ContextMenuItem(Res.string.open_in_tab) {
-                }
-            )
-        }
-    ) {
+    FolderContextMenu {
         TooltipArea(
             tooltip = {
                 Surface(
@@ -99,7 +75,7 @@ fun FileItem(
         ) {
             var selected2 by remember { mutableStateOf(false) }
 
-            val onClick = remember {
+            val onSelect = remember {
                 {
                     selected2 = !selected2
                 }
@@ -109,15 +85,15 @@ fun FileItem(
 
             val onClickLambda = remember(currentAction) {
                 when (currentAction) {
-                    OpenItemAction.SINGLE_CLICK -> onDoubleClick
-                    OpenItemAction.DOUBLE_CLICK -> onClick
+                    OpenItemAction.SINGLE_CLICK -> onOpen
+                    OpenItemAction.DOUBLE_CLICK -> onSelect
                 }
             }
 
             val onDoubleClickLambda = remember(currentAction) {
                 when (currentAction) {
-                    OpenItemAction.SINGLE_CLICK -> onClick
-                    OpenItemAction.DOUBLE_CLICK -> onDoubleClick
+                    OpenItemAction.SINGLE_CLICK -> onSelect
+                    OpenItemAction.DOUBLE_CLICK -> onOpen
                 }
             }
 
@@ -230,7 +206,6 @@ fun FileItem(
                 var renaming by remember { mutableStateOf(true) }
 
                 BasicTextField(
-                    modifier = Modifier,
                     readOnly = !renaming,
                     value = fileName,
                     // textAlign = TextAlign.Center,
@@ -271,8 +246,8 @@ private fun FileItemPreview() {
     FileItem(
         path = File("/home/tau").toPath(),
         selected = false,
-        onClick = {},
-        onDoubleClick = {}
+        onSelect = {},
+        onOpen = {}
     )
 }
 

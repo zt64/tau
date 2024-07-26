@@ -5,5 +5,6 @@ import androidx.compose.runtime.Stable
 @Stable
 enum class Theme {
     LIGHT,
-    DARK
+    DARK,
+    SYSTEM
 }

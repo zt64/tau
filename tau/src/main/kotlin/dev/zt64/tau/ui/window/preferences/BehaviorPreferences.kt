@@ -12,16 +12,13 @@ import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.OpenItemAction
 import org.koin.compose.koinInject
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BehaviorPreferences() {
     val preferencesManager = koinInject<PreferencesManager>()
 
     Column {
         ListItem(
-            headlineContent = {
-                Text(Res.string.open_item_action)
-            },
+            headlineContent = { Text(Res.string.open_item_action) },
             trailingContent = {
                 var expanded by rememberSaveable { mutableStateOf(false) }
 

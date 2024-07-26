@@ -18,7 +18,6 @@ import dev.zt64.tau.ui.component.*
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import dev.zt64.tau.util.humanReadableSize
 import dev.zt64.tau.util.moveTo
-import dev.zt64.tau.util.setContents
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -29,11 +28,10 @@ import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import java.io.File
-import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalSplitPaneApi::class)
+@OptIn(ExperimentalSplitPaneApi::class)
 @Composable
 fun BrowserWindow() {
     val viewModel = koinViewModel<BrowserViewModel>()
@@ -41,30 +39,19 @@ fun BrowserWindow() {
     val clipboardManager = LocalClipboardManager.current
 
     Scaffold(
-        modifier = Modifier.onKeyEvent {
-            if (it.type != KeyEventType.KeyUp) return@onKeyEvent false
+        modifier = Modifier.onPreviewKeyEvent {
+            if (it.type != KeyEventType.KeyUp) return@onPreviewKeyEvent false
 
             when {
                 it.isCtrlPressed -> {
                     when (it.key) {
-                        Key.C -> {
-                            val selectedFiles = viewModel.selected
-                            val files = selectedFiles.map(Path::toFile)
-
-                            clipboardManager.setContents(FileTransferable(files), null)
-                            // Copy
-                        }
-                        Key.V -> {
-                            // Paste
-                        }
+                        Key.C -> viewModel.copy()
+                        Key.V -> viewModel.paste()
                         Key.X -> {
                             // Cut
                         }
-                        Key.A -> {
-                        }
-                        Key.R -> {
-                            viewModel.refresh()
-                        }
+                        Key.A -> viewModel.selectAll()
+                        Key.R -> viewModel.refresh()
                         Key.H -> {
                             preferencesManager.showHiddenFiles = !preferencesManager.showHiddenFiles
                             viewModel.refresh()
@@ -72,22 +59,18 @@ fun BrowserWindow() {
                         Key.F -> {
                             // state.focusSearch()
                         }
-                        Key.T -> {
-                            viewModel.newTab()
-                        }
-                        Key.W -> {
-                            viewModel.closeTab()
-                        }
+                        Key.T -> viewModel.newTab()
+                        Key.W -> viewModel.closeTab()
                         Key.N -> {
                             // Open new window
                         }
-                        else -> return@onKeyEvent false
+                        else -> return@onPreviewKeyEvent false
                     }
                 }
                 it.key == Key.Enter -> {
                     // Open file
                 }
-                else -> return@onKeyEvent false
+                else -> return@onPreviewKeyEvent false
             }
 
             true
@@ -134,9 +117,7 @@ fun BrowserWindow() {
             Toolbar()
 
             HorizontalSplitPane(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f, true),
+                modifier = Modifier.fillMaxWidth(),
                 splitPaneState = rememberSplitPaneState(0.2f)
             ) {
                 first(minSize = 120.dp) {
@@ -145,10 +126,10 @@ fun BrowserWindow() {
 
                 second {
                     Column {
-                        TabsRow()
+                        TabRow()
 
                         FileGrid(
-                            modifier = Modifier.weight(1f, true)
+                            modifier = Modifier.weight(1f)
                         )
 
                         StatusBar()
@@ -160,21 +141,25 @@ fun BrowserWindow() {
 }
 
 @Composable
-fun StatusBar() {
+fun StatusBar(modifier: Modifier = Modifier) {
     val viewModel = koinViewModel<BrowserViewModel>()
 
     Surface(
         tonalElevation = 1.dp
     ) {
-        if (viewModel.selected.isNotEmpty()) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (viewModel.selected.size == 1) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(40.dp)
+                .padding(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            when (viewModel.selected.size) {
+                0 -> {
+                    Text("${viewModel.contents.size} items")
+                }
+                1 -> {
                     viewModel.selected.single().let { selectedFile ->
                         Text(
                             text = selectedFile.name,
@@ -184,10 +169,9 @@ fun StatusBar() {
                         Spacer(Modifier.width(16.dp))
 
                         Text("Size: ${selectedFile.toFile().humanReadableSize()}")
-                        Spacer(Modifier.weight(1f, true))
-                        Text("${viewModel.files.size} items")
                     }
-                } else {
+                }
+                else -> {
                     Text("${viewModel.selected.size} items selected")
                 }
             }

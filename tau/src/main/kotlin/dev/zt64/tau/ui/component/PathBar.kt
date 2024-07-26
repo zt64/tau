@@ -1,6 +1,5 @@
 package dev.zt64.tau.ui.component
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -38,7 +37,13 @@ fun PathBar(
 
     LaunchedEffect(location) {
         if (location !in currentSegments) {
-            currentSegments = getPathSegments(location)
+            currentSegments = buildList {
+                add(location.root ?: Path.of(""))
+
+                location.fold(this) { acc, part ->
+                    acc.apply { add(last().resolve(part)) }
+                }
+            }
         }
     }
 
@@ -47,7 +52,7 @@ fun PathBar(
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         itemsIndexed(
-            currentSegments,
+            items = currentSegments,
             key = { _, path -> path.absolutePathString() }
         ) { index, segment ->
             Segment(
@@ -113,7 +118,6 @@ fun PathBar(
     //    }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Segment(
     segment: Path,
@@ -158,13 +162,5 @@ fun Segment(
                 )
             }
         }
-    }
-}
-
-fun getPathSegments(path: Path): List<Path> = buildList {
-    add(path.root ?: Path.of(""))
-
-    path.fold(this) { acc, part ->
-        acc.apply { add(last().resolve(part)) }
     }
 }

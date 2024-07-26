@@ -2,12 +2,14 @@ package dev.zt64.tau.ui.viewmodel
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.Snapshot
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zt64.tau.domain.manager.PreferencesManager
 import io.github.irgaly.kfswatch.KfsDirectoryWatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.awt.Desktop
 import java.io.IOException
@@ -21,28 +23,30 @@ class BrowserViewModel(private val pref: PreferencesManager) : ViewModel() {
         private set
 
     val tabs = mutableStateListOf(currentLocation)
-    var currentTabIndex by mutableIntStateOf(0)
+    private var _currentTabIndex = MutableStateFlow(0)
+    val currentTabIndex = _currentTabIndex.asStateFlow()
 
-    var snackbarHostState = SnackbarHostState()
-    var files by mutableStateOf(listOf<Path>())
+    val snackbarHostState = SnackbarHostState()
 
-    val watcher = KfsDirectoryWatcher(CoroutineScope(Dispatchers.IO))
+    /** The contents of the current directory */
+    var contents = mutableStateListOf<Path>()
+        private set
+
+    val watcher = KfsDirectoryWatcher(viewModelScope)
     var search by mutableStateOf("")
         private set
 
+    // TODO: Use indices instead of paths to use less memory
     val selected = mutableStateListOf<Path>()
-    private var forwardStack = mutableStateListOf<Path>()
-    private var backwardStack = mutableStateListOf<Path>()
+    private val forwardStack = mutableStateListOf<Path>()
+    private val backwardStack = mutableStateListOf<Path>()
 
     val canGoUp by derivedStateOf { currentLocation.parent != null }
-
     val canGoForward by derivedStateOf {
-        forwardStack.isNotEmpty() &&
-            currentLocation != forwardStack.first()
+        forwardStack.isNotEmpty() && currentLocation != forwardStack.first()
     }
     val canGoBack by derivedStateOf {
-        backwardStack.isNotEmpty() &&
-            currentLocation != backwardStack.first()
+        backwardStack.isNotEmpty() && currentLocation != backwardStack.first()
     }
 
     init {
@@ -56,7 +60,7 @@ class BrowserViewModel(private val pref: PreferencesManager) : ViewModel() {
 
     fun navigateUp() {
         // IDK, how to make this work with history
-        // navigating up, should result in the back button becoming available but it doesn't
+        // navigating up, should result in the back button becoming available, but it doesn't
 
         backwardStack.add(currentLocation)
         updateCurrentLocation(currentLocation.parent!!)
@@ -81,14 +85,30 @@ class BrowserViewModel(private val pref: PreferencesManager) : ViewModel() {
     }
 
     fun newTab(path: Path = currentLocation) {
-        tabs.add(path)
-        currentTabIndex = tabs.size - 1
+        Snapshot.withMutableSnapshot {
+            tabs.add(_currentTabIndex.value, path)
+            switchTab(_currentTabIndex.value + 1)
+        }
     }
 
-    fun closeTab(index: Int = currentTabIndex) {
-        // TODO: Make this close the window when there is only one tab
-        tabs.removeAt(index)
-        currentTabIndex = tabs.size - 1
+    fun closeTab(index: Int = currentTabIndex.value) {
+        Snapshot.withMutableSnapshot {
+            tabs.removeAt(index)
+
+            when {
+                index == _currentTabIndex.value -> {
+                    switchTab((index - 1).coerceAtLeast(0))
+                }
+                index < _currentTabIndex.value -> {
+                    switchTab(_currentTabIndex.value - 1)
+                }
+            }
+        }
+    }
+
+    fun switchTab(index: Int) {
+        _currentTabIndex.update { index }
+        updateCurrentLocation(tabs[index])
     }
 
     fun search(query: String) {
@@ -102,26 +122,38 @@ class BrowserViewModel(private val pref: PreferencesManager) : ViewModel() {
 
     fun refresh() {
         viewModelScope.launch {
-            files = try {
-                currentLocation
+            try {
+                val newItems = currentLocation
                     .listDirectoryEntries()
                     .asSequence()
-                    .filter { !it.isHidden() || pref.showHiddenFiles }
-                    .filter { search in it.name }
-                    .sortedBy { it.nameWithoutExtension }
-                    .sortedBy { !it.isDirectory() }
-                    .sortedBy { it.startsWith(".") }
+                    .filter { (!it.isHidden() || pref.showHiddenFiles) && (search in it.name) }
+                    .sortedWith(
+                        compareBy<Path> { it.startsWith(".") }
+                            .thenBy { !it.isDirectory() }
+                            .thenBy { it.nameWithoutExtension }
+                    )
                     .toList()
+                contents.clear()
+                contents += newItems
             } catch (e: IOException) {
                 e.printStackTrace()
-                emptyList()
             }
         }
+    }
+
+    fun copy() {
+    }
+
+    fun paste() {
     }
 
     fun selectItems(vararg paths: Path) {
         clearSelection()
         selected += paths
+    }
+
+    fun selectAll() {
+        selectItems(*contents.toTypedArray())
     }
 
     fun clearSelection() {
@@ -130,6 +162,7 @@ class BrowserViewModel(private val pref: PreferencesManager) : ViewModel() {
 
     private fun updateCurrentLocation(path: Path) {
         currentLocation = path
+        tabs[_currentTabIndex.value] = path
         refresh()
     }
 
@@ -139,7 +172,7 @@ class BrowserViewModel(private val pref: PreferencesManager) : ViewModel() {
         }
     }
 
-    fun doubleClick(path: Path) {
+    fun open(path: Path) {
         when {
             path.isDirectory() -> {
                 if (path.isReadable()) {

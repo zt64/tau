@@ -3,7 +3,6 @@ package dev.zt64.tau.ui.component
 import Res
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
@@ -21,7 +20,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -32,14 +30,7 @@ import androidx.compose.ui.unit.dp
 import dev.zt64.tau.ui.component.tooltip.PlainTooltipBox
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(
-    ExperimentalFoundationApi::class,
-    ExperimentalMaterial3Api::class,
-    ExperimentalComposeUiApi::class,
-    KoinExperimentalAPI::class
-)
 @Composable
 fun Toolbar() {
     val viewModel = koinViewModel<BrowserViewModel>()
@@ -123,14 +114,14 @@ fun Toolbar() {
                     )
                 } else {
                     PathBar(
-                        modifier = Modifier.weight(1f, true),
+                        modifier = Modifier.weight(1f),
                         location = viewModel.currentLocation,
                         onClickSegment = viewModel::navigate
                     )
                 }
             }
 
-            Spacer(Modifier.weight(1f, true))
+            Spacer(Modifier.weight(1f))
 
             FilledTonalIconToggleButton(
                 checked = searching,
@@ -157,7 +148,6 @@ fun Toolbar() {
 }
 
 @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchField(
     value: String,

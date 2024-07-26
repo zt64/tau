@@ -9,6 +9,17 @@ plugins {
     alias(libs.plugins.libres)
 }
 
+kotlin {
+    compilerOptions {
+        optIn.addAll(
+            "androidx.compose.ui.ExperimentalComposeUiApi",
+            "androidx.compose.material3.ExperimentalMaterial3Api",
+            "androidx.compose.foundation.ExperimentalFoundationApi",
+            "org.koin.core.annotation.KoinExperimentalAPI"
+        )
+    }
+}
+
 @OptIn(ExperimentalComposeLibrary::class)
 dependencies {
     ktlintRuleset(libs.ktlint.rules.compose)
@@ -20,19 +31,21 @@ dependencies {
     implementation(compose.desktop.components.splitPane)
     implementation(compose.materialIconsExtended)
 
-    implementation(libs.bundles.coroutines)
+    implementation(libs.humanReadable)
     implementation(libs.viewmodel)
-    implementation(libs.materialKolor)
-    implementation(libs.colorPicker)
-    implementation(libs.windowSize)
-
     implementation(libs.clikt)
     implementation(libs.tika.core)
     implementation(libs.kfswatch)
-
     implementation(libs.io)
     implementation(libs.oshi)
 
+    implementation(libs.materialKolor)
+    implementation(libs.colorPicker)
+    implementation(libs.windowSize)
+    implementation("androidx.compose.material3.adaptive:adaptive:1.0.0-beta04")
+    implementation("androidx.compose.material3.adaptive:adaptive-layout:1.0.0-beta04")
+
+    implementation(libs.bundles.coroutines)
     implementation(libs.bundles.koin)
     implementation(libs.bundles.dbus.java)
     implementation(libs.bundles.settings)

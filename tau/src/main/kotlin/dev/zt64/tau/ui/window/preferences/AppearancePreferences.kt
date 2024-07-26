@@ -15,17 +15,18 @@ import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
 import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.Theme
+import dev.zt64.tau.ui.viewmodel.PreferencesViewModel
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AppearancePreferences() {
+    val viewModel = koinViewModel<PreferencesViewModel>()
     val preferencesManager = koinInject<PreferencesManager>()
 
     Column {
         ListItem(
-            headlineContent = {
-                Text(Res.string.dark)
-            },
+            headlineContent = { Text(Res.string.dark) },
             trailingContent = {
                 Switch(
                     checked = preferencesManager.theme == Theme.DARK,
@@ -42,7 +43,7 @@ fun AppearancePreferences() {
                 .padding(16.dp)
         ) {
             Text("Accent color")
-            Spacer(Modifier.weight(1f, true))
+            Spacer(Modifier.weight(1f))
             HarmonyColorPicker(
                 modifier = Modifier.size(128.dp),
                 harmonyMode = ColorHarmonyMode.NONE,

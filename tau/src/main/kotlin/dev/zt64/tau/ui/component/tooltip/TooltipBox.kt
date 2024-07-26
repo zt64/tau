@@ -1,12 +1,13 @@
 package dev.zt64.tau.ui.component.tooltip
 
-import androidx.compose.material3.*
+import androidx.compose.material3.TooltipScope
+import androidx.compose.material3.TooltipState
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.PopupPositionProvider
 
 // Composable for a tooltip box. M3 tooltip box for some reason doesnt have a default state ???
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TooltipBox(
     positionProvider: PopupPositionProvider,

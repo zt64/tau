@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Shortcut
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
@@ -21,7 +22,8 @@ private enum class SettingsPage(
     val content: @Composable () -> Unit
 ) {
     APPEARANCE(Res.string.appearance, Icons.Default.Palette, { AppearancePreferences() }),
-    BEHAVIOR(Res.string.behavior, Icons.Default.Settings, { BehaviorPreferences() })
+    BEHAVIOR(Res.string.behavior, Icons.Default.Settings, { BehaviorPreferences() }),
+    SHORTCUTS(Res.string.shortcuts, Icons.AutoMirrored.Default.Shortcut, { ShortcutsPreferences() })
 }
 
 @Composable

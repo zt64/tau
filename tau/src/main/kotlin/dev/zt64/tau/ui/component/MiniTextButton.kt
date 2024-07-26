@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-val ButtonDefaults.MiniTextButtonContentPadding: PaddingValues
+val MiniTextButtonContentPadding: PaddingValues
     get() = PaddingValues(
         horizontal = 8.dp,
         vertical = 4.dp
@@ -29,7 +29,7 @@ fun MiniTextButton(
     colors: ButtonColors = ButtonDefaults.textButtonColors(),
     elevation: ButtonElevation? = null,
     border: BorderStroke? = null,
-    contentPadding: PaddingValues = ButtonDefaults.MiniTextButtonContentPadding,
+    contentPadding: PaddingValues = MiniTextButtonContentPadding,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable RowScope.() -> Unit
 ) {

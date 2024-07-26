@@ -6,7 +6,7 @@ import dev.zt64.tau.model.OpenItemAction
 import dev.zt64.tau.model.Theme
 import dev.zt64.tau.model.ViewMode
 
-class PreferencesManager : BasePreferenceManager(PreferencesSettings.Factory().create("tau")) {
+class PreferencesManager(settings: PreferencesSettings) : BasePreferenceManager(settings) {
     var theme: Theme by preference(Theme.DARK)
     var color: Int by preference(0x1ed760) // Spotify green
     var viewMode: ViewMode by preference(ViewMode.GRID)

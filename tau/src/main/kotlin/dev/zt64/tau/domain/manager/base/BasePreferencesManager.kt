@@ -140,15 +140,16 @@ abstract class BasePreferenceManager(protected val settings: Settings) {
     fun clear() = settings.clear()
 }
 
-@OptIn(ExperimentalStdlibApi::class)
-inline fun <reified E : Enum<E>> Settings.getEnum(
+@PublishedApi
+internal inline fun <reified E : Enum<E>> Settings.getEnum(
     key: String,
     defaultValue: E
 ): E {
     return enumEntries<E>()[(getInt(key, defaultValue.ordinal))]
 }
 
-inline fun <reified E : Enum<E>> Settings.putEnum(
+@PublishedApi
+internal inline fun <reified E : Enum<E>> Settings.putEnum(
     key: String,
     value: E
 ) {
