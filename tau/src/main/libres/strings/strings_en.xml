@@ -24,6 +24,7 @@
     <string name="date_modified">Date modified</string>
     <string name="date_created">Date created</string>
     <string name="date_accessed">Date accessed</string>
+    <string name="mime_type">MIME type</string>
     <string name="type">Type</string>
     <string name="name">Name</string>
     <string name="contents">Contents</string>
