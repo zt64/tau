@@ -61,7 +61,7 @@ libres-compose = { module = "io.github.skeptick.libres:libres-compose", version.
 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 
-ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.5" }
+ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.8" }
 
 [bundles]
 coroutines = ["coroutines-core", "coroutines-swing"]
