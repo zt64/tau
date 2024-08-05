@@ -4,13 +4,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import com.godaddy.android.colorpicker.HsvColor
 import dev.zt64.tau.di.managerModule
 import dev.zt64.tau.di.viewModelModule
 import dev.zt64.tau.domain.manager.PreferencesManager
+import dev.zt64.tau.domain.manager.ShortcutsManager
 import dev.zt64.tau.model.Theme
 import dev.zt64.tau.ui.component.MenuBar
 import dev.zt64.tau.ui.theme.Theme
@@ -28,6 +28,7 @@ fun Tau(onCloseRequest: () -> Unit) {
         }
     ) {
         val preferencesManager = koinInject<PreferencesManager>()
+        val shortcutsManager = koinInject<ShortcutsManager>()
 
         val updatedHsvColor by remember(preferencesManager.color) {
             mutableStateOf(HsvColor.from(Color(preferencesManager.color)).toColor())
@@ -38,6 +39,7 @@ fun Tau(onCloseRequest: () -> Unit) {
             isDarkTheme = preferencesManager.theme == Theme.DARK
         ) {
             var showPreferences by rememberSaveable { mutableStateOf(false) }
+            var showMenuBar by rememberSaveable { mutableStateOf(true) }
 
             if (showPreferences) {
                 PreferencesWindow(
@@ -45,24 +47,22 @@ fun Tau(onCloseRequest: () -> Unit) {
                 )
             }
 
-            var showMenuBar by rememberSaveable { mutableStateOf(false) }
-
             Window(
                 title = "tau",
                 icon = painterResource("window-icon.svg"),
-                onCloseRequest = onCloseRequest,
-                onKeyEvent = {
-                    if (it.type == KeyEventType.KeyDown) {
-                        when (it.key) {
-                            Key.AltLeft -> showMenuBar = !showMenuBar
-                            else -> return@Window false
-                        }
-
-                        return@Window true
-                    }
-
-                    false
-                }
+                onCloseRequest = onCloseRequest
+                // onKeyEvent = {
+                //     if (it.type == KeyEventType.KeyDown) {
+                //         when (it.key) {
+                //             Key.AltLeft -> showMenuBar = !showMenuBar
+                //             else -> return@Window false
+                //         }
+                //
+                //         return@Window true
+                //     }
+                //
+                //     false
+                // }
             ) {
                 LaunchedEffect(Unit) {
                     window.minimumSize = Dimension(300, 400)

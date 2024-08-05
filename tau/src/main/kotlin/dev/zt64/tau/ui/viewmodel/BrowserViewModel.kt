@@ -147,8 +147,11 @@ class BrowserViewModel(private val pref: PreferencesManager) : ViewModel() {
     fun paste() {
     }
 
-    fun selectItems(vararg paths: Path) {
-        clearSelection()
+    fun selectItems(
+        vararg paths: Path,
+        clear: Boolean = true
+    ) {
+        if (clear) clearSelection()
         selected += paths
     }
 

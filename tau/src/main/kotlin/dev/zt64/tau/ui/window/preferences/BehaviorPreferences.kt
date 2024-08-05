@@ -76,7 +76,7 @@ fun BehaviorPreferences() {
 
         ListItem(
             headlineContent = {
-                Text("Show hidden files")
+                Text(Res.string.show_hidden_files)
             },
             supportingContent = {
                 Text("Global setting for showing hidden files in the file browser")

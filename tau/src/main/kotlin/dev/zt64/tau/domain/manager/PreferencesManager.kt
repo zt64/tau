@@ -16,4 +16,7 @@ class PreferencesManager(settings: PreferencesSettings) : BasePreferenceManager(
     var openItemAction: OpenItemAction by preference(OpenItemAction.DOUBLE_CLICK)
     var truncateNames: Boolean by preference(true)
     var showHiddenFiles: Boolean by preference(false)
+
+    // var columns by preference()
+    var autoSizeColumns: Boolean by preference(true)
 }

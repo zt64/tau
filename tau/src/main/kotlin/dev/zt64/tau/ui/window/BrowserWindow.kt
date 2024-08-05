@@ -128,7 +128,7 @@ fun BrowserWindow() {
                     Column {
                         TabRow()
 
-                        FileGrid(
+                        FileVerticalGrid(
                             modifier = Modifier.weight(1f)
                         )
 
