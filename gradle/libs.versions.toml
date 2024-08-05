@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.0"
+kotlin = "2.0.20-RC"
 compose = "1.7.0-alpha01"
 
 clikt = "4.4.0"
@@ -40,6 +40,7 @@ io = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "io" }
 windowSize = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version.ref = "windowSize" }
 colorPicker = { module = "com.godaddy.android.colorpicker:compose-color-picker", version.ref = "colorPicker" }
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
+reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 
 dbus-java-core = { module = "com.github.hypfvieh:dbus-java-core", version.ref = "dbus-java" }
 dbus-java-transport-native-unixsocket = { module = "com.github.hypfvieh:dbus-java-transport-native-unixsocket", version.ref = "dbus-java" }
