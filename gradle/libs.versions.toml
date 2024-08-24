@@ -14,7 +14,7 @@ io = "0.5.1"
 windowSize = "0.5.0"
 colorPicker = "0.7.0"
 materialKolor = "1.7.0"
-reorderable = "2.3.0"
+reorderable = "2.3.1"
 
 dbus-java = "5.1.0"
 coroutines = "1.8.1"
