@@ -44,7 +44,7 @@ dependencies {
     implementation(libs.windowSize)
     implementation(libs.reorderable)
     implementation("androidx.compose.material3.adaptive:adaptive:1.0.0-beta04")
-    implementation("androidx.compose.material3.adaptive:adaptive-layout:1.0.0-beta04")
+    implementation("androidx.compose.material3.adaptive:adaptive-layout:1.0.0-rc01")
 
     implementation(libs.bundles.coroutines)
     implementation(libs.bundles.koin)
