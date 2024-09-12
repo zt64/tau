@@ -14,6 +14,7 @@ import androidx.compose.ui.window.Window
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.DetailColumn
 import dev.zt64.tau.model.DetailColumnType
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import sh.calvin.reorderable.ReorderableColumn
 
@@ -73,7 +74,7 @@ fun ColumnsList() {
 
                         Text(
                             modifier = Modifier.weight(1f),
-                            text = item.type.displayName,
+                            text = stringResource(item.type.displayName),
                             style = MaterialTheme.typography.titleMedium,
                             maxLines = 1
                         )

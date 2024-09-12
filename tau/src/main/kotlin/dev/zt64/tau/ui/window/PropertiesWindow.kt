@@ -1,6 +1,5 @@
 package dev.zt64.tau.ui.window
 
-import Res
 import androidx.compose.animation.*
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
@@ -18,15 +17,18 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.rememberWindowState
+import dev.zt64.tau.resources.*
 import dev.zt64.tau.util.creationTime
 import dev.zt64.tau.util.humanFriendly
 import dev.zt64.tau.util.humanReadableSize
 import dev.zt64.tau.util.rememberVectorPainter
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 import java.nio.file.Path
 import kotlin.io.path.*
 import kotlin.text.contains
 
-private enum class Tab(val label: String, val icon: ImageVector) {
+private enum class Tab(val label: StringResource, val icon: ImageVector) {
     DETAILS(Res.string.details, Icons.Default.Info),
     PERMISSIONS(Res.string.permissions, Icons.Default.Lock)
 }
@@ -44,7 +46,7 @@ fun PropertiesWindow(
     )
 
     Window(
-        title = "${path.name} - ${Res.string.properties}",
+        title = "${path.name} - ${stringResource(Res.string.properties)}",
         icon = icon,
         state = windowState,
         resizable = false,
@@ -63,11 +65,11 @@ fun PropertiesWindow(
                     Tab.entries.forEach { tab ->
                         Tab(
                             selected = selectedTab == tab,
-                            text = { Text(tab.label) },
+                            text = { Text(stringResource(tab.label)) },
                             icon = {
                                 Icon(
                                     imageVector = tab.icon,
-                                    contentDescription = tab.label
+                                    contentDescription = stringResource(tab.label)
                                 )
                             },
                             onClick = { selectedTab = tab }
@@ -99,7 +101,7 @@ fun PropertiesWindow(
 private fun DetailsTab(path: Path) {
     ListItem( // TODO: Why are the first 3 items not showing up?
         headlineContent = {
-            Text(Res.string.name)
+            Text(stringResource(Res.string.name))
         },
         trailingContent = {
             Text(path.name)
@@ -107,7 +109,7 @@ private fun DetailsTab(path: Path) {
     )
     ListItem(
         headlineContent = {
-            Text(Res.string.location)
+            Text(stringResource(Res.string.location))
         },
         trailingContent = {
             Text(path.pathString)
@@ -115,7 +117,7 @@ private fun DetailsTab(path: Path) {
     )
     ListItem(
         headlineContent = {
-            Text(Res.string.size)
+            Text(stringResource(Res.string.size))
         },
         trailingContent = {
             Text(path.toFile().humanReadableSize())
@@ -123,7 +125,7 @@ private fun DetailsTab(path: Path) {
     )
     ListItem(
         headlineContent = {
-            Text(Res.string.date_created)
+            Text(stringResource(Res.string.date_created))
         },
         trailingContent = {
             Text(path.creationTime().humanFriendly())
@@ -131,7 +133,7 @@ private fun DetailsTab(path: Path) {
     )
     ListItem(
         headlineContent = {
-            Text(Res.string.date_modified)
+            Text(stringResource(Res.string.date_modified))
         },
         trailingContent = {
             Text(path.getLastModifiedTime().toInstant().humanFriendly())
@@ -141,7 +143,7 @@ private fun DetailsTab(path: Path) {
     if (!path.isRegularFile()) {
         ListItem(
             headlineContent = {
-                Text(Res.string.contents)
+                Text(stringResource(Res.string.contents))
             },
             trailingContent = {
                 val entries = remember {
@@ -160,46 +162,22 @@ private fun PermissionsTab(path: Path) {
 
     ListItem(
         leadingContent = {
-            Icon(Icons.Default.Person, Res.string.owner)
+            Icon(Icons.Default.Person, stringResource(Res.string.owner))
         },
         headlineContent = {
-            Text(Res.string.owner)
+            Text(stringResource(Res.string.owner))
         },
         trailingContent = {
-            Text(path.getOwner()?.name ?: Res.string.unknown)
+            Text(path.getOwner()?.name ?: stringResource(Res.string.unknown))
         }
     )
 
     ListItem(
         leadingContent = {
-            Icon(Icons.Default.Key, Res.string.owner_access)
+            Icon(Icons.Default.Key, stringResource(Res.string.owner_access))
         },
         headlineContent = {
-            Text(Res.string.owner_access)
-        },
-        trailingContent = {
-        }
-    )
-
-    HorizontalDivider(thickness = 1.dp)
-
-    ListItem(
-        leadingContent = {
-            Icon(Icons.Default.Group, Res.string.group)
-        },
-        headlineContent = {
-            Text(Res.string.group)
-        },
-        trailingContent = {
-        }
-    )
-
-    ListItem(
-        leadingContent = {
-            Icon(Icons.Default.Key, Res.string.group_access)
-        },
-        headlineContent = {
-            Text(Res.string.group_access)
+            Text(stringResource(Res.string.owner_access))
         },
         trailingContent = {
         }
@@ -209,19 +187,43 @@ private fun PermissionsTab(path: Path) {
 
     ListItem(
         leadingContent = {
-            Icon(Icons.Default.Public, Res.string.global)
+            Icon(Icons.Default.Group, stringResource(Res.string.group))
         },
         headlineContent = {
-            Text(Res.string.global)
+            Text(stringResource(Res.string.group))
+        },
+        trailingContent = {
         }
     )
 
     ListItem(
         leadingContent = {
-            Icon(Icons.Default.Key, Res.string.global_access)
+            Icon(Icons.Default.Key, stringResource(Res.string.group_access))
         },
         headlineContent = {
-            Text(Res.string.global_access)
+            Text(stringResource(Res.string.group_access))
+        },
+        trailingContent = {
+        }
+    )
+
+    HorizontalDivider(thickness = 1.dp)
+
+    ListItem(
+        leadingContent = {
+            Icon(Icons.Default.Public, stringResource(Res.string.global))
+        },
+        headlineContent = {
+            Text(stringResource(Res.string.global))
+        }
+    )
+
+    ListItem(
+        leadingContent = {
+            Icon(Icons.Default.Key, stringResource(Res.string.global_access))
+        },
+        headlineContent = {
+            Text(stringResource(Res.string.global_access))
         },
         trailingContent = {
         }
@@ -229,7 +231,7 @@ private fun PermissionsTab(path: Path) {
 
     if (!isWindows) {
         ListItem(
-            headlineContent = { Text(Res.string.execute) },
+            headlineContent = { Text(stringResource(Res.string.execute)) },
             trailingContent = {
                 Switch(
                     checked = path.isExecutable(),

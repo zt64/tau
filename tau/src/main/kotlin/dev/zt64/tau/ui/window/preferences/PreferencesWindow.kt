@@ -1,6 +1,5 @@
 package dev.zt64.tau.ui.window.preferences
 
-import Res
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -12,12 +11,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
+import dev.zt64.tau.resources.*
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 private enum class SettingsPage(
-    val label: String,
+    val label: StringResource,
     val icon: ImageVector,
     val content: @Composable () -> Unit
 ) {
@@ -30,9 +32,9 @@ private enum class SettingsPage(
 fun PreferencesWindow(onCloseRequest: () -> Unit) {
     Window(
         onCloseRequest = onCloseRequest,
-        title = Res.string.settings,
+        title = stringResource(Res.string.settings),
         resizable = true,
-        icon = painterResource("window-icon.svg")
+        icon = painterResource(Res.drawable.window_icon)
     ) {
         var selectedCategory by remember {
             mutableStateOf(SettingsPage.APPEARANCE)
@@ -46,7 +48,7 @@ fun PreferencesWindow(onCloseRequest: () -> Unit) {
                     SettingsPage.entries.forEach {
                         NavigationDrawerItem(
                             icon = { Icon(it.icon, null) },
-                            label = { Text(text = it.label) },
+                            label = { Text(stringResource(it.label)) },
                             selected = selectedCategory == it,
                             onClick = { selectedCategory = it },
                             modifier = Modifier.padding(

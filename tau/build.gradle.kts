@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ktlint)
-    alias(libs.plugins.libres)
 }
 
 kotlin {
@@ -51,13 +50,16 @@ dependencies {
     implementation(libs.bundles.dbus.java)
     implementation(libs.bundles.settings)
 
-    implementation(libs.libres.compose)
+    implementation(compose.components.resources)
 
     testImplementation(compose.uiTest)
     testImplementation(libs.kotlin.test)
 }
 
 compose {
+    resources {
+        packageOfResClass = "dev.zt64.tau.resources"
+    }
     desktop.application {
         mainClass = "dev.zt64.tau.MainKt"
 

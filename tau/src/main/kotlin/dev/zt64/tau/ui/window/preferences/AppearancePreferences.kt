@@ -1,6 +1,5 @@
 package dev.zt64.tau.ui.window.preferences
 
-import Res
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,8 +16,11 @@ import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
 import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.Theme
+import dev.zt64.tau.resources.Res
+import dev.zt64.tau.resources.dark
 import dev.zt64.tau.ui.viewmodel.PreferencesViewModel
 import dev.zt64.tau.ui.window.ColumnsList
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -31,7 +33,7 @@ fun AppearancePreferences() {
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         ListItem(
-            headlineContent = { Text(Res.string.dark) },
+            headlineContent = { Text(stringResource(Res.string.dark)) },
             trailingContent = {
                 Switch(
                     checked = preferencesManager.theme == Theme.DARK,

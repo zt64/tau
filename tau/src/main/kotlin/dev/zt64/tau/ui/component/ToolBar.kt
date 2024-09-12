@@ -1,6 +1,5 @@
 package dev.zt64.tau.ui.component
 
-import Res
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -27,8 +26,10 @@ import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
+import dev.zt64.tau.resources.*
 import dev.zt64.tau.ui.component.tooltip.PlainTooltipBox
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -50,7 +51,7 @@ fun Toolbar() {
 
             PlainTooltipBox(
                 tooltipContent = {
-                    Text(Res.string.goto_parent_folder)
+                    Text(stringResource(Res.string.goto_parent_folder))
                 }
             ) {
                 FilledIconButton(
@@ -63,27 +64,27 @@ fun Toolbar() {
 
             PlainTooltipBox(
                 tooltipContent = {
-                    Text(Res.string.back)
+                    Text(stringResource(Res.string.back))
                 }
             ) {
                 FilledTonalIconButton(
                     enabled = viewModel.canGoBack,
                     onClick = viewModel::navigateBack
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowLeft, Res.string.back)
+                    Icon(Icons.AutoMirrored.Filled.ArrowLeft, stringResource(Res.string.back))
                 }
             }
 
             PlainTooltipBox(
                 tooltipContent = {
-                    Text(Res.string.forward)
+                    Text(stringResource(Res.string.forward))
                 }
             ) {
                 FilledTonalIconButton(
                     enabled = viewModel.canGoForward,
                     onClick = viewModel::navigateForward
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowRight, Res.string.forward)
+                    Icon(Icons.AutoMirrored.Filled.ArrowRight, stringResource(Res.string.forward))
                 }
             }
 
@@ -107,7 +108,7 @@ fun Toolbar() {
                         onValueChange = viewModel::search,
                         placeholder = {
                             Text(
-                                text = Res.string.search,
+                                text = stringResource(Res.string.search),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -129,7 +130,7 @@ fun Toolbar() {
             ) {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = Res.string.search
+                    contentDescription = stringResource(Res.string.search)
                 )
             }
 

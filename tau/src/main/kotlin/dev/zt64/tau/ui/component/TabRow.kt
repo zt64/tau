@@ -1,6 +1,5 @@
 package dev.zt64.tau.ui.component
 
-import Res
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.Orientation
@@ -19,8 +18,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.zt64.tau.resources.Res
+import dev.zt64.tau.resources.close_tab
 import dev.zt64.tau.ui.component.menu.FolderContextMenu
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.io.path.name
 import kotlin.io.path.pathString
@@ -100,7 +102,7 @@ fun TabRow() {
                                         Icon(
                                             modifier = Modifier.size(14.dp),
                                             imageVector = Icons.Default.Close,
-                                            contentDescription = Res.string.close_tab
+                                            contentDescription = stringResource(Res.string.close_tab)
                                         )
                                     }
                                 }

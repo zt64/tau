@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Window
 import com.godaddy.android.colorpicker.HsvColor
 import dev.zt64.tau.di.managerModule
@@ -12,19 +11,24 @@ import dev.zt64.tau.di.viewModelModule
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.domain.manager.ShortcutsManager
 import dev.zt64.tau.model.Theme
+import dev.zt64.tau.resources.*
 import dev.zt64.tau.ui.component.MenuBar
 import dev.zt64.tau.ui.theme.Theme
 import dev.zt64.tau.ui.window.BrowserWindow
 import dev.zt64.tau.ui.window.preferences.PreferencesWindow
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
+import org.koin.core.KoinApplication
 import java.awt.Dimension
 
 @Composable
 fun Tau(onCloseRequest: () -> Unit) {
     KoinApplication(
         application = {
-            modules(managerModule, viewModelModule)
+            KoinApplication.init().apply {
+                modules(managerModule, viewModelModule)
+            }
         }
     ) {
         val preferencesManager = koinInject<PreferencesManager>()
@@ -49,7 +53,7 @@ fun Tau(onCloseRequest: () -> Unit) {
 
             Window(
                 title = "tau",
-                icon = painterResource("window-icon.svg"),
+                icon = painterResource(Res.drawable.window_icon),
                 onCloseRequest = onCloseRequest
                 // onKeyEvent = {
                 //     if (it.type == KeyEventType.KeyDown) {

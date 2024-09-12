@@ -1,6 +1,9 @@
 package dev.zt64.tau.model
 
-enum class DetailColumnType(val displayName: String) {
+import dev.zt64.tau.resources.*
+import org.jetbrains.compose.resources.StringResource
+
+enum class DetailColumnType(val displayName: StringResource) {
     NAME(Res.string.name),
     SIZE(Res.string.size),
     DATE_MODIFIED(Res.string.date_modified),

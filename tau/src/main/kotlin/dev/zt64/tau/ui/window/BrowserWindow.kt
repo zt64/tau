@@ -2,12 +2,15 @@
 
 package dev.zt64.tau.ui.window
 
+import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draganddrop.*
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.font.FontWeight
@@ -81,19 +84,24 @@ fun BrowserWindow() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .onExternalDrag {
-                    val dragData = it.dragData
-                    if (dragData !is DragData.FilesList) {
-                        println("Unsupported drag data: $dragData")
-                        return@onExternalDrag
-                    }
+                .dragAndDropTarget(
+                    shouldStartDragAndDrop = {
+                        it.dragData() is DragData.FilesList
+                    },
+                    target = object : DragAndDropTarget {
+                        override fun onDrop(event: DragAndDropEvent): Boolean {
+                            val data = event.dragData() as DragData.FilesList
 
-                    val currentLocation = viewModel.currentLocation.toFile()
+                            val currentLocation = viewModel.currentLocation.toFile()
 
-                    dragData.readFiles().forEach { path ->
-                        File(path).moveTo(currentLocation)
+                            data.readFiles().forEach { path ->
+                                File(path).moveTo(currentLocation)
+                            }
+
+                            return true
+                        }
                     }
-                }
+                )
         ) {
             val watcher = viewModel.watcher
 

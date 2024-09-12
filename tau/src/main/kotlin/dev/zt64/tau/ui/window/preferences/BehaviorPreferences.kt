@@ -1,6 +1,5 @@
 package dev.zt64.tau.ui.window.preferences
 
-import Res
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
@@ -10,6 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.OpenItemAction
+import dev.zt64.tau.resources.*
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
@@ -18,7 +19,7 @@ fun BehaviorPreferences() {
 
     Column {
         ListItem(
-            headlineContent = { Text(Res.string.open_item_action) },
+            headlineContent = { Text(stringResource(Res.string.open_item_action)) },
             trailingContent = {
                 var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -28,7 +29,7 @@ fun BehaviorPreferences() {
                 ) {
                     TextField(
                         modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
-                        value = preferencesManager.openItemAction.s,
+                        value = stringResource(preferencesManager.openItemAction.s),
                         onValueChange = {},
                         readOnly = true,
                         singleLine = true,
@@ -44,7 +45,7 @@ fun BehaviorPreferences() {
                     ) {
                         OpenItemAction.entries.forEach { action ->
                             DropdownMenuItem(
-                                text = { Text(action.s) },
+                                text = { Text(stringResource(action.s)) },
                                 onClick = {
                                     preferencesManager.openItemAction = action
                                     expanded = false
@@ -59,7 +60,7 @@ fun BehaviorPreferences() {
 
         ListItem(
             headlineContent = {
-                Text(Res.string.truncate_filename)
+                Text(stringResource(Res.string.truncate_filename))
             },
             trailingContent = {
                 Switch(
@@ -76,7 +77,7 @@ fun BehaviorPreferences() {
 
         ListItem(
             headlineContent = {
-                Text(Res.string.show_hidden_files)
+                Text(stringResource(Res.string.show_hidden_files))
             },
             supportingContent = {
                 Text("Global setting for showing hidden files in the file browser")

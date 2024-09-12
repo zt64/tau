@@ -1,6 +1,5 @@
 package dev.zt64.tau.ui.component
 
-import Res
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -8,6 +7,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.zt64.tau.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MenuBar(
@@ -25,20 +26,20 @@ fun MenuBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             MenuBarItem(
-                label = { Text(Res.string.file) },
+                label = { Text(stringResource(Res.string.file)) },
                 content = {
                     DropdownMenuItem(
-                        text = { Text(Res.string.settings) },
+                        text = { Text(stringResource(Res.string.settings)) },
                         onClick = onClickPreferences
                     )
                 }
             )
 
             MenuBarItem(
-                label = { Text(Res.string.edit) },
+                label = { Text(stringResource(Res.string.edit)) },
                 content = {
                     DropdownMenuItem(
-                        text = { Text(Res.string.copy) },
+                        text = { Text(stringResource(Res.string.copy)) },
                         onClick = {
                         }
                     )
@@ -46,10 +47,10 @@ fun MenuBar(
             )
 
             MenuBarItem(
-                label = { Text(Res.string.view) },
+                label = { Text(stringResource(Res.string.view)) },
                 content = {
                     DropdownMenuItem(
-                        text = { Text(Res.string.copy) },
+                        text = { Text(stringResource(Res.string.copy)) },
                         onClick = {
                         }
                     )

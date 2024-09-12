@@ -1,6 +1,5 @@
 package dev.zt64.tau.ui.component.sidepanel
 
-import Res
 import androidx.compose.foundation.ContextMenuArea
 import androidx.compose.foundation.ContextMenuItem
 import androidx.compose.foundation.combinedClickable
@@ -26,11 +25,11 @@ fun Bookmark(
         items = {
             listOf(
                 ContextMenuItem(
-                    label = Res.string.open_in_tab,
+                    label = "Open in new tab",
                     onClick = { }
                 ),
                 ContextMenuItem(
-                    label = Res.string.open_in_window,
+                    label = "Open in new window",
                     onClick = { }
                 )
             )

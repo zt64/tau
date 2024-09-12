@@ -1,9 +1,10 @@
 package dev.zt64.tau.ui.component.menu
 
-import Res
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import dev.zt64.tau.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun FolderContextMenu(content: @Composable () -> Unit) {
@@ -11,21 +12,21 @@ fun FolderContextMenu(content: @Composable () -> Unit) {
         menuItems = {
             DropdownMenuItem(
                 text = {
-                    Text(Res.string.open_in_tab)
+                    Text(stringResource(Res.string.open_in_tab))
                 },
                 onClick = {
                 }
             )
             DropdownMenuItem(
                 text = {
-                    Text(Res.string.open_in_window)
+                    Text(stringResource(Res.string.open_in_window))
                 },
                 onClick = {
                 }
             )
             DropdownMenuItem(
                 text = {
-                    Text(Res.string.properties)
+                    Text(stringResource(Res.string.properties))
                 },
                 onClick = {
                 }
