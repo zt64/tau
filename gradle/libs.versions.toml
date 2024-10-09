@@ -13,7 +13,7 @@ io = "0.5.3"
 
 windowSize = "0.5.0"
 colorPicker = "0.7.0"
-materialKolor = "1.7.0"
+materialKolor = "1.7.1"
 reorderable = "2.3.3"
 
 dbus-java = "5.1.0"
