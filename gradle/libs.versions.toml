@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.0.21"
-compose = "1.7.0-rc01"
+compose = "1.7.0"
 
 clikt = "5.0.1"
 tika-core = "2.9.2"
