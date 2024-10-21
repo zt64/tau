@@ -11,6 +11,7 @@ val managerModule = module {
         return PreferencesSettings.Factory().create("tau")
     }
 
+    
     singleOf(::providePreferencesSettings)
     singleOf(::PreferencesManager)
     singleOf(::ShortcutsManager)

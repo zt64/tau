@@ -11,7 +11,8 @@ import dev.zt64.tau.di.viewModelModule
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.domain.manager.ShortcutsManager
 import dev.zt64.tau.model.Theme
-import dev.zt64.tau.resources.*
+import dev.zt64.tau.resources.Res
+import dev.zt64.tau.resources.window_icon
 import dev.zt64.tau.ui.component.MenuBar
 import dev.zt64.tau.ui.theme.Theme
 import dev.zt64.tau.ui.window.BrowserWindow
@@ -19,16 +20,13 @@ import dev.zt64.tau.ui.window.preferences.PreferencesWindow
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
-import org.koin.core.KoinApplication
 import java.awt.Dimension
 
 @Composable
 fun Tau(onCloseRequest: () -> Unit) {
     KoinApplication(
         application = {
-            KoinApplication.init().apply {
-                modules(managerModule, viewModelModule)
-            }
+            modules(managerModule, viewModelModule)
         }
     ) {
         val preferencesManager = koinInject<PreferencesManager>()
