@@ -23,6 +23,7 @@ class BrowserViewModel(private val pref: PreferencesManager) : ViewModel() {
         private set
 
     val tabs = mutableStateListOf(currentLocation)
+
     private var _currentTabIndex = MutableStateFlow(0)
     val currentTabIndex = _currentTabIndex.asStateFlow()
 
@@ -33,6 +34,7 @@ class BrowserViewModel(private val pref: PreferencesManager) : ViewModel() {
         private set
 
     val watcher = KfsDirectoryWatcher(viewModelScope)
+    var searching by mutableStateOf(false)
     var search by mutableStateOf("")
         private set
 

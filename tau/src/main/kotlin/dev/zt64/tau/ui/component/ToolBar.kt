@@ -17,9 +17,10 @@ import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
@@ -44,7 +45,6 @@ fun Toolbar() {
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            var searching by rememberSaveable { mutableStateOf(false) }
             var operations = remember {
                 mutableStateListOf<Unit>()
             }
@@ -89,11 +89,15 @@ fun Toolbar() {
             }
 
             Crossfade(
-                targetState = searching,
+                targetState = viewModel.searching,
                 animationSpec = tween(200)
             ) {
                 if (it) {
+                    val focusRequester = remember { FocusRequester() }
+
                     DisposableEffect(Unit) {
+                        focusRequester.requestFocus()
+
                         onDispose {
                             viewModel.clearSearch()
                         }
@@ -101,6 +105,7 @@ fun Toolbar() {
 
                     SearchField(
                         modifier = Modifier
+                            .focusRequester(focusRequester)
                             .width(400.dp)
                             .heightIn(min = 42.dp, max = 42.dp),
                         value = viewModel.search,
@@ -125,8 +130,8 @@ fun Toolbar() {
             Spacer(Modifier.weight(1f))
 
             FilledTonalIconToggleButton(
-                checked = searching,
-                onCheckedChange = { searching = it }
+                checked = viewModel.searching,
+                onCheckedChange = { viewModel.searching = it }
             ) {
                 Icon(
                     imageVector = Icons.Default.Search,

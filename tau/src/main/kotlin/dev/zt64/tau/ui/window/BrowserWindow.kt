@@ -60,7 +60,7 @@ fun BrowserWindow() {
                             viewModel.refresh()
                         }
                         Key.F -> {
-                            // state.focusSearch()
+                            viewModel.searching = true
                         }
                         Key.T -> viewModel.newTab()
                         Key.W -> viewModel.closeTab()
