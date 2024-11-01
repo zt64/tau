@@ -5,6 +5,8 @@ import dev.zt64.tau.domain.manager.base.BasePreferenceManager
 import dev.zt64.tau.model.OpenItemAction
 import dev.zt64.tau.model.Theme
 import dev.zt64.tau.model.ViewMode
+import dev.zt64.tau.util.SortDirection
+import dev.zt64.tau.util.SortType
 
 class PreferencesManager(settings: PreferencesSettings) : BasePreferenceManager(settings) {
     var theme: Theme by preference(Theme.DARK)
@@ -19,4 +21,7 @@ class PreferencesManager(settings: PreferencesSettings) : BasePreferenceManager(
 
     // var columns by preference()
     var autoSizeColumns: Boolean by preference(true)
+
+    var sortType: SortType by preference(SortType.NAME)
+    var sortDirection: SortDirection by preference(SortDirection.DESCENDING)
 }
