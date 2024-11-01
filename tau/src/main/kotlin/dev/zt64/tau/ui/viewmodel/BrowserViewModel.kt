@@ -6,6 +6,9 @@ import androidx.compose.runtime.snapshots.Snapshot
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zt64.tau.domain.manager.PreferencesManager
+import dev.zt64.tau.util.SortDirection
+import dev.zt64.tau.util.SortType
+import dev.zt64.tau.util.creationTime
 import io.github.irgaly.kfswatch.KfsDirectoryWatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -130,9 +133,13 @@ class BrowserViewModel(private val pref: PreferencesManager) : ViewModel() {
                     .asSequence()
                     .filter { (!it.isHidden() || pref.showHiddenFiles) && (search in it.name) }
                     .sortedWith(
-                        compareBy<Path> { it.startsWith(".") }
-                            .thenBy { !it.isDirectory() }
-                            .thenBy { it.nameWithoutExtension }
+                        compareBy<Path> {
+                            when (pref.sortType) {
+                                SortType.SIZE -> it.fileSize()
+                                SortType.DATE -> it.creationTime()
+                                SortType.NAME -> it.nameWithoutExtension
+                            }
+                        }.let { if (pref.sortDirection == SortDirection.DESCENDING) it.reversed() else it }
                     )
                     .toList()
                 contents.clear()
