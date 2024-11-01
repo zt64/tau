@@ -136,8 +136,9 @@ class BrowserViewModel(private val pref: PreferencesManager) : ViewModel() {
                         compareBy<Path> {
                             when (pref.sortType) {
                                 SortType.SIZE -> it.fileSize()
-                                SortType.DATE -> it.creationTime()
+                                SortType.CREATION_DATE -> it.creationTime()
                                 SortType.NAME -> it.nameWithoutExtension
+                                SortType.MODIFICATION_DATE -> it.getLastModifiedTime().toInstant()
                             }
                         }.let { if (pref.sortDirection == SortDirection.DESCENDING) it.reversed() else it }
                     )
