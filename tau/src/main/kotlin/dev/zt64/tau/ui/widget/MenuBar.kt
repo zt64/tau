@@ -1,4 +1,4 @@
-package dev.zt64.tau.ui.component
+package dev.zt64.tau.ui.widget
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.resources.*
+import dev.zt64.tau.ui.component.MiniTextButton
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -29,8 +30,28 @@ fun MenuBar(
                 label = { Text(stringResource(Res.string.file)) },
                 content = {
                     DropdownMenuItem(
+                        text = { Text(stringResource(Res.string.new_tab)) },
+                        onClick = {}
+                    )
+
+                    DropdownMenuItem(
+                        text = { Text(stringResource(Res.string.new_window)) },
+                        onClick = {}
+                    )
+
+                    DropdownMenuItem(
                         text = { Text(stringResource(Res.string.settings)) },
                         onClick = onClickPreferences
+                    )
+
+                    DropdownMenuItem(
+                        text = { Text(stringResource(Res.string.close_tab)) },
+                        onClick = {}
+                    )
+
+                    DropdownMenuItem(
+                        text = { Text(stringResource(Res.string.quit)) },
+                        onClick = {}
                     )
                 }
             )
@@ -66,7 +87,7 @@ fun MenuBarItem(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Box(
-        modifier = Modifier.wrapContentSize(Alignment.TopStart)
+        contentAlignment = Alignment.TopStart
     ) {
         var showDropdown by rememberSaveable { mutableStateOf(false) }
 

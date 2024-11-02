@@ -1,9 +1,7 @@
 package dev.zt64.tau.ui.dialog
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -11,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import dev.zt64.tau.model.File
+import dev.zt64.tau.ui.component.Thumbnail
 import nl.jacobras.humanreadable.HumanReadable
 import java.nio.file.Path
 
@@ -40,26 +39,58 @@ fun FileConflictDialog(
             ) {
                 Text(
                     text = "This folder already contains a file \"${file.name}\"",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.headlineMedium
                 )
 
-                Row {
+                Column {
+                    Text(
+                        text = "Source",
+                        style = MaterialTheme.typography.titleSmall
+                    )
                     File(file)
+
+                    Text(
+                        text = "Destination",
+                        style = MaterialTheme.typography.titleSmall
+                    )
                     File(otherFile)
                 }
 
-                if (showApplyToAll) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            "Apply to all"
-                        )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (showApplyToAll) {
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Apply to all")
 
-                        Checkbox(
-                            checked = false,
-                            onCheckedChange = { }
-                        )
+                            Checkbox(
+                                checked = false,
+                                onCheckedChange = { }
+                            )
+                        }
+                    }
+
+                    Button(
+                        onClick = { onResolveConflict(FileConflictResolution.SKIP) }
+                    ) {
+                        Text("Skip")
+                    }
+
+                    Button(
+                        onClick = { onResolveConflict(FileConflictResolution.REPLACE) }
+                    ) {
+                        Text("Overwrite")
+                    }
+
+                    Button(
+                        onClick = { onResolveConflict(FileConflictResolution.RENAME) }
+                    ) {
+                        Text("Rename")
                     }
                 }
             }
@@ -69,16 +100,22 @@ fun FileConflictDialog(
 
 @Composable
 private fun File(file: File) {
-    Column {
-        Text(
-            text = "Size: ${HumanReadable.fileSize(file.size)}",
-            style = MaterialTheme.typography.bodySmall
-        )
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Thumbnail(file.path.toFile())
 
-        Text(
-            text = "Modified: ${file.lastModified}",
-            style = MaterialTheme.typography.bodySmall
-        )
+        Column {
+            Text(
+                text = "Size: ${HumanReadable.fileSize(file.size)}",
+                style = MaterialTheme.typography.bodySmall
+            )
+
+            Text(
+                text = "Modified: March 23, 1455 10:58 AM",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
     }
 }
 
@@ -99,7 +136,7 @@ fun FileConflictDialogPreview() {
             name = "file",
             isDirectory = false,
             isHidden = false,
-            size = 3000,
+            size = 5000,
             lastModified = 0
         ),
         onResolveConflict = {},

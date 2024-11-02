@@ -1,4 +1,4 @@
-package dev.zt64.tau.ui.component
+package dev.zt64.tau.ui.widget.toolbar
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
@@ -33,6 +33,9 @@ import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
+/**
+ * Primary toolbar
+ */
 @Composable
 fun Toolbar() {
     val viewModel = koinViewModel<BrowserViewModel>()
@@ -155,7 +158,7 @@ fun Toolbar() {
 
 @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
 @Composable
-fun SearchField(
+private fun SearchField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
