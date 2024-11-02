@@ -59,7 +59,7 @@ fun BehaviorPreferences() {
             }
         )
 
-        ListItem(
+        PreferenceItem(
             headlineContent = { Text(stringResource(Res.string.sort_type)) },
             trailingContent = {
                 var expanded by rememberSaveable { mutableStateOf(false) }
@@ -99,7 +99,7 @@ fun BehaviorPreferences() {
             }
         )
 
-        ListItem(
+        PreferenceItem(
             headlineContent = { Text(stringResource(Res.string.sort_direction)) },
             trailingContent = {
                 var expanded by rememberSaveable { mutableStateOf(false) }

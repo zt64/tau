@@ -43,7 +43,7 @@ fun Path.setXAttr(key: String, value: String) {
 
 fun Path.getXAttr(key: String): String? {
     val view = Files.getFileAttributeView(this, UserDefinedFileAttributeView::class.java)
-    if (view == null || !this.listXAttrs().contains(key)) return null
+    if (view == null || key !in listXAttrs()) return null
 
     val buffer = ByteBuffer.allocate(view.size(key))
     view.read(key, buffer)
@@ -53,5 +53,5 @@ fun Path.getXAttr(key: String): String? {
 
 fun Path.listXAttrs(): List<String> {
     val view = Files.getFileAttributeView(this, UserDefinedFileAttributeView::class.java)
-    return view?.list() ?: emptyList()
+    return view?.list().orEmpty()
 }
