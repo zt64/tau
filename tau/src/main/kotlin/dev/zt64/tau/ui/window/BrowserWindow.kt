@@ -1,5 +1,3 @@
-@file:OptIn(KoinExperimentalAPI::class)
-
 package dev.zt64.tau.ui.window
 
 import androidx.compose.foundation.draganddrop.dragAndDropTarget
@@ -17,8 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
-import dev.zt64.tau.ui.component.*
+import dev.zt64.tau.ui.component.FileVerticalGrid
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
+import dev.zt64.tau.ui.widget.SidePanel
+import dev.zt64.tau.ui.widget.TabRow
+import dev.zt64.tau.ui.widget.toolbar.Toolbar
 import dev.zt64.tau.util.humanReadableSize
 import dev.zt64.tau.util.moveTo
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +30,6 @@ import org.jetbrains.compose.splitpane.HorizontalSplitPane
 import org.jetbrains.compose.splitpane.rememberSplitPaneState
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 import java.io.File
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
@@ -122,7 +122,9 @@ fun BrowserWindow() {
                 }
             }
 
-            Toolbar()
+            if (preferencesManager.showToolbar) {
+                Toolbar()
+            }
 
             HorizontalSplitPane(
                 modifier = Modifier.fillMaxWidth(),
@@ -132,7 +134,7 @@ fun BrowserWindow() {
                     SidePanel()
                 }
 
-                second {
+                second(minSize = 200.dp) {
                     Column {
                         TabRow()
 
@@ -140,7 +142,9 @@ fun BrowserWindow() {
                             modifier = Modifier.weight(1f)
                         )
 
-                        StatusBar()
+                        if (preferencesManager.showStatusBar) {
+                            StatusBar()
+                        }
                     }
                 }
             }

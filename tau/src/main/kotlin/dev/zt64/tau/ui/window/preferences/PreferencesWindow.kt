@@ -17,6 +17,7 @@ import dev.zt64.tau.resources.*
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import java.awt.Dimension
 
 private enum class SettingsPage(
     val label: StringResource,
@@ -36,6 +37,10 @@ fun PreferencesWindow(onCloseRequest: () -> Unit) {
         resizable = true,
         icon = painterResource(Res.drawable.window_icon)
     ) {
+        LaunchedEffect(Unit) {
+            window.minimumSize = Dimension(540, 300)
+        }
+
         var selectedCategory by remember {
             mutableStateOf(SettingsPage.APPEARANCE)
         }

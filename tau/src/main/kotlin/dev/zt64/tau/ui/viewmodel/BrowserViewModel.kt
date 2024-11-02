@@ -94,15 +94,17 @@ class BrowserViewModel(private val pref: PreferencesManager) : ViewModel() {
     }
 
     fun closeTab(index: Int = currentTabIndex.value) {
-        Snapshot.withMutableSnapshot {
-            tabs.removeAt(index)
+        if (tabs.size > 1) {
+            Snapshot.withMutableSnapshot {
+                tabs.removeAt(index)
 
-            when {
-                index == _currentTabIndex.value -> {
-                    switchTab((index - 1).coerceAtLeast(0))
-                }
-                index < _currentTabIndex.value -> {
-                    switchTab(_currentTabIndex.value - 1)
+                when {
+                    index == _currentTabIndex.value -> {
+                        switchTab((index - 1).coerceAtLeast(0))
+                    }
+                    index < _currentTabIndex.value -> {
+                        switchTab(_currentTabIndex.value - 1)
+                    }
                 }
             }
         }

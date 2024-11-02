@@ -1,4 +1,4 @@
-package dev.zt64.tau.ui.component
+package dev.zt64.tau.ui.widget
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxHeight

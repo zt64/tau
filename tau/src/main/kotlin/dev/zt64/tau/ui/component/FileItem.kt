@@ -27,7 +27,6 @@ import dev.zt64.tau.model.OpenItemAction
 import dev.zt64.tau.ui.component.menu.FolderContextMenu
 import dev.zt64.tau.ui.window.PropertiesWindow
 import dev.zt64.tau.util.contains
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.apache.tika.Tika
 import org.koin.compose.koinInject
@@ -36,6 +35,7 @@ import java.awt.datatransfer.Transferable
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.*
+
 
 @Composable
 fun FileItem(
@@ -120,60 +120,9 @@ fun FileItem(
                 Box(
                     modifier = Modifier.padding(8.dp)
                 ) {
-                    val coroutineScope = rememberCoroutineScope { Dispatchers.IO }
-                    var fileIcon by remember {
-                        mutableStateOf(
-                            if (path.isDirectory()) {
-                                Icons.Default.Folder
-                            } else {
-                                Icons.Default.Description
-                            }
-                        )
-                    }
-
-                    LaunchedEffect(Unit) {
-                        coroutineScope.launch {
-                            if (path.isDirectory()) return@launch
-
-                            val (dataType, dataFormat) = runCatching {
-                                Tika()
-                                    .detect(path.inputStream(), path.name)
-                                    .split("/")
-                            }.getOrElse { return@launch }
-
-                            fileIcon = when (dataType) {
-                                "image" -> Icons.Default.Image
-                                "video" -> Icons.Default.VideoFile
-                                "audio" -> Icons.Default.AudioFile
-                                "text" -> Icons.AutoMirrored.Filled.Article
-                                "font" -> Icons.Default.TextFields
-                                "application" -> when {
-                                    dataFormat.contains(
-                                        "zip",
-                                        "7z",
-                                        "rar",
-                                        "tar"
-                                    ) -> Icons.Default.Archive
-                                    dataFormat == "java-archive" -> Icons.Default.Coffee
-                                    dataFormat == "ogg" -> Icons.Default.MusicVideo
-                                    else -> Icons.Default.Description
-                                }
-                                else -> Icons.Default.Description
-                            }
-                        }
-                    }
-
-                    val tint = if (path.isHidden()) {
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-                    } else {
-                        MaterialTheme.colorScheme.primary
-                    }
-
-                    Icon(
+                    Thumbnail(
                         modifier = Modifier.size(48.dp),
-                        imageVector = fileIcon,
-                        tint = tint,
-                        contentDescription = null
+                        file = path.toFile()
                     )
 
                     val icon = when {
@@ -238,6 +187,93 @@ fun FileItem(
             }
         }
     }
+}
+
+@Composable
+fun Thumbnail(file: File, modifier: Modifier = Modifier) {
+    val scope = rememberCoroutineScope()
+
+    var fileIcon by remember {
+        mutableStateOf(
+            if (file.isDirectory) {
+                Icons.Default.Folder
+            } else {
+                Icons.Default.Description
+            }
+        )
+    }
+
+    LaunchedEffect(Unit) {
+        scope.launch {
+            if (file.isDirectory) return@launch
+
+            val (dataType, dataFormat) = runCatching {
+                Tika()
+                    .detect(file.inputStream(), file.name)
+                    .split("/")
+            }.getOrElse { return@launch }
+
+            fileIcon = when (dataType) {
+                "image" -> Icons.Default.Image
+                "video" -> Icons.Default.VideoFile
+                "audio" -> Icons.Default.AudioFile
+                "text" -> Icons.AutoMirrored.Filled.Article
+                "font" -> Icons.Default.TextFields
+                "application" -> when {
+                    dataFormat.contains(
+                        "zip",
+                        "7z",
+                        "rar",
+                        "tar"
+                    ) -> Icons.Default.Archive
+                    dataFormat == "java-archive" -> Icons.Default.Coffee
+                    dataFormat == "ogg" -> Icons.Default.MusicVideo
+                    else -> Icons.Default.Description
+                }
+                else -> Icons.Default.Description
+            }
+        }
+    }
+
+    val tint = if (file.isHidden) {
+        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+    } else {
+        MaterialTheme.colorScheme.primary
+    }
+
+    Icon(
+        modifier = modifier,
+        imageVector = fileIcon,
+        tint = tint,
+        contentDescription = null
+    )
+
+    // var bitmap: ImageBitmap? by remember { mutableStateOf(null) }
+    //
+    // LaunchedEffect(file) {
+    //     scope.launch(Dispatchers.IO) {
+    //         val icon = FileSystemView.getFileSystemView().getSystemIcon(file)
+    //
+    //         val width: Int = icon.iconWidth
+    //         val height: Int = icon.iconHeight
+    //         val bufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+    //
+    //         // Paint the icon onto the BufferedImage
+    //         val g2d = bufferedImage.createGraphics()
+    //         icon.paintIcon(null, g2d, 0, 0)
+    //         g2d.dispose()
+    //
+    //         bitmap = bufferedImage.toComposeImageBitmap()
+    //     }
+    // }
+    //
+    // if (bitmap != null) {
+    //     Image(
+    //         modifier = modifier,
+    //         bitmap = bitmap!!,
+    //         contentDescription = null
+    //     )
+    // }
 }
 
 @Preview

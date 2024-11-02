@@ -7,6 +7,9 @@ import dev.zt64.tau.model.KeyModifier
 import dev.zt64.tau.model.Shortcut
 
 class ShortcutsManager(settings: PreferencesSettings) : BasePreferenceManager(settings) {
+    /**
+     * List of all available shortcuts
+     */
     val shortcuts = mutableListOf<Shortcut>()
 
     var selectAll by shortcut(Shortcut(KeyModifier.Ctrl, Key.A))
@@ -24,7 +27,7 @@ class ShortcutsManager(settings: PreferencesSettings) : BasePreferenceManager(se
         return PreferenceProvider(
             key = null,
             defaultValue = defaultValue,
-            getter = { key, defaultValue ->
+            getter = { key, _ ->
                 settings.getIntOrNull(key)?.let(::Shortcut) ?: defaultValue
             },
             setter = { key, newValue ->

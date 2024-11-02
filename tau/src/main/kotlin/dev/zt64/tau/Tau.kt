@@ -1,5 +1,6 @@
 package dev.zt64.tau
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -13,8 +14,8 @@ import dev.zt64.tau.domain.manager.ShortcutsManager
 import dev.zt64.tau.model.Theme
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.window_icon
-import dev.zt64.tau.ui.component.MenuBar
 import dev.zt64.tau.ui.theme.Theme
+import dev.zt64.tau.ui.widget.MenuBar
 import dev.zt64.tau.ui.window.BrowserWindow
 import dev.zt64.tau.ui.window.preferences.PreferencesWindow
 import org.jetbrains.compose.resources.painterResource
@@ -38,10 +39,9 @@ fun Tau(onCloseRequest: () -> Unit) {
 
         Theme(
             seedColor = updatedHsvColor,
-            isDarkTheme = preferencesManager.theme == Theme.DARK
+            isDarkTheme = preferencesManager.theme == Theme.DARK || preferencesManager.theme == Theme.SYSTEM && isSystemInDarkTheme()
         ) {
             var showPreferences by rememberSaveable { mutableStateOf(false) }
-            var showMenuBar by rememberSaveable { mutableStateOf(true) }
 
             if (showPreferences) {
                 PreferencesWindow(
@@ -71,7 +71,7 @@ fun Tau(onCloseRequest: () -> Unit) {
                 }
 
                 Column {
-                    if (showMenuBar) {
+                    if (preferencesManager.showMenuBar) {
                         MenuBar(
                             onClickPreferences = {
                                 showPreferences = true

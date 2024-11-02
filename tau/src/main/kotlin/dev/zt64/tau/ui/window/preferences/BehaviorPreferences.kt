@@ -1,15 +1,14 @@
 package dev.zt64.tau.ui.window.preferences
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.OpenItemAction
 import dev.zt64.tau.resources.*
+import dev.zt64.tau.ui.component.preferences.PreferenceItem
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -18,7 +17,7 @@ fun BehaviorPreferences() {
     val preferencesManager = koinInject<PreferencesManager>()
 
     Column {
-        ListItem(
+        PreferenceItem(
             headlineContent = { Text(stringResource(Res.string.open_item_action)) },
             trailingContent = {
                 var expanded by rememberSaveable { mutableStateOf(false) }
@@ -58,15 +57,14 @@ fun BehaviorPreferences() {
             }
         )
 
-        ListItem(
+        PreferenceItem(
             headlineContent = {
                 Text(stringResource(Res.string.truncate_filename))
             },
             trailingContent = {
                 Switch(
                     checked = preferencesManager.truncateNames,
-                    onCheckedChange = { preferencesManager.truncateNames = it },
-                    modifier = Modifier.padding(8.dp)
+                    onCheckedChange = { preferencesManager.truncateNames = it }
                 )
             }
         )
@@ -75,7 +73,7 @@ fun BehaviorPreferences() {
             // TODO Numerical input for lines to truncate
         }
 
-        ListItem(
+        PreferenceItem(
             headlineContent = {
                 Text(stringResource(Res.string.show_hidden_files))
             },
