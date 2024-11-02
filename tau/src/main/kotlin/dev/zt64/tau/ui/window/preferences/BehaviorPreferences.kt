@@ -9,6 +9,8 @@ import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.OpenItemAction
 import dev.zt64.tau.resources.*
 import dev.zt64.tau.ui.component.preferences.PreferenceItem
+import dev.zt64.tau.util.SortDirection
+import dev.zt64.tau.util.SortType
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -47,6 +49,86 @@ fun BehaviorPreferences() {
                                 text = { Text(stringResource(action.s)) },
                                 onClick = {
                                     preferencesManager.openItemAction = action
+                                    expanded = false
+                                },
+                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                            )
+                        }
+                    }
+                }
+            }
+        )
+
+        PreferenceItem(
+            headlineContent = { Text(stringResource(Res.string.sort_type)) },
+            trailingContent = {
+                var expanded by rememberSaveable { mutableStateOf(false) }
+
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = it }
+                ) {
+                    TextField(
+                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                        value = stringResource(preferencesManager.sortType.s),
+                        onValueChange = {},
+                        readOnly = true,
+                        singleLine = true,
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded)
+                        },
+                        colors = ExposedDropdownMenuDefaults.textFieldColors()
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        SortType.entries.forEach { type ->
+                            DropdownMenuItem(
+                                text = { Text(stringResource(type.s)) },
+                                onClick = {
+                                    preferencesManager.sortType = type
+                                    expanded = false
+                                },
+                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                            )
+                        }
+                    }
+                }
+            }
+        )
+
+        PreferenceItem(
+            headlineContent = { Text(stringResource(Res.string.sort_direction)) },
+            trailingContent = {
+                var expanded by rememberSaveable { mutableStateOf(false) }
+
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = it }
+                ) {
+                    TextField(
+                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                        value = stringResource(preferencesManager.sortDirection.s),
+                        onValueChange = {},
+                        readOnly = true,
+                        singleLine = true,
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded)
+                        },
+                        colors = ExposedDropdownMenuDefaults.textFieldColors()
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        SortDirection.entries.forEach { direction ->
+                            DropdownMenuItem(
+                                text = { Text(stringResource(direction.s)) },
+                                onClick = {
+                                    preferencesManager.sortDirection = direction
                                     expanded = false
                                 },
                                 contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding

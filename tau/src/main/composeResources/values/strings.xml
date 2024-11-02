@@ -95,6 +95,14 @@
     <string name="open_item_action">Action to open items</string>
     <string name="single_click">Single click</string>
     <string name="double_click">Double click</string>
+    <string name="sort_type">Sort type</string>
+    <string name="sort_direction">Sorting direction</string>
+    <string name="sort_type_name">Name</string>
+    <string name="sort_type_creation_date">Creation date</string>
+    <string name="sort_type_modification_date">Modification date</string>
+    <string name="sort_type_size">Size</string>
+    <string name="sort_order_desc">Descending</string>
+    <string name="sort_order_asc">Ascending</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="quit">Quit</string>
