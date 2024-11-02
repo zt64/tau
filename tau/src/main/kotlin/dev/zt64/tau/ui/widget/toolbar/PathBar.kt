@@ -1,4 +1,4 @@
-package dev.zt64.tau.ui.component
+package dev.zt64.tau.ui.widget.toolbar
 
 import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.layout.*
@@ -17,6 +17,22 @@ import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
 
+@Stable
+class PathBarState(val location: Path) {
+    var currentSegments by mutableStateOf(emptyList<Path>())
+    var currentSegmentIndex by mutableIntStateOf(0)
+
+    fun navigateTo(path: Path) {
+        currentSegments = currentSegments + path
+    }
+
+    fun navigateUp() {
+
+    }
+
+    fun navigateToSegment(index: Int) {}
+}
+
 /**
  * Path bar component.
  *
@@ -31,8 +47,8 @@ fun PathBar(
     modifier: Modifier = Modifier
 ) {
     var currentSegments by remember { mutableStateOf(emptyList<Path>()) }
-    var currentSegmentIndex by rememberSaveable(currentSegments) {
-        mutableIntStateOf(currentSegments.lastIndex)
+    var currentSegmentIndex by rememberSaveable(location) {
+        mutableIntStateOf(0)
     }
 
     LaunchedEffect(location) {
@@ -44,6 +60,8 @@ fun PathBar(
                     acc.apply { add(last().resolve(part)) }
                 }
             }
+
+            currentSegmentIndex = currentSegments.lastIndex
         }
     }
 

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.geometry.isUnspecified
+import androidx.compose.ui.geometry.isSpecified
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.unit.dp
@@ -27,13 +27,13 @@ import kotlin.math.absoluteValue
 fun FileHorizontalGrid(modifier: Modifier = Modifier) {
     val viewModel = koinViewModel<BrowserViewModel>()
 
-    FileGridContents(modifier) {
+    FileGrid(
+        modifier = modifier,
+        onClick = viewModel::clearSelection
+    ) {
         val preferencesManager = koinInject<PreferencesManager>()
         var scale by remember { mutableStateOf(preferencesManager.scale) }
         val gridState = rememberLazyGridState()
-
-        var topLeftOffset by remember { mutableStateOf(Offset(0f, 0f)) }
-        var offset by remember { mutableStateOf(Offset(0f, 0f)) }
 
         LazyHorizontalGrid(
             modifier = Modifier
@@ -52,27 +52,7 @@ fun FileHorizontalGrid(modifier: Modifier = Modifier) {
                         .toInt()
                     scale = scale.coerceAtLeast(78)
                     preferencesManager.scale = scale
-                }.clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = viewModel::clearSelection
-                ).drawWithCache {
-                    this.onDrawWithContent {
-                        drawContent()
-                        // drawRect(
-                        //     color = Color.Red.copy(alpha = 0.3f),
-                        //     size = size,
-                        //     topLeft = topLeftOffset
-                        // )
-                    }
-                }.onDrag(
-                    onDragStart = { topLeftOffset = it },
-                    onDrag = { offset = it },
-                    onDragEnd = {
-                        topLeftOffset = Offset(0f, 0f)
-                        offset = Offset(0f, 0f)
-                    }
-                ),
+                },
             state = gridState,
             rows = GridCells.FixedSize(scale.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -100,31 +80,16 @@ fun FileHorizontalGrid(modifier: Modifier = Modifier) {
 fun FileVerticalGrid(modifier: Modifier = Modifier) {
     val viewModel = koinViewModel<BrowserViewModel>()
 
-    FileGridContents(modifier) {
+    FileGrid(
+        modifier = modifier,
+        onClick = viewModel::clearSelection
+    ) {
         val preferencesManager = koinInject<PreferencesManager>()
         var scale by remember { mutableStateOf(preferencesManager.scale) }
         val gridState = rememberLazyGridState()
 
-        var topLeftOffset by remember { mutableStateOf(Offset.Unspecified) }
-        var offset by remember { mutableStateOf(Offset.Unspecified) }
-
         LazyVerticalGrid(
             modifier = Modifier
-                .fillMaxWidth()
-                .onDrag(
-                    onDragStart = { topLeftOffset = it },
-                    onDrag = {
-                        if (offset.isUnspecified) {
-                            offset = it
-                        } else {
-                            offset += it
-                        }
-                    },
-                    onDragEnd = {
-                        topLeftOffset = Offset.Unspecified
-                        offset = Offset.Unspecified
-                    }
-                )
                 .onPointerEvent(
                     eventType = PointerEventType.Scroll,
                     pass = PointerEventPass.Initial
@@ -139,32 +104,6 @@ fun FileVerticalGrid(modifier: Modifier = Modifier) {
                         .toInt()
                     scale = scale.coerceAtLeast(78)
                     preferencesManager.scale = scale
-                }
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = viewModel::clearSelection
-                )
-                .drawWithCache {
-                    this.onDrawWithContent {
-                        drawContent()
-
-                        if (!topLeftOffset.isUnspecified && !offset.isUnspecified) {
-                            val rectTopLeft = Offset(
-                                x = topLeftOffset.x.coerceAtMost(offset.x),
-                                y = topLeftOffset.y.coerceAtMost(offset.y)
-                            )
-                            val rectSize = Size(
-                                width = (topLeftOffset.x - offset.x).absoluteValue,
-                                height = (topLeftOffset.y - offset.y).absoluteValue
-                            )
-                            drawRect(
-                                color = Color.Red.copy(alpha = 0.7f),
-                                topLeft = rectTopLeft,
-                                size = rectSize
-                            )
-                        }
-                    }
                 },
             state = gridState,
             columns = GridCells.FixedSize(scale.dp),
@@ -184,7 +123,7 @@ fun FileVerticalGrid(modifier: Modifier = Modifier) {
     }
 }
 
-fun LazyGridScope.files(viewModel: BrowserViewModel) {
+private fun LazyGridScope.files(viewModel: BrowserViewModel) {
     items(
         items = viewModel.contents,
         key = { it.name }
@@ -212,14 +151,56 @@ fun LazyGridScope.files(viewModel: BrowserViewModel) {
 }
 
 @Composable
-private fun FileGridContents(
+private fun FileGrid(
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable BoxWithConstraintsScope.() -> Unit
 ) {
+    var startOffset by remember { mutableStateOf(Offset.Unspecified) }
+    var endOffset by remember { mutableStateOf(Offset.Unspecified) }
+
     BoxWithConstraints(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .then(modifier)
+            .onDrag(
+                onDragStart = { offset ->
+                    startOffset = offset
+                    endOffset = offset
+                },
+                onDrag = { dragAmount ->
+                    endOffset += dragAmount
+                },
+                onDragEnd = {
+                    startOffset = Offset.Unspecified
+                    endOffset = Offset.Unspecified
+                }
+            )
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            )
+            .drawWithCache {
+                onDrawWithContent {
+                    drawContent()
+                    if (startOffset.isSpecified && endOffset.isSpecified) {
+                        val rectTopLeft = Offset(
+                            x = minOf(startOffset.x, endOffset.x),
+                            y = minOf(startOffset.y, endOffset.y)
+                        )
+                        val rectSize = Size(
+                            width = (startOffset.x - endOffset.x).absoluteValue,
+                            height = (startOffset.y - endOffset.y).absoluteValue
+                        )
+
+                        drawRect(
+                            color = Color.Red.copy(alpha = 0.3f),
+                            topLeft = rectTopLeft,
+                            size = rectSize
+                        )
+                    }
+                }
+            }
     ) {
         content()
     }

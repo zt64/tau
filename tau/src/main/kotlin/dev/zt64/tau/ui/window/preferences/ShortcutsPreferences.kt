@@ -5,20 +5,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import dev.zt64.tau.model.KeyModifier
 import dev.zt64.tau.model.Shortcut
+import dev.zt64.tau.resources.Res
+import dev.zt64.tau.resources.cancel
+import dev.zt64.tau.resources.confirm
 import dev.zt64.tau.ui.component.preferences.PreferenceItem
 import dev.zt64.tau.ui.viewmodel.PreferencesViewModel
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -30,7 +34,9 @@ fun ShortcutsPreferences() {
     ) {
         viewModel.shortcuts.shortcuts.forEach {
             ShortcutItem(
-                label = { },
+                label = {
+                    Text("Some Shortcut")
+                },
                 shortcut = it
             )
         }
@@ -59,36 +65,39 @@ fun ShortcutItem(
         headlineContent = label,
         modifier = modifier,
         trailingContent = {
-            FilledTonalButton(
-                onClick = {
-                    showDialog = true
-                }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                when (shortcut) {
-                    is Shortcut.Bound -> {
-                        val keyText = remember {
-                            buildString {
-                                if (shortcut.modifiers.isNotEmpty()) {
-                                    append(shortcut.modifiers.joinToString(" + ") + " + ")
+                FilledTonalButton(
+                    onClick = { showDialog = true }
+                ) {
+                    when (shortcut) {
+                        is Shortcut.Bound -> {
+                            val keyText = remember {
+                                buildString {
+                                    if (shortcut.modifiers.isNotEmpty()) {
+                                        append("${shortcut.modifiers.joinToString(" + ")} + ")
+                                    }
+
+                                    append(shortcut.key.toString().removePrefix("Key: "))
                                 }
-
-                                append(shortcut.key.toString().removePrefix("Key: "))
                             }
-                        }
 
-                        Text(keyText)
-                    }
-                    Shortcut.Unbound -> {
-                        Text("...")
+                            Text(keyText)
+                        }
+                        Shortcut.Unbound -> {
+                            Text("...")
+                        }
                     }
                 }
-            }
 
-            // if edited show a button to reset to default
-            IconButton(
-                onClick = {}
-            ) {
-                Icon(Icons.Default.Restore, contentDescription = "Reset to default")
+                // if edited show a button to reset to default
+                FilledIconButton(
+                    enabled = false,
+                    onClick = {}
+                ) {
+                    Icon(Icons.Default.Restore, contentDescription = "Reset to default")
+                }
             }
         }
     )
@@ -142,7 +151,7 @@ fun ShortcutDialog(
         )
     ) {
         Surface(
-            shape = CircleShape
+            shape = MaterialTheme.shapes.large
         ) {
             Column(
                 modifier = Modifier.padding(24.dp)
@@ -155,7 +164,7 @@ fun ShortcutDialog(
 
                 Row {
                     FilledTonalButton(onClick = onDismissRequest) {
-                        Text("Cancel")
+                        Text(stringResource(Res.string.cancel))
                     }
 
                     FilledTonalButton(
@@ -164,7 +173,7 @@ fun ShortcutDialog(
                             onConfirm(Shortcut(detectedModifiers, detectedKey!!))
                         }
                     ) {
-                        Text("Confirm")
+                        Text(stringResource(Res.string.confirm))
                     }
                 }
             }

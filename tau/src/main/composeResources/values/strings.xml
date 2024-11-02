@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <string name="copy">Copy</string>
+    <string name="copy_location">Copy Location</string>
     <string name="cut">Cut</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
@@ -46,6 +47,8 @@
     <string name="open_in_tab">Open in new tab</string>
     <string name="open_in_window">Open in new window</string>
     <string name="open_in_terminal_here">Open terminal here</string>
+    <string name="new_tab">New Tab</string>
+    <string name="new_window">New Window</string>
     <string name="close">Close</string>
     <string name="close_tab">Close tab</string>
     <string name="theme">Theme</string>
@@ -100,4 +103,9 @@
     <string name="sort_type_size">Size</string>
     <string name="sort_order_desc">Descending</string>
     <string name="sort_order_asc">Ascending</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="quit">Quit</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="frame_rate">Frame Rate</string>
 </resources>
