@@ -17,11 +17,11 @@ on:
       - '**.kt'
       - '**.kts'
       - 'gradle.properties'
-      - '.github/workflows/check.yml'
+      - '.github/workflows/*.yml'
       - 'gradle/**'
 
 concurrency:
-  group: "${{ github.workflow }}-${{ github.ref }}"
+  group: "${{ github.workflow }}-${{ github.ref }}-${{ github.run_id }}"
   cancel-in-progress: true
 
 permissions:
@@ -38,13 +38,13 @@ jobs:
             arch: x64
             os: ubuntu-latest
             shell: bash
-            build: packageReleaseUberJarForCurrentOS packageReleaseDeb
+            build: packageUberJarForCurrentOS packageDeb
 
           - runtime: win-x64
             arch: x64
             os: windows-latest
             shell: powershell
-            build: packageReleaseUberJarForCurrentOS packageReleaseMsi
+            build: packageUberJarForCurrentOS packageMsi
 
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
