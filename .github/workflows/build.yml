@@ -8,7 +8,7 @@ on:
       - '**.kt'
       - '**.kts'
       - 'gradle.properties'
-      - '.github/workflows/check.yml'
+      - '.github/workflows/*.yml'
       - 'gradle/**'
   pull_request:
     branches:
@@ -19,6 +19,7 @@ on:
       - 'gradle.properties'
       - '.github/workflows/*.yml'
       - 'gradle/**'
+  workflow_dispatch:
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}-${{ github.run_id }}"
