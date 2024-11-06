@@ -3,7 +3,7 @@ kotlin = "2.0.21"
 compose = "1.7.0"
 
 clikt = "5.0.1"
-tika-core = "2.9.2"
+tika-core = "3.0.0"
 datetime = "0.6.1"
 humanReadable = "1.10.0"
 viewmodel = "2.8.3"
