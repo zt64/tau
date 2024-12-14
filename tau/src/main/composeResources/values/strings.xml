@@ -29,9 +29,9 @@
     <string name="type">Type</string>
     <string name="name">Name</string>
     <string name="contents">Contents</string>
-    <string name="items">Items</string>
     <string name="details">Details</string>
     <string name="permissions">Permissions</string>
+    <string name="checksums">Checksums</string>
     <string name="owner">Owner</string>
     <string name="owner_access">Owner access</string>
     <string name="group">Group</string>

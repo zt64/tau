@@ -2,9 +2,7 @@ package dev.zt64.tau.ui.window
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -14,23 +12,24 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.rememberWindowState
 import dev.zt64.tau.resources.*
-import dev.zt64.tau.util.creationTime
-import dev.zt64.tau.util.humanFriendly
-import dev.zt64.tau.util.humanReadableSize
-import dev.zt64.tau.util.rememberVectorPainter
+import dev.zt64.tau.util.*
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import java.nio.file.Path
+import java.security.MessageDigest
 import kotlin.io.path.*
-import kotlin.text.contains
 
 private enum class Tab(val label: StringResource, val icon: ImageVector) {
     DETAILS(Res.string.details, Icons.Default.Info),
-    PERMISSIONS(Res.string.permissions, Icons.Default.Lock)
+    PERMISSIONS(Res.string.permissions, Icons.Default.Lock),
+    CHECKSUMS(Res.string.checksums, Icons.Default.Check)
 }
 
 @Composable
@@ -62,7 +61,8 @@ fun PropertiesWindow(
                     modifier = Modifier.fillMaxWidth(),
                     selectedTabIndex = selectedTab.ordinal
                 ) {
-                    Tab.entries.forEach { tab ->
+                    @Composable
+                    fun tab(tab: Tab) {
                         Tab(
                             selected = selectedTab == tab,
                             text = { Text(stringResource(tab.label)) },
@@ -74,6 +74,13 @@ fun PropertiesWindow(
                             },
                             onClick = { selectedTab = tab }
                         )
+                    }
+
+                    tab(Tab.DETAILS)
+                    tab(Tab.PERMISSIONS)
+
+                    if (path.isRegularFile()) {
+                        tab(Tab.CHECKSUMS)
                     }
                 }
 
@@ -89,6 +96,7 @@ fun PropertiesWindow(
                         when (tab) {
                             Tab.DETAILS -> DetailsTab(path)
                             Tab.PERMISSIONS -> PermissionsTab(path)
+                            Tab.CHECKSUMS -> ChecksumsTab(path)
                         }
                     }
                 }
@@ -131,6 +139,7 @@ private fun DetailsTab(path: Path) {
             Text(path.creationTime().humanFriendly())
         }
     )
+
     ListItem(
         headlineContent = {
             Text(stringResource(Res.string.date_modified))
@@ -150,7 +159,7 @@ private fun DetailsTab(path: Path) {
                     path.listDirectoryEntries()
                 }
 
-                Text("${entries.size} ${Res.string.items}")
+                Text(pluralStringResource(Res.plurals.items, entries.size, entries.size))
             }
         )
     }
@@ -240,5 +249,70 @@ private fun PermissionsTab(path: Path) {
                 )
             }
         )
+    }
+}
+
+@OptIn(ExperimentalStdlibApi::class)
+@Composable
+private fun ChecksumsTab(path: Path) {
+    val content = remember {
+        path.readBytes()
+    }
+
+    val md5 = remember(content) {
+        MessageDigest.getInstance("MD5").digest(content).toHexString()
+    }
+
+    val sha1 = remember(content) {
+        MessageDigest.getInstance("SHA-1").digest(content).toHexString()
+    }
+
+    val sha256 = remember(content) {
+        MessageDigest.getInstance("SHA-256").digest(content).toHexString()
+    }
+
+    val sha512 = remember(content) {
+        MessageDigest.getInstance("SHA-512").digest(content).toHexString()
+    }
+
+    val clipboardManager = LocalClipboardManager.current
+
+    Column(
+        modifier = Modifier.width(IntrinsicSize.Max)
+    ) {
+        @Composable
+        fun field(
+            value: String,
+            label: String
+        ) {
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = value,
+                onValueChange = {},
+                label = { Text(label) },
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+                            clipboardManager.setText(AnnotatedString(value))
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ContentCopy,
+                            contentDescription = stringResource(Res.string.copy)
+                        )
+                    }
+                },
+                readOnly = true,
+                maxLines = 1
+            )
+        }
+
+        field(md5, "MD5")
+
+        field(sha1, "SHA-1")
+
+        field(sha256, "SHA-256")
+
+        field(sha512, "SHA-512")
     }
 }
