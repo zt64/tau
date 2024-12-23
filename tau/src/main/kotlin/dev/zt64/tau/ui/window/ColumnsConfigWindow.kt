@@ -67,9 +67,7 @@ fun ColumnsList() {
                     ) {
                         Checkbox(
                             checked = enabled,
-                            onCheckedChange = {
-                                enabled = it
-                            }
+                            onCheckedChange = { enabled = it }
                         )
 
                         Text(

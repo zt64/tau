@@ -12,7 +12,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import dev.zt64.tau.ui.component.menu.FolderContextMenu
+import dev.zt64.tau.ui.component.menu.ItemContextMenu
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
@@ -157,7 +157,7 @@ fun Segment(
             }
         }
     ) {
-        FolderContextMenu {
+        ItemContextMenu(segment) {
             FilledTonalButton(
                 shape = MaterialTheme.shapes.large,
                 onClick = onClick,

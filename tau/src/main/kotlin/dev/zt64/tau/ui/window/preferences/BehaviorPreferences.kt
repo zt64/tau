@@ -6,11 +6,11 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import dev.zt64.tau.domain.manager.PreferencesManager
+import dev.zt64.tau.model.DetailColumnType
+import dev.zt64.tau.model.Direction
 import dev.zt64.tau.model.OpenItemAction
 import dev.zt64.tau.resources.*
 import dev.zt64.tau.ui.component.preferences.PreferenceItem
-import dev.zt64.tau.util.SortDirection
-import dev.zt64.tau.util.SortType
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -70,7 +70,7 @@ fun BehaviorPreferences() {
                 ) {
                     TextField(
                         modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
-                        value = stringResource(preferencesManager.sortType.s),
+                        value = stringResource(preferencesManager.sortType.displayName),
                         onValueChange = {},
                         readOnly = true,
                         singleLine = true,
@@ -84,9 +84,9 @@ fun BehaviorPreferences() {
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
-                        SortType.entries.forEach { type ->
+                        DetailColumnType.entries.forEach { type ->
                             DropdownMenuItem(
-                                text = { Text(stringResource(type.s)) },
+                                text = { Text(stringResource(type.displayName)) },
                                 onClick = {
                                     preferencesManager.sortType = type
                                     expanded = false
@@ -124,7 +124,7 @@ fun BehaviorPreferences() {
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
-                        SortDirection.entries.forEach { direction ->
+                        Direction.entries.forEach { direction ->
                             DropdownMenuItem(
                                 text = { Text(stringResource(direction.s)) },
                                 onClick = {

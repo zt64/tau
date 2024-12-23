@@ -2,25 +2,19 @@ package dev.zt64.tau.ui.window
 
 import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draganddrop.*
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
-import dev.zt64.tau.ui.component.FileVerticalGrid
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
-import dev.zt64.tau.ui.widget.SidePanel
-import dev.zt64.tau.ui.widget.TabRow
+import dev.zt64.tau.ui.widget.*
+import dev.zt64.tau.ui.widget.browse.DetailList
 import dev.zt64.tau.ui.widget.toolbar.Toolbar
-import dev.zt64.tau.util.humanReadableSize
 import dev.zt64.tau.util.moveTo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -32,7 +26,6 @@ import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import java.io.File
 import kotlin.io.path.absolutePathString
-import kotlin.io.path.name
 
 @OptIn(ExperimentalSplitPaneApi::class)
 @Composable
@@ -80,6 +73,7 @@ fun BrowserWindow() {
         },
         snackbarHost = { SnackbarHost(viewModel.snackbarHostState) }
     ) { paddingValues ->
+        val currentLocation by viewModel.nav.currentLocation.collectAsState()
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -92,10 +86,8 @@ fun BrowserWindow() {
                         override fun onDrop(event: DragAndDropEvent): Boolean {
                             val data = event.dragData() as DragData.FilesList
 
-                            val currentLocation = viewModel.currentLocation.toFile()
-
                             data.readFiles().forEach { path ->
-                                File(path).moveTo(currentLocation)
+                                File(path).moveTo(currentLocation.toFile())
                             }
 
                             return true
@@ -107,9 +99,9 @@ fun BrowserWindow() {
 
             val coroutineScope = rememberCoroutineScope()
 
-            DisposableEffect(viewModel.currentLocation) {
+            DisposableEffect(currentLocation) {
                 coroutineScope.launch(Dispatchers.IO) {
-                    watcher.add(viewModel.currentLocation.absolutePathString())
+                    watcher.add(currentLocation.absolutePathString())
                     watcher.onEventFlow.collectLatest {
                         viewModel.refresh()
                     }
@@ -138,7 +130,21 @@ fun BrowserWindow() {
                     Column {
                         TabRow()
 
-                        FileVerticalGrid(
+                        if (viewModel.searching) {
+                            SearchBar(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(min = 42.dp, max = 42.dp),
+                                value = viewModel.search,
+                                onValueChange = viewModel::search
+                            )
+                        }
+
+                        // FileVerticalGrid(
+                        //     modifier = Modifier.weight(1f)
+                        // )
+
+                        DetailList(
                             modifier = Modifier.weight(1f)
                         )
 
@@ -146,45 +152,6 @@ fun BrowserWindow() {
                             StatusBar()
                         }
                     }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun StatusBar(modifier: Modifier = Modifier) {
-    val viewModel = koinViewModel<BrowserViewModel>()
-
-    Surface(
-        tonalElevation = 1.dp
-    ) {
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(40.dp)
-                .padding(4.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            when (viewModel.selected.size) {
-                0 -> {
-                    Text("${viewModel.contents.size} items")
-                }
-                1 -> {
-                    viewModel.selected.single().let { selectedFile ->
-                        Text(
-                            text = selectedFile.name,
-                            fontWeight = FontWeight.Bold,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Spacer(Modifier.width(16.dp))
-
-                        Text("Size: ${selectedFile.toFile().humanReadableSize()}")
-                    }
-                }
-                else -> {
-                    Text("${viewModel.selected.size} items selected")
                 }
             }
         }

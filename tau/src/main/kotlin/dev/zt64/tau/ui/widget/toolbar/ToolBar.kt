@@ -11,9 +11,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowLeft
-import androidx.compose.material.icons.automirrored.filled.ArrowRight
-import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -27,8 +24,8 @@ import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
-import dev.zt64.tau.resources.*
-import dev.zt64.tau.ui.component.tooltip.PlainTooltipBox
+import dev.zt64.tau.resources.Res
+import dev.zt64.tau.resources.search
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -40,11 +37,27 @@ import org.koin.compose.viewmodel.koinViewModel
 fun Toolbar() {
     val viewModel = koinViewModel<BrowserViewModel>()
 
+    val entries by remember {
+        mutableStateOf(
+            listOf(
+                ToolbarEntry.Up,
+                ToolbarEntry.Back,
+                ToolbarEntry.Forward,
+                ToolbarEntry.Separator,
+                ToolbarEntry.PathBar,
+                ToolbarEntry.Spacer,
+                ToolbarEntry.Search
+            )
+        )
+    }
+
     Surface(
         tonalElevation = 7.dp
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp, vertical = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -52,94 +65,101 @@ fun Toolbar() {
                 mutableStateListOf<Unit>()
             }
 
-            PlainTooltipBox(
-                tooltipContent = {
-                    Text(stringResource(Res.string.goto_parent_folder))
-                }
-            ) {
-                FilledIconButton(
-                    enabled = viewModel.canGoUp,
-                    onClick = viewModel::navigateUp
-                ) {
-                    Icon(Icons.Default.ArrowUpward, null)
-                }
-            }
+            entries.forEach { entry ->
+                when (entry) {
+                    ToolbarEntry.Spacer -> {
+                        Spacer(Modifier.weight(1f))
+                    }
+                    ToolbarEntry.Separator -> {
+                        VerticalDivider(
+                            modifier = Modifier.height(24.dp),
+                            thickness = 2.dp
+                        )
+                    }
+                    is ToolbarEntry.PathBar -> {
+                        Crossfade(
+                            targetState = viewModel.searching,
+                            animationSpec = tween(200)
+                        ) {
+                            if (false) {
+                                val focusRequester = remember { FocusRequester() }
 
-            PlainTooltipBox(
-                tooltipContent = {
-                    Text(stringResource(Res.string.back))
-                }
-            ) {
-                FilledTonalIconButton(
-                    enabled = viewModel.canGoBack,
-                    onClick = viewModel::navigateBack
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowLeft, stringResource(Res.string.back))
-                }
-            }
+                                DisposableEffect(Unit) {
+                                    focusRequester.requestFocus()
 
-            PlainTooltipBox(
-                tooltipContent = {
-                    Text(stringResource(Res.string.forward))
-                }
-            ) {
-                FilledTonalIconButton(
-                    enabled = viewModel.canGoForward,
-                    onClick = viewModel::navigateForward
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowRight, stringResource(Res.string.forward))
-                }
-            }
+                                    onDispose {
+                                        viewModel.clearSearch()
+                                    }
+                                }
 
-            Crossfade(
-                targetState = viewModel.searching,
-                animationSpec = tween(200)
-            ) {
-                if (it) {
-                    val focusRequester = remember { FocusRequester() }
-
-                    DisposableEffect(Unit) {
-                        focusRequester.requestFocus()
-
-                        onDispose {
-                            viewModel.clearSearch()
+                                SearchField(
+                                    modifier = Modifier
+                                        .focusRequester(focusRequester)
+                                        .width(400.dp)
+                                        .heightIn(min = 42.dp, max = 42.dp),
+                                    value = viewModel.search,
+                                    textStyle = MaterialTheme.typography.bodyMedium,
+                                    onValueChange = viewModel::search,
+                                    placeholder = {
+                                        Text(
+                                            text = stringResource(Res.string.search),
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    }
+                                )
+                            } else {
+                                val currentLocation by viewModel.nav.currentLocation.collectAsState()
+                                PathBar(
+                                    modifier = Modifier.weight(1f),
+                                    location = currentLocation,
+                                    onClickSegment = viewModel::navigate
+                                )
+                            }
                         }
                     }
-
-                    SearchField(
-                        modifier = Modifier
-                            .focusRequester(focusRequester)
-                            .width(400.dp)
-                            .heightIn(min = 42.dp, max = 42.dp),
-                        value = viewModel.search,
-                        textStyle = MaterialTheme.typography.bodyMedium,
-                        onValueChange = viewModel::search,
-                        placeholder = {
-                            Text(
-                                text = stringResource(Res.string.search),
-                                style = MaterialTheme.typography.bodyMedium
+                    is ToolbarEntry.Back -> {
+                        entry.Content(
+                            enabled = viewModel.nav.canGoBack,
+                            onClick = viewModel::navigateBack
+                        )
+                    }
+                    is ToolbarEntry.Forward -> {
+                        entry.Content(
+                            enabled = viewModel.nav.canGoForward,
+                            onClick = viewModel::navigateForward
+                        )
+                    }
+                    is ToolbarEntry.Up -> {
+                        entry.Content(
+                            enabled = viewModel.nav.canGoUp,
+                            onClick = viewModel::navigateUp
+                        )
+                    }
+                    is ToolbarEntry.Refresh -> {
+                        TODO()
+                    }
+                    is ToolbarEntry.Search -> {
+                        FilledTonalIconToggleButton(
+                            checked = viewModel.searching,
+                            onCheckedChange = { viewModel.searching = it }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = stringResource(Res.string.search)
                             )
                         }
-                    )
-                } else {
-                    PathBar(
-                        modifier = Modifier.weight(1f),
-                        location = viewModel.currentLocation,
-                        onClickSegment = viewModel::navigate
-                    )
+                    }
+                    is ToolbarEntry.AddBookmark -> {
+                        entry.Content(
+                            onClick = {}
+                        )
+                    }
+                    is ToolbarEntry.CreateNew -> TODO()
+                    is ToolbarEntry.Split -> TODO()
+                    is ToolbarEntry.OpenMenu -> TODO()
+                    is ToolbarEntry.NewTab -> TODO()
+                    is ToolbarEntry.NewWindow -> TODO()
                 }
-            }
-
-            Spacer(Modifier.weight(1f))
-
-            FilledTonalIconToggleButton(
-                checked = viewModel.searching,
-                onCheckedChange = { viewModel.searching = it }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = stringResource(Res.string.search)
-                )
             }
 
             if (operations.isNotEmpty()) {
@@ -189,11 +209,10 @@ private fun SearchField(
     CompositionLocalProvider(LocalTextSelectionColors provides colors.textSelectionColors) {
         BasicTextField(
             value = value,
-            modifier = modifier
-                .defaultMinSize(
-                    minWidth = TextFieldDefaults.MinWidth,
-                    minHeight = TextFieldDefaults.MinHeight
-                ),
+            modifier = modifier.defaultMinSize(
+                minWidth = TextFieldDefaults.MinWidth,
+                minHeight = TextFieldDefaults.MinHeight
+            ),
             onValueChange = onValueChange,
             enabled = enabled,
             readOnly = readOnly,

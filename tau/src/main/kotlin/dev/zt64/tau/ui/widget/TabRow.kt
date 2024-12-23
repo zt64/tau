@@ -20,10 +20,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.close_tab
-import dev.zt64.tau.ui.component.menu.FolderContextMenu
+import dev.zt64.tau.ui.component.menu.ItemContextMenu
+import dev.zt64.tau.ui.component.tooltip.PlainTooltipBox
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import java.nio.file.Path
+import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
 import kotlin.io.path.pathString
 import kotlin.math.roundToInt
@@ -33,11 +36,11 @@ fun TabRow() {
     val viewModel = koinViewModel<BrowserViewModel>()
 
     AnimatedVisibility(
-        visible = viewModel.tabs.size > 1,
+        visible = viewModel.nav.tabs.size > 1,
         enter = expandVertically(tween(5000), expandFrom = Alignment.Top) { it },
         exit = shrinkVertically(tween(5000)) { it }
     ) {
-        val currentTabIndex by viewModel.currentTabIndex.collectAsState()
+        val currentTabIndex by viewModel.nav.currentTabIndex.collectAsState()
 
         TabRow(
             modifier = Modifier
@@ -48,8 +51,8 @@ fun TabRow() {
                             .roundToInt()
                             .let { index ->
                                 when {
-                                    index < 0 -> viewModel.tabs.size - 1
-                                    index >= viewModel.tabs.size -> 0
+                                    index < 0 -> viewModel.nav.tabs.size - 1
+                                    index >= viewModel.nav.tabs.size -> 0
                                     else -> index
                                 }
                             }
@@ -62,50 +65,69 @@ fun TabRow() {
             selectedTabIndex = currentTabIndex,
             containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
         ) {
-            viewModel.tabs.forEachIndexed { index, title ->
-                val interactionSource = remember { MutableInteractionSource() }
+            viewModel.nav.tabs.forEachIndexed { index, path ->
+                Tab(
+                    path = path,
+                    selected = currentTabIndex == index,
+                    onClick = { viewModel.switchTab(index) },
+                    onClickClose = { viewModel.closeTab(index) }
+                )
+            }
+        }
+    }
+}
 
-                TabContextMenu {
-                    Tab(
-                        selected = currentTabIndex == index,
-                        onClick = { viewModel.switchTab(index) },
-                        interactionSource = interactionSource
+@Composable
+private fun Tab(
+    path: Path,
+    selected: Boolean,
+    onClick: () -> Unit,
+    onClickClose: () -> Unit
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+
+    TabContextMenu(path) {
+        PlainTooltipBox(
+            tooltipContent = {
+                Text(path.absolutePathString())
+            }
+        ) {
+            Tab(
+                selected = selected,
+                onClick = onClick,
+                interactionSource = interactionSource
+            ) {
+                Box(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .fillMaxWidth()
+                        .height(26.dp)
+                ) {
+                    val isHovered by interactionSource.collectIsHoveredAsState()
+
+                    Text(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = path.name.ifEmpty { path.pathString },
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center
+                    )
+
+                    this@Tab.AnimatedVisibility(
+                        modifier = Modifier.align(Alignment.CenterEnd),
+                        visible = isHovered,
+                        enter = fadeIn(),
+                        exit = fadeOut()
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .padding(4.dp)
-                                .fillMaxWidth()
-                                .height(26.dp)
+                        CompositionLocalProvider(
+                            LocalMinimumInteractiveComponentSize provides Dp.Unspecified
                         ) {
-                            val isHovered by interactionSource.collectIsHoveredAsState()
-
-                            Text(
-                                modifier = Modifier.align(Alignment.Center),
-                                text = title.name.ifEmpty { title.pathString },
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-                                textAlign = TextAlign.Center
-                            )
-
-                            this@Tab.AnimatedVisibility(
-                                modifier = Modifier.align(Alignment.CenterEnd),
-                                visible = isHovered,
-                                enter = fadeIn(),
-                                exit = fadeOut()
-                            ) {
-                                CompositionLocalProvider(
-                                    LocalMinimumInteractiveComponentSize provides Dp.Unspecified
-                                ) {
-                                    IconButton(
-                                        onClick = { viewModel.closeTab(index) }
-                                    ) {
-                                        Icon(
-                                            modifier = Modifier.size(14.dp),
-                                            imageVector = Icons.Default.Close,
-                                            contentDescription = stringResource(Res.string.close_tab)
-                                        )
-                                    }
-                                }
+                            IconButton(onClick = onClickClose) {
+                                Icon(
+                                    modifier = Modifier.size(14.dp),
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = stringResource(Res.string.close_tab)
+                                )
                             }
                         }
                     }
@@ -116,6 +138,9 @@ fun TabRow() {
 }
 
 @Composable
-fun TabContextMenu(content: @Composable () -> Unit) {
-    FolderContextMenu(content)
+fun TabContextMenu(
+    path: Path,
+    content: @Composable () -> Unit
+) {
+    ItemContextMenu(path, content)
 }

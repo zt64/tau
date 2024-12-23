@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.PopupPositionProvider
 
-// Composable for a tooltip box. M3 tooltip box for some reason doesnt have a default state ???
+// Composable for a tooltip box. M3 tooltip box for some reason doesn't have a default state ???
 @Composable
 fun TooltipBox(
     positionProvider: PopupPositionProvider,

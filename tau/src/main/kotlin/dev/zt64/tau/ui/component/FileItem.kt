@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.OpenItemAction
-import dev.zt64.tau.ui.component.menu.FolderContextMenu
+import dev.zt64.tau.ui.component.menu.ItemContextMenu
 import dev.zt64.tau.ui.window.PropertiesWindow
 import dev.zt64.tau.util.contains
 import kotlinx.coroutines.launch
@@ -34,8 +34,9 @@ import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.io.File
 import java.nio.file.Path
-import kotlin.io.path.*
-
+import kotlin.io.path.isReadable
+import kotlin.io.path.isSymbolicLink
+import kotlin.io.path.name
 
 @Composable
 fun FileItem(
@@ -58,7 +59,7 @@ fun FileItem(
 
     val clipboardManager = LocalClipboardManager.current
 
-    FolderContextMenu {
+    ItemContextMenu(path) {
         TooltipArea(
             tooltip = {
                 Surface(
@@ -73,14 +74,6 @@ fun FileItem(
                 }
             }
         ) {
-            var selected2 by remember { mutableStateOf(false) }
-
-            val onSelect = remember {
-                {
-                    selected2 = !selected2
-                }
-            }
-
             val currentAction by rememberUpdatedState(preferencesManager.openItemAction)
 
             val onClickLambda = remember(currentAction) {
@@ -106,9 +99,9 @@ fun FileItem(
                         onClick = onClickLambda,
                         onDoubleClick = onDoubleClickLambda
                     )
-                    .semantics { this.selected = selected2 }
+                    .semantics { this.selected = selected }
                     .background(
-                        if (selected2) {
+                        if (selected) {
                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
                         } else {
                             MaterialTheme.colorScheme.surface

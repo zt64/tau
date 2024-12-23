@@ -23,6 +23,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import java.nio.file.Path
+import java.nio.file.attribute.PosixFilePermission
 import java.security.MessageDigest
 import kotlin.io.path.*
 
@@ -48,7 +49,6 @@ fun PropertiesWindow(
         title = "${path.name} - ${stringResource(Res.string.properties)}",
         icon = icon,
         state = windowState,
-        resizable = false,
         onCloseRequest = onCloseRequest
     ) {
         Surface(
@@ -189,6 +189,7 @@ private fun PermissionsTab(path: Path) {
             Text(stringResource(Res.string.owner_access))
         },
         trailingContent = {
+            Text(path.getOwner()?.name ?: stringResource(Res.string.unknown))
         }
     )
 
@@ -239,12 +240,29 @@ private fun PermissionsTab(path: Path) {
     )
 
     if (!isWindows) {
+        var executable by remember(path) {
+            mutableStateOf(path.isExecutable())
+        }
+
         ListItem(
             headlineContent = { Text(stringResource(Res.string.execute)) },
             trailingContent = {
                 Switch(
-                    checked = path.isExecutable(),
+                    checked = executable,
                     onCheckedChange = {
+                        try {
+                            path.setPosixFilePermissions(
+                                path.getPosixFilePermissions().toMutableSet().apply {
+                                    if (PosixFilePermission.OWNER_EXECUTE in this) {
+                                        remove(PosixFilePermission.OWNER_EXECUTE)
+                                    } else {
+                                        add(PosixFilePermission.OWNER_EXECUTE)
+                                    }
+                                }
+                            )
+                            executable = path.isExecutable()
+                        } catch (_: Exception) {
+                        }
                     }
                 )
             }

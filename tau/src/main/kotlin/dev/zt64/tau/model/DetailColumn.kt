@@ -12,7 +12,7 @@ enum class DetailColumnType(val displayName: StringResource) {
     PERMISSIONS(Res.string.permissions),
     OWNER(Res.string.owner),
     GROUP(Res.string.group),
-    MIME_TYPE(Res.string.mime_type)
+    TYPE(Res.string.mime_type)
 }
 
 data class DetailColumn(val type: DetailColumnType, val visible: Boolean)

@@ -1,4 +1,4 @@
-package dev.zt64.tau.ui.component
+package dev.zt64.tau.ui.widget.browse
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.onDrag
@@ -13,11 +13,12 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.isSpecified
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
+import dev.zt64.tau.ui.component.FileItem
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.io.path.name
@@ -131,6 +132,7 @@ private fun LazyGridScope.files(viewModel: BrowserViewModel) {
         val selected by remember(viewModel.selected) {
             derivedStateOf { path in viewModel.selected }
         }
+        val scope = rememberCoroutineScope()
 
         FileItem(
             modifier = Modifier
@@ -144,8 +146,14 @@ private fun LazyGridScope.files(viewModel: BrowserViewModel) {
                 ),
             selected = selected,
             path = path,
-            onSelect = { viewModel.selectItems(path) },
-            onOpen = { viewModel.open(path) }
+            onSelect = {
+                viewModel.selectItems(path)
+            },
+            onOpen = {
+                scope.launch {
+                    viewModel.open(path)
+                }
+            }
         )
     }
 }
@@ -158,6 +166,7 @@ private fun FileGrid(
 ) {
     var startOffset by remember { mutableStateOf(Offset.Unspecified) }
     var endOffset by remember { mutableStateOf(Offset.Unspecified) }
+    val tertiary = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f)
 
     BoxWithConstraints(
         modifier = modifier
@@ -194,7 +203,7 @@ private fun FileGrid(
                         )
 
                         drawRect(
-                            color = Color.Red.copy(alpha = 0.3f),
+                            color = tertiary,
                             topLeft = rectTopLeft,
                             size = rectSize
                         )

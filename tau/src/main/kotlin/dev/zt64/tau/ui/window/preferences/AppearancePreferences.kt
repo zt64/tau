@@ -14,20 +14,17 @@ import androidx.compose.ui.unit.dp
 import com.godaddy.android.colorpicker.HsvColor
 import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
 import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
-import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.Theme
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.dark
 import dev.zt64.tau.ui.viewmodel.PreferencesViewModel
 import dev.zt64.tau.ui.window.ColumnsList
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AppearancePreferences() {
     val viewModel = koinViewModel<PreferencesViewModel>()
-    val preferencesManager = koinInject<PreferencesManager>()
 
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState())
@@ -36,9 +33,9 @@ fun AppearancePreferences() {
             headlineContent = { Text(stringResource(Res.string.dark)) },
             trailingContent = {
                 Switch(
-                    checked = preferencesManager.theme == Theme.DARK,
+                    checked = viewModel.preferences.theme == Theme.DARK,
                     onCheckedChange = {
-                        preferencesManager.theme = if (it) Theme.DARK else Theme.LIGHT
+                        viewModel.preferences.theme = if (it) Theme.DARK else Theme.LIGHT
                     }
                 )
             }
@@ -55,11 +52,11 @@ fun AppearancePreferences() {
                 modifier = Modifier.size(128.dp),
                 harmonyMode = ColorHarmonyMode.NONE,
                 color = HsvColor
-                    .from(Color(preferencesManager.color))
+                    .from(Color(viewModel.preferences.color))
                     .copy(value = 1f),
                 // else every color becomes 0,0,0
                 onColorChanged = {
-                    preferencesManager.color = it.toColor().toArgb()
+                    viewModel.preferences.color = it.toColor().toArgb()
                 },
                 showBrightnessBar = false
             )

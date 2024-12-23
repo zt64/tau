@@ -6,6 +6,9 @@ import dev.zt64.tau.domain.manager.base.BasePreferenceManager
 import dev.zt64.tau.model.KeyModifier
 import dev.zt64.tau.model.Shortcut
 
+/**
+ * Manages shortcuts
+ */
 class ShortcutsManager(settings: PreferencesSettings) : BasePreferenceManager(settings) {
     /**
      * List of all available shortcuts
@@ -19,6 +22,8 @@ class ShortcutsManager(settings: PreferencesSettings) : BasePreferenceManager(se
     var delete by shortcut(Shortcut(Key.Delete))
     var rename by shortcut(Shortcut(Key.F2))
     var newFolder by shortcut(Shortcut(KeyModifier.Ctrl, Key.N))
+    var newTab by shortcut(Shortcut(KeyModifier.Ctrl, Key.T))
+    var toggleHidden by shortcut(Shortcut(KeyModifier.Ctrl, Key.H))
 
     var menu by shortcut(Shortcut(Key.AltLeft))
 
