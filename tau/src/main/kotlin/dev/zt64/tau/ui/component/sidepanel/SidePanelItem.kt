@@ -28,7 +28,7 @@ fun SidePanelItem(
     ) {
         icon()
 
-        Spacer(Modifier.width(4.dp))
+        Spacer(Modifier.width(6.dp))
 
         Text(
             text = text,
@@ -51,6 +51,7 @@ fun SidePanelLocationItem(
             text = data.displayName,
             icon = {
                 Icon(
+                    modifier = Modifier.size(24.dp),
                     imageVector = data.icon,
                     contentDescription = null
                 )

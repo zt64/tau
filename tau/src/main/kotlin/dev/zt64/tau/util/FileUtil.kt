@@ -1,7 +1,6 @@
 package dev.zt64.tau.util
 
 import kotlinx.io.IOException
-import java.io.File
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -11,19 +10,6 @@ import java.nio.file.attribute.UserDefinedFileAttributeView
 import java.time.Instant
 import kotlin.io.path.fileSize
 import kotlin.io.path.isDirectory
-
-fun File.moveTo(
-    file: File,
-    overwrite: Boolean = false
-) {
-    try {
-        copyTo(file, overwrite)
-        deleteRecursively()
-    } catch (e: FileAlreadyExistsException) {
-        // prompt user if they want to overwrite
-        // moveTo(this, true)
-    }
-}
 
 fun Path.dirSize() = try {
     Files.newDirectoryStream(this).count()
@@ -38,10 +24,6 @@ fun Path.size(): Long = if (isDirectory()) {
     dirSize()?.toLong() ?: 0
 } else {
     fileSize()
-}
-
-fun File.humanReadableSize(): String {
-    return getHumanReadableSize(length().toDouble())
 }
 
 fun Path.humanReadableSize(): String {

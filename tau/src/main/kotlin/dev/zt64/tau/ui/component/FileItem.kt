@@ -34,9 +34,7 @@ import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.io.File
 import java.nio.file.Path
-import kotlin.io.path.isReadable
-import kotlin.io.path.isSymbolicLink
-import kotlin.io.path.name
+import kotlin.io.path.*
 
 @Composable
 fun FileItem(
@@ -115,7 +113,7 @@ fun FileItem(
                 ) {
                     Thumbnail(
                         modifier = Modifier.size(48.dp),
-                        file = path.toFile()
+                        file = path
                     )
 
                     val icon = when {
@@ -183,12 +181,12 @@ fun FileItem(
 }
 
 @Composable
-fun Thumbnail(file: File, modifier: Modifier = Modifier) {
+fun Thumbnail(file: Path, modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
 
     var fileIcon by remember {
         mutableStateOf(
-            if (file.isDirectory) {
+            if (file.isDirectory()) {
                 Icons.Default.Folder
             } else {
                 Icons.Default.Description
@@ -198,7 +196,7 @@ fun Thumbnail(file: File, modifier: Modifier = Modifier) {
 
     LaunchedEffect(Unit) {
         scope.launch {
-            if (file.isDirectory) return@launch
+            if (file.isDirectory()) return@launch
 
             val (dataType, dataFormat) = runCatching {
                 Tika()
@@ -228,7 +226,7 @@ fun Thumbnail(file: File, modifier: Modifier = Modifier) {
         }
     }
 
-    val tint = if (file.isHidden) {
+    val tint = if (file.isHidden()) {
         MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
     } else {
         MaterialTheme.colorScheme.primary

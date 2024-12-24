@@ -19,7 +19,8 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.model.DetailColumnType
 import dev.zt64.tau.model.Direction
-import dev.zt64.tau.resources.*
+import dev.zt64.tau.resources.Res
+import dev.zt64.tau.resources.items
 import dev.zt64.tau.ui.component.menu.ItemContextMenu
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import dev.zt64.tau.util.dirSize
@@ -108,13 +109,15 @@ fun DetailList(modifier: Modifier = Modifier) {
         },
         cellContent = { columnIndex, rowIndex ->
             val item = viewModel.contents[rowIndex]
-
             val column = columns[columnIndex]
 
             when (column) {
                 DetailColumnType.NAME -> {
-                    Row {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Icon(
+                            modifier = Modifier.size(28.dp),
                             imageVector = if (item.isDirectory()) {
                                 Icons.Default.Folder
                             } else {
@@ -122,6 +125,8 @@ fun DetailList(modifier: Modifier = Modifier) {
                             },
                             contentDescription = null
                         )
+
+                        Spacer(Modifier.width(4.dp))
 
                         Text(
                             text = item.name
@@ -138,7 +143,8 @@ fun DetailList(modifier: Modifier = Modifier) {
                             } catch (_: Exception) {
                                 "Unknown"
                             }
-                        }
+                        },
+                        maxLines = 1
                     )
                 }
                 DetailColumnType.SIZE -> {
@@ -151,7 +157,8 @@ fun DetailList(modifier: Modifier = Modifier) {
                             pluralStringResource(Res.plurals.items, itemCount ?: 0, itemCount ?: "?")
                         } else {
                             item.humanReadableSize()
-                        }
+                        },
+                        maxLines = 1
                     )
                 }
                 else -> {}
@@ -166,18 +173,10 @@ fun DetailList(modifier: Modifier = Modifier) {
                 },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                when (column) {
-                    DetailColumnType.NAME -> {
-                        Text( stringResource(Res.string.name) )
-                    }
-                    DetailColumnType.TYPE -> {
-                        Text(stringResource(Res.string.type))
-                    }
-                    DetailColumnType.SIZE -> {
-                        Text(stringResource(Res.string.size))
-                    }
-                    else -> {}
-                }
+                Text(
+                    text = stringResource(column.displayName),
+                    maxLines = 1
+                )
 
                 if (viewModel.sortType == column) {
                     Icon(

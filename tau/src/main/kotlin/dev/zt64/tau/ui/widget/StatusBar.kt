@@ -45,7 +45,7 @@ fun StatusBar(modifier: Modifier = Modifier) {
                             )
                             Spacer(Modifier.width(16.dp))
 
-                            Text("Size: ${selectedFile.toFile().humanReadableSize()}")
+                            Text("Size: ${selectedFile.humanReadableSize()}")
                         }
                     }
                     viewModel.selected.size > 1 -> {

@@ -128,7 +128,7 @@ private fun DetailsTab(path: Path) {
             Text(stringResource(Res.string.size))
         },
         trailingContent = {
-            Text(path.toFile().humanReadableSize())
+            Text(path.humanReadableSize())
         }
     )
     ListItem(

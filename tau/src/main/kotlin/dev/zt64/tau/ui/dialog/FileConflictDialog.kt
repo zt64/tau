@@ -1,6 +1,5 @@
 package dev.zt64.tau.ui.dialog
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -8,10 +7,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import dev.zt64.tau.model.File
 import dev.zt64.tau.ui.component.Thumbnail
-import nl.jacobras.humanreadable.HumanReadable
+import dev.zt64.tau.util.humanReadableSize
 import java.nio.file.Path
+import kotlin.io.path.getLastModifiedTime
+import kotlin.io.path.name
 
 enum class FileConflictResolution {
     SKIP,
@@ -21,8 +21,8 @@ enum class FileConflictResolution {
 
 @Composable
 fun FileConflictDialog(
-    file: File,
-    otherFile: File,
+    file: Path,
+    otherFile: Path,
     onResolveConflict: (FileConflictResolution) -> Unit,
     showApplyToAll: Boolean,
     onDismissRequest: () -> Unit
@@ -99,48 +99,22 @@ fun FileConflictDialog(
 }
 
 @Composable
-private fun File(file: File) {
+private fun File(file: Path) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Thumbnail(file.path.toFile())
+        Thumbnail(file)
 
         Column {
             Text(
-                text = "Size: ${HumanReadable.fileSize(file.size)}",
+                text = "Size: ${file.humanReadableSize()}",
                 style = MaterialTheme.typography.bodySmall
             )
 
             Text(
-                text = "Modified: March 23, 1455 10:58 AM",
+                text = file.getLastModifiedTime().toInstant().toString(),
                 style = MaterialTheme.typography.bodySmall
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun FileConflictDialogPreview() {
-    FileConflictDialog(
-        file = File(
-            path = Path.of(""),
-            name = "file",
-            isDirectory = false,
-            isHidden = false,
-            size = 3000,
-            lastModified = 0
-        ),
-        otherFile = File(
-            path = Path.of(""),
-            name = "file",
-            isDirectory = false,
-            isHidden = false,
-            size = 5000,
-            lastModified = 0
-        ),
-        onResolveConflict = {},
-        showApplyToAll = true,
-        onDismissRequest = {}
-    )
 }

@@ -15,7 +15,6 @@ import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import dev.zt64.tau.ui.widget.*
 import dev.zt64.tau.ui.widget.browse.DetailList
 import dev.zt64.tau.ui.widget.toolbar.Toolbar
-import dev.zt64.tau.util.moveTo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -24,8 +23,9 @@ import org.jetbrains.compose.splitpane.HorizontalSplitPane
 import org.jetbrains.compose.splitpane.rememberSplitPaneState
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import java.io.File
+import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.moveTo
 
 @OptIn(ExperimentalSplitPaneApi::class)
 @Composable
@@ -87,7 +87,7 @@ fun BrowserWindow() {
                             val data = event.dragData() as DragData.FilesList
 
                             data.readFiles().forEach { path ->
-                                File(path).moveTo(currentLocation.toFile())
+                                Path(path).moveTo(currentLocation)
                             }
 
                             return true
