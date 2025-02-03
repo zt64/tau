@@ -1,18 +1,12 @@
 package dev.zt64.tau.ui.widget.browse
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.onDrag
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.geometry.isSpecified
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
@@ -22,15 +16,13 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.io.path.name
-import kotlin.math.absoluteValue
 
 @Composable
 fun FileHorizontalGrid(modifier: Modifier = Modifier) {
     val viewModel = koinViewModel<BrowserViewModel>()
 
     FileGrid(
-        modifier = modifier,
-        onClick = viewModel::clearSelection
+        modifier = modifier
     ) {
         val preferencesManager = koinInject<PreferencesManager>()
         var scale by remember { mutableStateOf(preferencesManager.scale) }
@@ -82,8 +74,7 @@ fun FileVerticalGrid(modifier: Modifier = Modifier) {
     val viewModel = koinViewModel<BrowserViewModel>()
 
     FileGrid(
-        modifier = modifier,
-        onClick = viewModel::clearSelection
+        modifier = modifier
     ) {
         val preferencesManager = koinInject<PreferencesManager>()
         var scale by remember { mutableStateOf(preferencesManager.scale) }
@@ -160,56 +151,12 @@ private fun LazyGridScope.files(viewModel: BrowserViewModel) {
 
 @Composable
 private fun FileGrid(
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable BoxWithConstraintsScope.() -> Unit
 ) {
-    var startOffset by remember { mutableStateOf(Offset.Unspecified) }
-    var endOffset by remember { mutableStateOf(Offset.Unspecified) }
-    val tertiary = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f)
-
     BoxWithConstraints(
         modifier = modifier
             .fillMaxWidth()
-            .onDrag(
-                onDragStart = { offset ->
-                    startOffset = offset
-                    endOffset = offset
-                },
-                onDrag = { dragAmount ->
-                    endOffset += dragAmount
-                },
-                onDragEnd = {
-                    startOffset = Offset.Unspecified
-                    endOffset = Offset.Unspecified
-                }
-            )
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onClick
-            )
-            .drawWithCache {
-                onDrawWithContent {
-                    drawContent()
-                    if (startOffset.isSpecified && endOffset.isSpecified) {
-                        val rectTopLeft = Offset(
-                            x = minOf(startOffset.x, endOffset.x),
-                            y = minOf(startOffset.y, endOffset.y)
-                        )
-                        val rectSize = Size(
-                            width = (startOffset.x - endOffset.x).absoluteValue,
-                            height = (startOffset.y - endOffset.y).absoluteValue
-                        )
-
-                        drawRect(
-                            color = tertiary,
-                            topLeft = rectTopLeft,
-                            size = rectSize
-                        )
-                    }
-                }
-            }
     ) {
         content()
     }

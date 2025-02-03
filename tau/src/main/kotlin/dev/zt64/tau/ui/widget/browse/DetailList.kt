@@ -14,7 +14,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.model.DetailColumnType
@@ -30,7 +29,6 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import java.nio.file.Files
-import java.nio.file.Path
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 
@@ -150,9 +148,7 @@ fun DetailList(modifier: Modifier = Modifier) {
                 DetailColumnType.SIZE -> {
                     Text(
                         text = if (item.isDirectory()) {
-                            val itemCount = remember {
-                                item.dirSize()
-                            }
+                            val itemCount = remember { item.dirSize() }
 
                             pluralStringResource(Res.plurals.items, itemCount ?: 0, itemCount ?: "?")
                         } else {
@@ -168,9 +164,7 @@ fun DetailList(modifier: Modifier = Modifier) {
             val column = columns[columnIndex]
 
             Row(
-                modifier = Modifier.clickable {
-                    viewModel.sortBy(column)
-                },
+                modifier = Modifier.clickable { viewModel.sortBy(column) },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -192,136 +186,6 @@ fun DetailList(modifier: Modifier = Modifier) {
             }
         }
     )
-    // LazyColumn(modifier = modifier) {
-    //     stickyHeader {
-    //         Surface {
-    //             HeaderRow(nameWeight, typeWeight, sizeWeight)
-    //         }
-    //     }
-    //
-    //     itemsIndexed(
-    //         items = viewModel.contents
-    //     ) { index, path ->
-    //         val interactionSource = remember { MutableInteractionSource() }
-    //         val isHovered by interactionSource.collectIsHoveredAsState()
-    //         val selected by remember(viewModel.selected) {
-    //             derivedStateOf {
-    //                 viewModel.selected.contains(path)
-    //             }
-    //         }
-    //
-    //         ItemRow(
-    //             modifier = Modifier
-    //                 .hoverable(interactionSource)
-    //                 .selectable(
-    //                     selected = selected,
-    //                     onClick = {
-    //                         viewModel.selectItems(path)
-    //                     },
-    //                     interactionSource = interactionSource,
-    //                     indication = LocalIndication.current
-    //                 )
-    //                 .combinedClickable(
-    //                     onClick = {},
-    //                     onDoubleClick = {
-    //                         scope.launch {
-    //                             viewModel.open(path)
-    //                         }
-    //                     }
-    //                 ),
-    //             item = path,
-    //             nameWeight = nameWeight,
-    //             typeWeight = typeWeight,
-    //             sizeWeight = sizeWeight,
-    //             onClick = {
-    //             },
-    //             color = if (index % 2 == 0) {
-    //                 MaterialTheme.colorScheme.background
-    //             } else {
-    //                 MaterialTheme.colorScheme.surfaceColorAtElevation(0.5.dp)
-    //             },
-    //             interactionSource = interactionSource
-    //         )
-    //     }
-    // }
-}
-
-@Composable
-fun HeaderRow(
-    nameWeight: Float,
-    typeWeight: Float,
-    sizeWeight: Float
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text("Name", Modifier.weight(nameWeight))
-        Text("Type", Modifier.weight(typeWeight))
-        Text("Size", Modifier.weight(sizeWeight))
-    }
-}
-
-@Composable
-fun ItemRow(
-    item: Path,
-    nameWeight: Float,
-    typeWeight: Float,
-    sizeWeight: Float,
-    onClick: () -> Unit = {},
-    color: Color,
-    interactionSource: MutableInteractionSource,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier,
-        color = color
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Icon(
-                modifier = Modifier.size(24.dp),
-                imageVector = if (item.isDirectory()) {
-                    Icons.Default.Folder
-                } else {
-                    Icons.Default.FilePresent
-                },
-                contentDescription = null
-            )
-            Text(item.name, Modifier.weight(nameWeight))
-            Text(
-                modifier = Modifier.weight(typeWeight),
-                text = if (item.isDirectory()) {
-                    "Directory"
-                } else {
-                    try {
-                        Files.probeContentType(item)!!
-                    } catch (_: Exception) {
-                        "Unknown"
-                    }
-                }
-            )
-
-            Text(
-                modifier = Modifier.weight(sizeWeight),
-                text = if (item.isDirectory()) {
-                    val itemCount = remember {
-                        item.dirSize()
-                    }
-
-                    pluralStringResource(Res.plurals.items, itemCount ?: 0, itemCount ?: "?")
-                } else {
-                    item.humanReadableSize()
-                }
-            )
-        }
-    }
 }
 
 @Composable
@@ -334,7 +198,7 @@ private fun Table(
     row: @Composable (rowIndex: Int, content: @Composable RowScope.() -> Unit) -> Unit,
     headerRow: @Composable (content: @Composable RowScope.() -> Unit) -> Unit,
     cellContent: @Composable RowScope.(columnIndex: Int, rowIndex: Int) -> Unit,
-    headerContent: @Composable RowScope.(columnIndex: Int) -> Unit
+    headerContent: @Composable BoxScope.(columnIndex: Int) -> Unit
 ) {
     Box(
         modifier = modifier.then(Modifier.horizontalScroll(horizontalScrollState))
@@ -364,12 +228,11 @@ private fun Table(
                                 }
                             }
                         ) {
-                            this@headerRow.headerContent(columnIndex)
+                            headerContent(columnIndex)
                         }
                     }
                 }
             }
-
             items(rowCount) { rowIndex ->
                 row(rowIndex) {
                     (0 until columnCount).forEach { columnIndex ->

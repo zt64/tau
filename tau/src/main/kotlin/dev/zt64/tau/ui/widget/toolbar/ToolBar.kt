@@ -43,7 +43,6 @@ fun Toolbar() {
                 ToolbarEntry.Up,
                 ToolbarEntry.Back,
                 ToolbarEntry.Forward,
-                ToolbarEntry.Separator,
                 ToolbarEntry.PathBar,
                 ToolbarEntry.Spacer,
                 ToolbarEntry.Search

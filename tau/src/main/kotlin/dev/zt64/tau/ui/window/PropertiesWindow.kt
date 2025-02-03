@@ -4,6 +4,8 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -22,7 +24,9 @@ import dev.zt64.tau.util.*
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
+import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.attribute.PosixFileAttributes
 import java.nio.file.attribute.PosixFilePermission
 import java.security.MessageDigest
 import kotlin.io.path.*
@@ -115,6 +119,7 @@ private fun DetailsTab(path: Path) {
             Text(path.name)
         }
     )
+
     ListItem(
         headlineContent = {
             Text(stringResource(Res.string.location))
@@ -123,6 +128,7 @@ private fun DetailsTab(path: Path) {
             Text(path.pathString)
         }
     )
+
     ListItem(
         headlineContent = {
             Text(stringResource(Res.string.size))
@@ -131,6 +137,7 @@ private fun DetailsTab(path: Path) {
             Text(path.humanReadableSize())
         }
     )
+
     ListItem(
         headlineContent = {
             Text(stringResource(Res.string.date_created))
@@ -203,6 +210,41 @@ private fun PermissionsTab(path: Path) {
             Text(stringResource(Res.string.group))
         },
         trailingContent = {
+            val view = remember { Files.readAttributes(path, PosixFileAttributes::class.java) }
+
+            var expanded by remember { mutableStateOf(false) }
+            val options = remember { listOf(view.group().name) }
+            val textFieldState = rememberTextFieldState(options[0])
+
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = it }
+            ) {
+                OutlinedTextField(
+                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                    value = view.group().name ?: stringResource(Res.string.unknown),
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text(stringResource(Res.string.group)) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    options.forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
+                            onClick = {
+                                textFieldState.setTextAndPlaceCursorAtEnd(option)
+                                expanded = false
+                            },
+                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                        )
+                    }
+                }
+            }
         }
     )
 

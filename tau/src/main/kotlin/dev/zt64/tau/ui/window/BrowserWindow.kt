@@ -11,9 +11,12 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
+import dev.zt64.tau.model.ViewMode
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import dev.zt64.tau.ui.widget.*
+import dev.zt64.tau.ui.widget.browse.BrowseView
 import dev.zt64.tau.ui.widget.browse.DetailList
+import dev.zt64.tau.ui.widget.browse.FileVerticalGrid
 import dev.zt64.tau.ui.widget.toolbar.Toolbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -140,13 +143,21 @@ fun BrowserWindow() {
                             )
                         }
 
-                        // FileVerticalGrid(
-                        //     modifier = Modifier.weight(1f)
-                        // )
-
-                        DetailList(
-                            modifier = Modifier.weight(1f)
-                        )
+                        BrowseView(
+                            modifier = Modifier.weight(1f),
+                            onClick = viewModel::clearSelection
+                        ) {
+                            when (preferencesManager.viewMode) {
+                                ViewMode.LIST -> {
+                                    DetailList(
+                                    )
+                                }
+                                ViewMode.GRID -> {
+                                    FileVerticalGrid(
+                                    )
+                                }
+                            }
+                        }
 
                         if (preferencesManager.showStatusBar) {
                             StatusBar()

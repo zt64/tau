@@ -64,6 +64,12 @@ fun MenuBar(
                         onClick = {
                         }
                     )
+
+                    DropdownMenuItem(
+                        text = { Text(stringResource(Res.string.select_all)) },
+                        onClick = {
+                        }
+                    )
                 }
             )
 
