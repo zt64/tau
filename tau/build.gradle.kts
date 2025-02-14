@@ -44,7 +44,7 @@ dependencies {
     implementation(libs.colorPicker)
     implementation(libs.windowSize)
     implementation(libs.reorderable)
-    implementation("ca.gosyer:kotlin-multiplatform-appdirs:1.1.1")
+    implementation("ca.gosyer:kotlin-multiplatform-appdirs:1.2.0")
 
     implementation(libs.bundles.coroutines)
     implementation(libs.bundles.koin)
