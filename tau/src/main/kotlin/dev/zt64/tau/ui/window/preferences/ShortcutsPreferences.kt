@@ -22,6 +22,7 @@ import dev.zt64.tau.model.Shortcut
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.cancel
 import dev.zt64.tau.resources.confirm
+import dev.zt64.tau.ui.component.ScrollableContainer
 import dev.zt64.tau.ui.component.preferences.PreferenceItem
 import dev.zt64.tau.ui.viewmodel.PreferencesViewModel
 import org.jetbrains.compose.resources.stringResource
@@ -30,17 +31,20 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ShortcutsPreferences() {
     val viewModel = koinViewModel<PreferencesViewModel>()
+    val scrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier.verticalScroll(rememberScrollState())
-    ) {
-        viewModel.shortcuts.shortcuts.forEach {
-            ShortcutItem(
-                label = {
-                    Text("Some Shortcut")
-                },
-                shortcut = it
-            )
+    ScrollableContainer(scrollState) {
+        Column(
+            modifier = Modifier.verticalScroll(scrollState)
+        ) {
+            viewModel.shortcuts.shortcuts.forEach {
+                ShortcutItem(
+                    label = {
+                        Text("Some Shortcut")
+                    },
+                    shortcut = it
+                )
+            }
         }
     }
 }
