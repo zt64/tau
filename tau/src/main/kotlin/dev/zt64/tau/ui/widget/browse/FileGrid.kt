@@ -1,8 +1,10 @@
 package dev.zt64.tau.ui.widget.browse
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.HorizontalScrollbar
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -11,6 +13,7 @@ import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.ui.component.FileItem
+import dev.zt64.tau.ui.component.ScrollableContainer
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -80,38 +83,36 @@ fun FileVerticalGrid(modifier: Modifier = Modifier) {
         var scale by remember { mutableStateOf(preferencesManager.scale) }
         val gridState = rememberLazyGridState()
 
-        LazyVerticalGrid(
-            modifier = Modifier
-                .onPointerEvent(
-                    eventType = PointerEventType.Scroll,
-                    pass = PointerEventPass.Initial
-                ) { ev ->
-                    if (!ev.keyboardModifiers.isCtrlPressed) return@onPointerEvent
-
-                    scale += ev
-                        .changes
-                        .first()
-                        .scrollDelta
-                        .y
-                        .toInt()
-                    scale = scale.coerceAtLeast(78)
-                    preferencesManager.scale = scale
-                },
-            state = gridState,
-            columns = GridCells.FixedSize(scale.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(12.dp)
+        ScrollableContainer(
+            state = gridState
         ) {
-            files(viewModel)
-        }
+            LazyVerticalGrid(
+                modifier = Modifier
+                    .onPointerEvent(
+                        eventType = PointerEventType.Scroll,
+                        pass = PointerEventPass.Initial
+                    ) { ev ->
+                        if (!ev.keyboardModifiers.isCtrlPressed) return@onPointerEvent
 
-        VerticalScrollbar(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .height(minHeight),
-            adapter = rememberScrollbarAdapter(gridState)
-        )
+                        scale += ev
+                            .changes
+                            .first()
+                            .scrollDelta
+                            .y
+                            .toInt()
+                        scale = scale.coerceAtLeast(78)
+                        preferencesManager.scale = scale
+                    },
+                state = gridState,
+                columns = GridCells.FixedSize(scale.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(12.dp)
+            ) {
+                files(viewModel)
+            }
+
+        }
     }
 }
 

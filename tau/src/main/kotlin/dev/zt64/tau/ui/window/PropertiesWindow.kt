@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.rememberWindowState
 import dev.zt64.tau.resources.*
+import dev.zt64.tau.ui.component.ScrollableContainer
 import dev.zt64.tau.util.*
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.pluralStringResource
@@ -94,13 +95,16 @@ fun PropertiesWindow(
                         fadeIn() togetherWith fadeOut()
                     }
                 ) { tab ->
-                    Column(
-                        modifier = Modifier.verticalScroll(rememberScrollState())
-                    ) {
-                        when (tab) {
-                            Tab.DETAILS -> DetailsTab(path)
-                            Tab.PERMISSIONS -> PermissionsTab(path)
-                            Tab.CHECKSUMS -> ChecksumsTab(path)
+                    val scrollState = rememberScrollState()
+                    ScrollableContainer(scrollState) {
+                        Column(
+                            modifier = Modifier.verticalScroll(scrollState)
+                        ) {
+                            when (tab) {
+                                Tab.DETAILS -> DetailsTab(path)
+                                Tab.PERMISSIONS -> PermissionsTab(path)
+                                Tab.CHECKSUMS -> ChecksumsTab(path)
+                            }
                         }
                     }
                 }
