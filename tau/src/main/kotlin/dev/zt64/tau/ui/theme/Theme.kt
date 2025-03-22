@@ -5,18 +5,18 @@ import androidx.compose.foundation.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorProducer
 import androidx.compose.ui.unit.dp
 import com.materialkolor.DynamicMaterialTheme
 
 @Composable
 fun Theme(
-    seedColor: Color,
+    seedColor: ColorProducer,
     isDarkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
     DynamicMaterialTheme(
-        seedColor = seedColor,
+        seedColor = seedColor(),
         useDarkTheme = isDarkTheme,
         animate = true,
         animationSpec = tween()

@@ -6,7 +6,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.Window
-import com.godaddy.android.colorpicker.HsvColor
 import dev.zt64.tau.di.managerModule
 import dev.zt64.tau.di.viewModelModule
 import dev.zt64.tau.domain.manager.PreferencesManager
@@ -33,12 +32,8 @@ fun Tau(onCloseRequest: () -> Unit) {
         val preferencesManager = koinInject<PreferencesManager>()
         val shortcutsManager = koinInject<ShortcutsManager>()
 
-        val updatedHsvColor by remember(preferencesManager.color) {
-            mutableStateOf(HsvColor.from(Color(preferencesManager.color)).toColor())
-        }
-
         Theme(
-            seedColor = updatedHsvColor,
+            seedColor = { Color(preferencesManager.color) },
             isDarkTheme = preferencesManager.theme == Theme.DARK || preferencesManager.theme == Theme.SYSTEM && isSystemInDarkTheme()
         ) {
             var showPreferences by rememberSaveable { mutableStateOf(false) }

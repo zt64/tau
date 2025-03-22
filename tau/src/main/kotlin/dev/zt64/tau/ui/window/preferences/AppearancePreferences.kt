@@ -11,9 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.godaddy.android.colorpicker.HsvColor
-import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
-import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
+import dev.zt64.compose.pipette.ColorCircle
 import dev.zt64.tau.model.Theme
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.dark
@@ -48,17 +46,12 @@ fun AppearancePreferences() {
         ) {
             Text("Accent color")
             Spacer(Modifier.weight(1f))
-            HarmonyColorPicker(
+            ColorCircle(
                 modifier = Modifier.size(128.dp),
-                harmonyMode = ColorHarmonyMode.NONE,
-                color = HsvColor
-                    .from(Color(viewModel.preferences.color))
-                    .copy(value = 1f),
-                // else every color becomes 0,0,0
-                onColorChanged = {
-                    viewModel.preferences.color = it.toColor().toArgb()
-                },
-                showBrightnessBar = false
+                color = Color(viewModel.preferences.color),
+                onColorChange = {
+                    viewModel.preferences.color = it.toArgb()
+                }
             )
         }
 

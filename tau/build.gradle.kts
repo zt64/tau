@@ -44,7 +44,7 @@ dependencies {
     implementation(libs.oshi)
 
     implementation(libs.materialKolor)
-    implementation(libs.colorPicker)
+    implementation(libs.composePipette)
     implementation(libs.windowSize)
     implementation(libs.reorderable)
     implementation("ca.gosyer:kotlin-multiplatform-appdirs:1.2.0")
