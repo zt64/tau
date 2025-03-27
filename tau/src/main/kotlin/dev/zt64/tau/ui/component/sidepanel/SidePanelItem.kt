@@ -18,7 +18,7 @@ import org.koin.compose.koinInject
 @Composable
 fun SidePanelItem(
     text: String,
-    icon: @Composable () -> Unit = {},
+    icon: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -26,9 +26,11 @@ fun SidePanelItem(
             .padding(6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        icon()
+        icon?.let {
+            it()
 
-        Spacer(Modifier.width(6.dp))
+            Spacer(Modifier.width(6.dp))
+        }
 
         Text(
             text = text,
