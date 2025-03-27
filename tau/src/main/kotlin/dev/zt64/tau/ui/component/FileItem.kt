@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Article
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.*
@@ -16,8 +16,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.graphics.toComposeImageBitmap
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -26,14 +28,16 @@ import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.OpenItemAction
 import dev.zt64.tau.ui.component.menu.ItemContextMenu
 import dev.zt64.tau.ui.window.PropertiesWindow
-import dev.zt64.tau.util.contains
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.apache.tika.Tika
+import org.jetbrains.skia.Image
 import org.koin.compose.koinInject
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.io.File
 import java.nio.file.Path
+import java.security.MessageDigest
 import kotlin.io.path.*
 
 @Composable
@@ -55,7 +59,7 @@ fun FileItem(
         )
     }
 
-    val clipboardManager = LocalClipboardManager.current
+    val clipboard = LocalClipboard.current
 
     ItemContextMenu(path) {
         TooltipArea(
@@ -159,7 +163,7 @@ fun FileItem(
                     } else {
                         Int.MAX_VALUE
                     },
-                    textStyle = MaterialTheme.typography.labelMedium.copy(
+                    textStyle = MaterialTheme.typography.bodySmall.copy(
                         color = LocalContentColor.current,
                         shadow = Shadow(
                             color = MaterialTheme.colorScheme.outline,
@@ -183,88 +187,63 @@ fun FileItem(
 @Composable
 fun Thumbnail(file: Path, modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
-
-    var fileIcon by remember {
-        mutableStateOf(
-            if (file.isDirectory()) {
-                Icons.Default.Folder
-            } else {
-                Icons.Default.Description
-            }
-        )
+    var bitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+    val fallbackIcon = remember(file) {
+        if (file.isDirectory()) Icons.Default.Folder else Icons.Default.Description
     }
 
-    LaunchedEffect(Unit) {
-        scope.launch {
-            if (file.isDirectory()) return@launch
+    LaunchedEffect(file) {
+        scope.launch(Dispatchers.IO) {
+            try {
+                // MD5 hash of the file URI for thumbnail naming
+                val md5Hash = MessageDigest.getInstance("MD5")
+                    .digest("file://${file.toAbsolutePath()}".toByteArray())
+                    .joinToString("") { "%02x".format(it) }
 
-            val (dataType, dataFormat) = runCatching {
-                Tika()
-                    .detect(file.inputStream(), file.name)
-                    .split("/")
-            }.getOrElse { return@launch }
+                // Check normal and large thumbnail paths
+                val xdgCacheHome = System.getenv("XDG_CACHE_HOME") ?: (System.getProperty("user.home") + "/.cache")
 
-            fileIcon = when (dataType) {
-                "image" -> Icons.Default.Image
-                "video" -> Icons.Default.VideoFile
-                "audio" -> Icons.Default.AudioFile
-                "text" -> Icons.AutoMirrored.Filled.Article
-                "font" -> Icons.Default.TextFields
-                "application" -> when {
-                    dataFormat.contains(
-                        "zip",
-                        "7z",
-                        "rar",
-                        "tar"
-                    ) -> Icons.Default.Archive
-                    dataFormat == "java-archive" -> Icons.Default.Coffee
-                    dataFormat == "ogg" -> Icons.Default.MusicVideo
-                    else -> Icons.Default.Description
+                val thumbPath = Path("$xdgCacheHome/thumbnails/normal/$md5Hash.png")
+                if (thumbPath.exists()) {
+                    bitmap = Image.makeFromEncoded(thumbPath.readBytes()).toComposeImageBitmap()
+                } else {
+                    val mimeType = Tika().detect(file.toString())
+
+                    if (mimeType.startsWith("image/")) {
+                        bitmap = try {
+                            Image.makeFromEncoded(file.readBytes()).toComposeImageBitmap()
+                        } catch (_: Exception) {
+                            null
+                        }
+                    }
                 }
-                else -> Icons.Default.Description
+            } catch (e: Exception) {
+                println("Error loading thumbnail: ${e.message}")
             }
         }
     }
 
-    val tint = if (file.isHidden()) {
-        MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+    if (bitmap != null) {
+        Image(
+            modifier = modifier,
+            bitmap = bitmap!!,
+            contentDescription = null
+        )
     } else {
-        MaterialTheme.colorScheme.primary
+        // Show fallback icon while loading or if thumbnail generation fails
+        val tint = if (file.isHidden()) {
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+        } else {
+            MaterialTheme.colorScheme.primary
+        }
+
+        Icon(
+            modifier = modifier,
+            imageVector = fallbackIcon,
+            tint = tint,
+            contentDescription = null
+        )
     }
-
-    Icon(
-        modifier = modifier,
-        imageVector = fileIcon,
-        tint = tint,
-        contentDescription = null
-    )
-
-    // var bitmap: ImageBitmap? by remember { mutableStateOf(null) }
-    //
-    // LaunchedEffect(file) {
-    //     scope.launch(Dispatchers.IO) {
-    //         val icon = FileSystemView.getFileSystemView().getSystemIcon(file)
-    //
-    //         val width: Int = icon.iconWidth
-    //         val height: Int = icon.iconHeight
-    //         val bufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-    //
-    //         // Paint the icon onto the BufferedImage
-    //         val g2d = bufferedImage.createGraphics()
-    //         icon.paintIcon(null, g2d, 0, 0)
-    //         g2d.dispose()
-    //
-    //         bitmap = bufferedImage.toComposeImageBitmap()
-    //     }
-    // }
-    //
-    // if (bitmap != null) {
-    //     Image(
-    //         modifier = modifier,
-    //         bitmap = bitmap!!,
-    //         contentDescription = null
-    //     )
-    // }
 }
 
 @Preview
