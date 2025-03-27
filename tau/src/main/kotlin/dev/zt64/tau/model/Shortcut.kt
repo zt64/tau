@@ -8,9 +8,9 @@ import androidx.compose.ui.input.key.nativeKeyCode
  *
  */
 enum class KeyModifier {
+    Ctrl,
     Alt,
     Shift,
-    Ctrl,
 
     /**
      * Meta is the command key on macOS and the windows key on Windows.

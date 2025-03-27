@@ -9,8 +9,8 @@ class PreferencesViewModel(val preferences: PreferencesManager, val shortcuts: S
     var theme by preferences::theme
 
     // Ensure that no two shortcuts are the same
-    fun validateShortcut(shortcut: Shortcut): Boolean {
-        return false
+    fun validateShortcut(shortcut: Shortcut, newShortcut: Shortcut): Boolean {
+        return shortcut != newShortcut
     }
 
     fun setShortcut(shortcut: Shortcut) {
