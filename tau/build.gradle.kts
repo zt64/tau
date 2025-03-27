@@ -70,6 +70,7 @@ compose {
     resources {
         packageOfResClass = "dev.zt64.tau.resources"
     }
+
     desktop.application {
         mainClass = "dev.zt64.tau.MainKt"
 
@@ -94,6 +95,7 @@ compose {
             windows {
                 iconFile = rootProject.file("resources/window-icon.ico")
             }
+        }
 
             buildTypes.release.proguard {
                 configurationFiles.from(project.file("proguard-rules.pro"))

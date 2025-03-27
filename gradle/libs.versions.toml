@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.1.20"
-compose = "1.7.3"
-hotReload = "1.0.0-alpha02"
+compose = "1.8.0-beta01"
+hotReload = "1.0.0-alpha03"
 
 clikt = "5.0.3"
 tika-core = "3.1.0"
@@ -37,7 +37,7 @@ oshi = { module = "com.github.oshi:oshi-core", version.ref = "oshi" }
 io = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "io" }
 
 windowSize = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version.ref = "windowSize" }
-colorPicker = { module = "com.godaddy.android.colorpicker:compose-color-picker", version.ref = "colorPicker" }
+composePipette = { module = "dev.zt64.compose.pipette:compose-pipette", version.ref = "composePipette" }
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 
