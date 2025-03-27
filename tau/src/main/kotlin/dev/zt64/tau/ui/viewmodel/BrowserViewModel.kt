@@ -105,7 +105,7 @@ class BrowserViewModel(private val pref: PreferencesManager, val nav: Navigation
                 val newItems = nav.currentLocation.value
                     .listDirectoryEntries()
                     .asSequence()
-                    .filter { (!it.isHidden() || pref.showHiddenFiles) && (search in it.name) }
+                    .filter { (!it.isHidden() || pref.showHiddenFiles) && (search.lowercase() in it.name.lowercase()) }
                     .sortedWith(
                         compareBy<Path>(
                             { !it.isDirectory() },
