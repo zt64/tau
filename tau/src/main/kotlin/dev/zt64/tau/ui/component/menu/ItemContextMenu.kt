@@ -11,7 +11,10 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import java.nio.file.Path
+import kotlin.io.path.deleteIfExists
+import kotlin.io.path.isDirectory
 
+// TODO: Customization?
 @Composable
 fun ItemContextMenu(
     path: Path,
@@ -27,21 +30,61 @@ fun ItemContextMenu(
 
     ContextMenu(
         menuItems = {
+            if (path.isDirectory()) {
+                DropdownMenuItem(
+                    text = {
+                        Text(stringResource(Res.string.open_in_tab))
+                    },
+                    onClick = {
+                        scope.launch {
+                            navigationManager.newTab(path)
+                        }
+                    }
+                )
+
+                DropdownMenuItem(
+                    text = {
+                        Text(stringResource(Res.string.open_in_window))
+                    },
+                    onClick = {
+                    }
+                )
+            } else {
+                DropdownMenuItem(
+                    text = {
+                        Text(stringResource(Res.string.open_with))
+                    },
+                    onClick = {
+                    }
+                )
+            }
             DropdownMenuItem(
                 text = {
-                    Text(stringResource(Res.string.open_in_tab))
+                    Text(stringResource(Res.string.copy))
                 },
                 onClick = {
-                    scope.launch {
-                        navigationManager.newTab(path)
-                    }
                 }
             )
             DropdownMenuItem(
                 text = {
-                    Text(stringResource(Res.string.open_in_window))
+                    Text(stringResource(Res.string.cut))
                 },
                 onClick = {
+                }
+            )
+            DropdownMenuItem(
+                text = {
+                    Text(stringResource(Res.string.paste))
+                },
+                onClick = {
+                }
+            )
+            DropdownMenuItem(
+                text = {
+                    Text(stringResource(Res.string.delete))
+                },
+                onClick = {
+                    path.deleteIfExists()
                 }
             )
             DropdownMenuItem(
