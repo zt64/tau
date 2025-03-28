@@ -29,6 +29,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.moveTo
+import kotlin.system.exitProcess
 
 @OptIn(ExperimentalSplitPaneApi::class)
 @Composable
@@ -63,11 +64,9 @@ fun BrowserWindow() {
                         Key.N -> {
                             // Open new window
                         }
+                        Key.Q -> exitProcess(0)
                         else -> return@onPreviewKeyEvent false
                     }
-                }
-                it.key == Key.Enter -> {
-                    // Open file
                 }
                 else -> return@onPreviewKeyEvent false
             }
