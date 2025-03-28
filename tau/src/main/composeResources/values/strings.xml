@@ -108,4 +108,6 @@
     <string name="quit">Quit</string>
     <string name="bitrate">Bitrate</string>
     <string name="frame_rate">Frame Rate</string>
+    <string name="view_mode_icons">Icons</string>
+    <string name="view_mode_list">List</string>
 </resources>

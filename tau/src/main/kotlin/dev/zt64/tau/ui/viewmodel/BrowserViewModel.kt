@@ -39,6 +39,7 @@ class BrowserViewModel(private val pref: PreferencesManager, val nav: Navigation
     val selected = mutableStateListOf<Path>()
     var sortType by mutableStateOf(pref.sortType)
     var sortDirection by mutableStateOf(pref.sortDirection)
+    var viewMode by mutableStateOf(pref.viewMode)
 
     init {
         viewModelScope.launch {
@@ -153,10 +154,7 @@ class BrowserViewModel(private val pref: PreferencesManager, val nav: Navigation
     fun paste() {
     }
 
-    fun selectItems(
-        vararg paths: Path,
-        clear: Boolean = true
-    ) {
+    fun selectItems(vararg paths: Path, clear: Boolean = true) {
         if (clear) clearSelection()
         selected += paths
     }

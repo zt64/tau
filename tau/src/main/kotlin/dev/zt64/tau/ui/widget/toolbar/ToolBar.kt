@@ -10,8 +10,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,6 +22,7 @@ import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
+import dev.zt64.tau.model.ViewMode
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.search
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
@@ -40,9 +39,9 @@ fun Toolbar() {
     val entries by remember {
         mutableStateOf(
             listOf(
-                ToolbarEntry.Up,
                 ToolbarEntry.Back,
                 ToolbarEntry.Forward,
+                ToolbarEntry.ViewMode,
                 ToolbarEntry.PathBar,
                 ToolbarEntry.Spacer,
                 ToolbarEntry.Search
@@ -116,6 +115,23 @@ fun Toolbar() {
                             }
                         }
                     }
+                    is ToolbarEntry.ViewMode -> {
+                        SingleChoiceSegmentedButtonRow {
+                            ViewMode.entries.forEachIndexed { i, entry ->
+                                SegmentedButton(
+                                    selected = viewModel.viewMode == entry,
+                                    onClick = { viewModel.viewMode = entry },
+                                    shape = SegmentedButtonDefaults.itemShape(i, ViewMode.entries.size),
+                                    icon = { }
+                                ) {
+                                    Icon(
+                                        imageVector = entry.icon,
+                                        contentDescription = stringResource(entry.label)
+                                    )
+                                }
+                            }
+                        }
+                    }
                     is ToolbarEntry.Back -> {
                         entry.Content(
                             enabled = viewModel.nav.canGoBack,
@@ -135,29 +151,35 @@ fun Toolbar() {
                         )
                     }
                     is ToolbarEntry.Refresh -> {
-                        TODO()
+                        entry.Content(onClick = viewModel::refresh)
                     }
                     is ToolbarEntry.Search -> {
-                        FilledTonalIconToggleButton(
-                            checked = viewModel.searching,
+                        entry.ToggleContent(
+                            toggled = viewModel.searching,
                             onCheckedChange = { viewModel.searching = it }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = stringResource(Res.string.search)
-                            )
-                        }
+                        )
                     }
                     is ToolbarEntry.AddBookmark -> {
                         entry.Content(
                             onClick = {}
                         )
                     }
-                    is ToolbarEntry.CreateNew -> TODO()
-                    is ToolbarEntry.Split -> TODO()
+                    is ToolbarEntry.CreateNew -> {
+                        entry.Content(onClick = { TODO() })
+                    }
+                    is ToolbarEntry.Split -> {
+                        entry.ToggleContent(
+                            toggled = false,
+                            onCheckedChange = { TODO() }
+                        )
+                    }
                     is ToolbarEntry.OpenMenu -> TODO()
-                    is ToolbarEntry.NewTab -> TODO()
-                    is ToolbarEntry.NewWindow -> TODO()
+                    is ToolbarEntry.NewTab -> {
+                        entry.Content(onClick = viewModel::newTab)
+                    }
+                    is ToolbarEntry.NewWindow -> {
+                        entry.Content(onClick = { TODO() })
+                    }
                 }
             }
 
