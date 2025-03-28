@@ -97,10 +97,9 @@ compose {
             }
         }
 
-            buildTypes.release.proguard {
-                configurationFiles.from(project.file("proguard-rules.pro"))
-                obfuscate = true
-            }
+        buildTypes.release.proguard {
+            configurationFiles.from(project.file("proguard-rules.pro"))
+            obfuscate = true
         }
     }
 }
