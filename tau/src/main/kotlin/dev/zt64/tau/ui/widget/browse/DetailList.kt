@@ -46,7 +46,7 @@ fun DetailList(modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
 
     Table(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxSize(),
         columnCount = columns.size,
         rowCount = viewModel.contents.size,
         row = { rowIndex, content ->
