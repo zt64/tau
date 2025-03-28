@@ -3,7 +3,7 @@ package dev.zt64.tau.ui.widget.browse
 import androidx.compose.foundation.ContextMenuArea
 import androidx.compose.foundation.ContextMenuItem
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.onDrag
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.isSpecified
+import androidx.compose.ui.input.pointer.pointerInput
 import kotlin.math.absoluteValue
 
 @Composable
@@ -29,19 +30,33 @@ fun BrowseView(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .onDrag(
-                onDragStart = { offset ->
-                    startOffset = offset
-                    endOffset = offset
-                },
-                onDrag = { dragAmount ->
-                    endOffset += dragAmount
-                },
-                onDragEnd = {
-                    startOffset = Offset.Unspecified
-                    endOffset = Offset.Unspecified
-                }
-            )
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDragStart = { offset ->
+                        startOffset = offset
+                        endOffset = offset
+                    },
+                    onDrag = { change, dragAmount ->
+                        change.consume()
+                        if (startOffset.isSpecified) {
+                            endOffset = change.position.let { (x, y) ->
+                                Offset(
+                                    x = x.coerceIn(0f, size.width.toFloat()),
+                                    y = y.coerceIn(0f, size.height.toFloat())
+                                )
+                            }
+                        }
+                    },
+                    onDragEnd = {
+                        startOffset = Offset.Unspecified
+                        endOffset = Offset.Unspecified
+                    },
+                    onDragCancel = {
+                        startOffset = Offset.Unspecified
+                        endOffset = Offset.Unspecified
+                    }
+                )
+            }
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
