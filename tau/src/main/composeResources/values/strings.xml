@@ -92,6 +92,7 @@
     <string name="bookmark_add">Add bookmark</string>
     <string name="bookmark_remove">Remove bookmark</string>
     <string name="bookmark_edit">Edit bookmark</string>
+    <string name="split_view">Split view</string>
     <string name="open_item_action">Action to open items</string>
     <string name="single_click">Single click</string>
     <string name="double_click">Double click</string>
