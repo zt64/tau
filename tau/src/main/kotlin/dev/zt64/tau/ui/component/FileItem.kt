@@ -230,17 +230,14 @@ fun Thumbnail(file: Path, modifier: Modifier = Modifier) {
             contentDescription = null
         )
     } else {
-        // Show fallback icon while loading or if thumbnail generation fails
-        val tint = if (file.isHidden()) {
-            MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-        } else {
-            MaterialTheme.colorScheme.primary
-        }
-
         Icon(
             modifier = modifier,
             imageVector = fallbackIcon,
-            tint = tint,
+            tint = if (file.isHidden()) {
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+            } else {
+                MaterialTheme.colorScheme.primary
+            },
             contentDescription = null
         )
     }

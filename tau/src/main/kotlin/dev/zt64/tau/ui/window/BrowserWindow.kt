@@ -8,7 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draganddrop.*
 import androidx.compose.ui.input.key.*
-import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.model.ViewMode
@@ -35,7 +35,7 @@ import kotlin.io.path.moveTo
 fun BrowserWindow() {
     val viewModel = koinViewModel<BrowserViewModel>()
     val preferencesManager = koinInject<PreferencesManager>()
-    val clipboardManager = LocalClipboardManager.current
+    val clipboard = LocalClipboard.current
 
     Scaffold(
         modifier = Modifier.onPreviewKeyEvent {
@@ -77,6 +77,7 @@ fun BrowserWindow() {
         snackbarHost = { SnackbarHost(viewModel.snackbarHostState) }
     ) { paddingValues ->
         val currentLocation by viewModel.nav.currentLocation.collectAsState()
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -99,7 +100,6 @@ fun BrowserWindow() {
                 )
         ) {
             val watcher = viewModel.watcher
-
             val coroutineScope = rememberCoroutineScope()
 
             DisposableEffect(currentLocation) {
@@ -147,21 +147,13 @@ fun BrowserWindow() {
                             modifier = Modifier.weight(1f),
                             onClick = viewModel::clearSelection
                         ) {
-                            when (preferencesManager.viewMode) {
-                                ViewMode.LIST -> {
-                                    DetailList(
-                                    )
-                                }
-                                ViewMode.GRID -> {
-                                    FileVerticalGrid(
-                                    )
-                                }
+                            when (viewModel.viewMode) {
+                                ViewMode.LIST -> DetailList()
+                                ViewMode.GRID -> FileVerticalGrid()
                             }
                         }
 
-                        if (preferencesManager.showStatusBar) {
-                            StatusBar()
-                        }
+                        if (preferencesManager.showStatusBar) StatusBar()
                     }
                 }
             }
