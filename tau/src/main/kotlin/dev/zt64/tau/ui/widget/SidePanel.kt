@@ -12,7 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.zt64.tau.model.Bookmark
+import dev.zt64.tau.domain.model.Bookmark
 import dev.zt64.tau.ui.component.ScrollableContainer
 import dev.zt64.tau.ui.component.sidepanel.SidePanelHeaderItem
 import dev.zt64.tau.ui.component.sidepanel.SidePanelLocationItem

@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
-import dev.zt64.tau.model.ViewMode
+import dev.zt64.tau.domain.model.ViewMode
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.search
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel

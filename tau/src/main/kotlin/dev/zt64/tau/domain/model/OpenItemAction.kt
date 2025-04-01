@@ -1,4 +1,4 @@
-package dev.zt64.tau.model
+package dev.zt64.tau.domain.model
 
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.double_click

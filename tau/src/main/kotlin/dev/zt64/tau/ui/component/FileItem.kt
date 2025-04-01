@@ -25,7 +25,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
-import dev.zt64.tau.model.OpenItemAction
+import dev.zt64.tau.domain.model.OpenItemAction
 import dev.zt64.tau.ui.component.menu.ItemContextMenu
 import dev.zt64.tau.ui.window.PropertiesWindow
 import kotlinx.coroutines.Dispatchers

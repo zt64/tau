@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.NavigationManager
-import dev.zt64.tau.model.Bookmark
+import dev.zt64.tau.domain.model.Bookmark
 import dev.zt64.tau.ui.component.menu.ItemContextMenu
 import org.koin.compose.koinInject
 

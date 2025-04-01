@@ -11,7 +11,7 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
-import dev.zt64.tau.model.ViewMode
+import dev.zt64.tau.domain.model.ViewMode
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import dev.zt64.tau.ui.widget.*
 import dev.zt64.tau.ui.widget.browse.BrowseView

@@ -12,8 +12,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import dev.zt64.tau.domain.manager.PreferencesManager
-import dev.zt64.tau.model.DetailColumn
-import dev.zt64.tau.model.DetailColumnType
+import dev.zt64.tau.domain.model.DetailColumn
+import dev.zt64.tau.domain.model.DetailColumnType
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import sh.calvin.reorderable.ReorderableColumn

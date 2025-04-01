@@ -6,9 +6,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import dev.zt64.tau.domain.manager.PreferencesManager
-import dev.zt64.tau.model.DetailColumnType
-import dev.zt64.tau.model.Direction
-import dev.zt64.tau.model.OpenItemAction
+import dev.zt64.tau.domain.model.DetailColumnType
+import dev.zt64.tau.domain.model.Direction
+import dev.zt64.tau.domain.model.OpenItemAction
 import dev.zt64.tau.resources.*
 import dev.zt64.tau.ui.component.preferences.PreferenceItem
 import org.jetbrains.compose.resources.stringResource

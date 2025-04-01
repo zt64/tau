@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zt64.tau.domain.manager.NavigationManager
 import dev.zt64.tau.domain.manager.PreferencesManager
-import dev.zt64.tau.model.DetailColumnType
-import dev.zt64.tau.model.Direction
+import dev.zt64.tau.domain.model.DetailColumnType
+import dev.zt64.tau.domain.model.Direction
 import dev.zt64.tau.util.creationTime
 import dev.zt64.tau.util.size
 import io.github.irgaly.kfswatch.KfsDirectoryWatcher

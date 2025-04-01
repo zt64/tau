@@ -15,7 +15,7 @@ import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.NavigationManager
-import dev.zt64.tau.model.Bookmark
+import dev.zt64.tau.domain.model.Bookmark
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import kotlin.io.path.absolutePathString

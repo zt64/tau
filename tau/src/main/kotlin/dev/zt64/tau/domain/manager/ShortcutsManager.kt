@@ -3,8 +3,8 @@ package dev.zt64.tau.domain.manager
 import androidx.compose.ui.input.key.Key
 import com.russhwolf.settings.PreferencesSettings
 import dev.zt64.tau.domain.manager.base.BasePreferenceManager
-import dev.zt64.tau.model.KeyModifier
-import dev.zt64.tau.model.Shortcut
+import dev.zt64.tau.domain.model.KeyModifier
+import dev.zt64.tau.domain.model.Shortcut
 
 /**
  * Manages shortcuts

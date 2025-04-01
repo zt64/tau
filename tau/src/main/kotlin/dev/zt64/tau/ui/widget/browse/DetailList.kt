@@ -16,8 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.dp
-import dev.zt64.tau.model.DetailColumnType
-import dev.zt64.tau.model.Direction
+import dev.zt64.tau.domain.model.DetailColumnType
+import dev.zt64.tau.domain.model.Direction
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.items
 import dev.zt64.tau.ui.component.menu.ItemContextMenu

@@ -2,7 +2,7 @@ package dev.zt64.tau.domain.manager
 
 import com.russhwolf.settings.PreferencesSettings
 import dev.zt64.tau.domain.manager.base.BasePreferenceManager
-import dev.zt64.tau.model.*
+import dev.zt64.tau.domain.model.*
 
 class PreferencesManager(settings: PreferencesSettings) : BasePreferenceManager(settings) {
     var theme: Theme by preference(Theme.DARK)

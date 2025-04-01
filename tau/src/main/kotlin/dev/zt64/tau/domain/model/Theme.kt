@@ -1,4 +1,4 @@
-package dev.zt64.tau.model
+package dev.zt64.tau.domain.model
 
 import androidx.compose.runtime.Stable
 

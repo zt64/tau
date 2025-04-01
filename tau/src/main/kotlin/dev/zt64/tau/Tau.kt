@@ -10,7 +10,7 @@ import dev.zt64.tau.di.managerModule
 import dev.zt64.tau.di.viewModelModule
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.domain.manager.ShortcutsManager
-import dev.zt64.tau.model.Theme
+import dev.zt64.tau.domain.model.Theme
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.window_icon
 import dev.zt64.tau.ui.theme.Theme

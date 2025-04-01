@@ -23,8 +23,6 @@ class NavigationManager {
     private var _currentTabIndex = MutableStateFlow(0)
     val currentTabIndex = _currentTabIndex.asStateFlow()
 
-    val selected = mutableStateListOf<Path>()
-
     // The forward and backward stacks are used to keep track of the navigation history.
     // TODO: Implement a more efficient way to handle the navigation history.
     //       Give each tab its own history

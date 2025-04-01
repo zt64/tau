@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import dev.zt64.compose.pipette.ColorCircle
-import dev.zt64.tau.model.Theme
+import dev.zt64.tau.domain.model.Theme
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.dark
 import dev.zt64.tau.ui.viewmodel.PreferencesViewModel

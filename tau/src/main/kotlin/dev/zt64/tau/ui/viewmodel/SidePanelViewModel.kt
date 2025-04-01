@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zt64.tau.domain.manager.NavigationManager
 import dev.zt64.tau.domain.manager.PreferencesManager
-import dev.zt64.tau.model.Bookmark
+import dev.zt64.tau.domain.model.Bookmark
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

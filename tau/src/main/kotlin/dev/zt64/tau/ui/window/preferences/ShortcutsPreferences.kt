@@ -15,8 +15,8 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import dev.zt64.tau.model.KeyModifier
-import dev.zt64.tau.model.Shortcut
+import dev.zt64.tau.domain.model.KeyModifier
+import dev.zt64.tau.domain.model.Shortcut
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.cancel
 import dev.zt64.tau.resources.confirm
