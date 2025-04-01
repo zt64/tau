@@ -19,7 +19,7 @@ allprojects {
         version = rootProject.libs.versions.ktlint
     }
 
-    group = "dev.zt64"
+    group = "dev.zt64.tau"
     version = "1.0.0"
 }
 
