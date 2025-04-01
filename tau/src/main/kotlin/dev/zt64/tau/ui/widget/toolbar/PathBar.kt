@@ -47,7 +47,7 @@ fun PathBar(
     modifier: Modifier = Modifier
 ) {
     var currentSegments by remember { mutableStateOf(emptyList<Path>()) }
-    var currentSegmentIndex by rememberSaveable(location) {
+    var currentSegmentIndex by rememberSaveable {
         mutableIntStateOf(0)
     }
 
@@ -62,6 +62,8 @@ fun PathBar(
             }
 
             currentSegmentIndex = currentSegments.lastIndex
+        } else {
+            currentSegmentIndex = currentSegments.indexOf(location)
         }
     }
 

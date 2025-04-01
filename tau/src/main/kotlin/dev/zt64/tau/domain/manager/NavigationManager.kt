@@ -40,7 +40,10 @@ class NavigationManager {
     }
 
     suspend fun navigate(path: Path) {
-        backwardStack.add(_currentLocation.value)
+        if (path == _currentLocation.value) return
+
+        backwardStack.add(0, _currentLocation.value)
+        forwardStack.clear()
         updateCurrentLocation(path)
     }
 
@@ -48,16 +51,18 @@ class NavigationManager {
         // IDK, how to make this work with history
         // navigating up, should result in the back button becoming available, but it doesn't
 
-        backwardStack.add(_currentLocation.value)
-        updateCurrentLocation(_currentLocation.value.parent!!)
+        val parent = _currentLocation.value.parent ?: return
+        backwardStack.add(0, _currentLocation.value)
+        forwardStack.clear()
+        updateCurrentLocation(parent)
     }
 
     suspend fun navigateForward() {
         if (forwardStack.isEmpty() || _currentLocation.value == forwardStack.first()) {
             throw IllegalStateException("Cannot go forward")
         } else {
-            backwardStack.add(_currentLocation.value)
-            updateCurrentLocation(forwardStack.removeLast())
+            backwardStack.add(0, _currentLocation.value)
+            updateCurrentLocation(forwardStack.removeAt(0))
         }
     }
 
@@ -65,8 +70,8 @@ class NavigationManager {
         if (backwardStack.isEmpty() || _currentLocation.value == backwardStack.first()) {
             throw IllegalStateException("Cannot go back")
         } else {
-            forwardStack.add(_currentLocation.value)
-            updateCurrentLocation(backwardStack.removeLast())
+            forwardStack.add(0, _currentLocation.value)
+            updateCurrentLocation(backwardStack.removeAt(0))
         }
     }
 
