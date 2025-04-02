@@ -89,11 +89,11 @@ compose {
             targetFormats(TargetFormat.Deb, TargetFormat.Exe, TargetFormat.Msi)
 
             linux {
-                iconFile = rootProject.file("resources/window-icon.png")
+                iconFile = file("icon/window-icon.png")
             }
 
             windows {
-                iconFile = rootProject.file("resources/window-icon.ico")
+                iconFile = file("icon/window-icon.ico")
             }
         }
 
