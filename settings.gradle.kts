@@ -18,4 +18,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "tau"
-include("tau")
+include("app")
