@@ -26,6 +26,8 @@ kotlin {
 dependencies {
     ktlintRuleset(libs.ktlint.rules.compose)
 
+    implementation(project(":resources"))
+
     implementation(compose.material3)
     implementation(compose.desktop.currentOs) {
         exclude(group = "org.jetbrains.compose.material", module = "material")
