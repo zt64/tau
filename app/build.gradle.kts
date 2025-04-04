@@ -11,50 +11,21 @@ plugins {
     alias(libs.plugins.ktlint)
 }
 
-kotlin {
-    compilerOptions {
-        optIn.addAll(
-            "androidx.compose.ui.ExperimentalComposeUiApi",
-            "androidx.compose.material3.ExperimentalMaterial3Api",
-            "androidx.compose.foundation.ExperimentalFoundationApi",
-            "org.koin.core.annotation.KoinExperimentalAPI"
-        )
-    }
-}
-
 @OptIn(ExperimentalComposeLibrary::class)
 dependencies {
     ktlintRuleset(libs.ktlint.rules.compose)
 
+    implementation(project(":core"))
+    implementation(project(":ui"))
     implementation(project(":resources"))
 
-    implementation(compose.material3)
     implementation(compose.desktop.currentOs) {
         exclude(group = "org.jetbrains.compose.material", module = "material")
     }
-    implementation(compose.materialIconsExtended)
-    implementation(compose.material3AdaptiveNavigationSuite)
-    implementation(compose.desktop.components.splitPane)
-    implementation(compose.components.resources)
 
-    implementation(libs.humanReadable)
-    implementation(libs.viewmodel)
     implementation(libs.clikt)
-    implementation(libs.tika.core)
-    implementation(libs.kfswatch)
-    implementation(libs.io)
-    implementation(libs.oshi)
 
-    implementation(libs.materialKolor)
-    implementation(libs.composePipette)
-    implementation(libs.windowSize)
-    implementation(libs.reorderable)
-    implementation("ca.gosyer:kotlin-multiplatform-appdirs:1.2.0")
-
-    implementation(libs.bundles.coroutines)
     implementation(libs.bundles.koin)
-    implementation(libs.bundles.dbus.java)
-    implementation(libs.bundles.settings)
 
     testImplementation(compose.uiTest)
     testImplementation(libs.kotlin.test)
@@ -69,10 +40,6 @@ tasks.register<ComposeHotRun>("runHot") {
 }
 
 compose {
-    resources {
-        packageOfResClass = "dev.zt64.tau.resources"
-    }
-
     desktop.application {
         mainClass = "dev.zt64.tau.MainKt"
 
@@ -103,11 +70,5 @@ compose {
             configurationFiles.from(project.file("proguard-rules.pro"))
             obfuscate = true
         }
-    }
-}
-
-ktlint {
-    filter {
-        exclude("**/libres/**.kt")
     }
 }
