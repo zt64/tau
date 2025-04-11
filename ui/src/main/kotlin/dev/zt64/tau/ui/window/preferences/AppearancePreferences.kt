@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import dev.zt64.compose.pipette.ColorCircle
+import dev.zt64.compose.pipette.CircularColorPicker
 import dev.zt64.tau.domain.model.Theme
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.dark
@@ -46,7 +46,7 @@ fun AppearancePreferences() {
         ) {
             Text("Accent color")
             Spacer(Modifier.weight(1f))
-            ColorCircle(
+            CircularColorPicker(
                 modifier = Modifier.size(128.dp),
                 color = Color(viewModel.preferences.color),
                 onColorChange = {
