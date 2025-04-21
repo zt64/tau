@@ -6,7 +6,7 @@ import dev.zt64.tau.domain.model.*
 
 class PreferencesManager(settings: PreferencesSettings) : BasePreferenceManager(settings) {
     var theme: Theme by preference(Theme.DARK)
-    var color: Int by preference(0x1ed760) // Spotify green
+    var color: Long by preference(0x1ed760FFL) // Spotify green
     var scale: Int by preference(78)
 
     var showMenuBar: Boolean by preference(true)

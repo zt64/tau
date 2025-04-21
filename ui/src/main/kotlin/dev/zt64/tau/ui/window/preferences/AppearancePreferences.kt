@@ -8,10 +8,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import dev.zt64.compose.pipette.CircularColorPicker
+import dev.zt64.compose.pipette.HsvColor
 import dev.zt64.tau.domain.model.Theme
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.dark
@@ -48,9 +48,9 @@ fun AppearancePreferences() {
             Spacer(Modifier.weight(1f))
             CircularColorPicker(
                 modifier = Modifier.size(128.dp),
-                color = Color(viewModel.preferences.color),
+                color = HsvColor.Companion(viewModel.preferences.color),
                 onColorChange = {
-                    viewModel.preferences.color = it.toArgb()
+                    viewModel.preferences.color = it.toColor().toArgb().toLong()
                 }
             )
         }
