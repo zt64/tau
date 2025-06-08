@@ -7,15 +7,21 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.zt64.tau.domain.manager.NavigationManager
 import dev.zt64.tau.resources.*
 import dev.zt64.tau.ui.component.MiniTextButton
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
+import kotlin.system.exitProcess
 
 @Composable
 fun MenuBar(
     onClickPreferences: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val navigationManager = koinInject<NavigationManager>()
+
     Surface(
         modifier = modifier,
         tonalElevation = 0.dp
@@ -26,12 +32,17 @@ fun MenuBar(
                 .padding(horizontal = 6.dp, vertical = 2.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val scope = rememberCoroutineScope()
             MenuBarItem(
                 label = { Text(stringResource(Res.string.file)) },
                 content = {
                     DropdownMenuItem(
                         text = { Text(stringResource(Res.string.new_tab)) },
-                        onClick = {}
+                        onClick = {
+                            scope.launch {
+                                navigationManager.newTab()
+                            }
+                        }
                     )
 
                     DropdownMenuItem(
@@ -46,12 +57,16 @@ fun MenuBar(
 
                     DropdownMenuItem(
                         text = { Text(stringResource(Res.string.close_tab)) },
-                        onClick = {}
+                        onClick = {
+                            scope.launch {
+                                navigationManager.closeTab()
+                            }
+                        }
                     )
 
                     DropdownMenuItem(
                         text = { Text(stringResource(Res.string.quit)) },
-                        onClick = {}
+                        onClick = { exitProcess(0) }
                     )
                 }
             )
