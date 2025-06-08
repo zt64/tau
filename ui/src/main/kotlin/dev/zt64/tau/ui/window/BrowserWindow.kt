@@ -2,16 +2,19 @@ package dev.zt64.tau.ui.window
 
 import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draganddrop.*
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Window
+import dev.zt64.tau.domain.manager.NotificationManager
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.domain.model.ViewMode
+import dev.zt64.tau.resources.Res
+import dev.zt64.tau.resources.window_icon
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import dev.zt64.tau.ui.widget.*
 import dev.zt64.tau.ui.widget.browse.BrowseView
@@ -21,22 +24,83 @@ import dev.zt64.tau.ui.widget.toolbar.Toolbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.splitpane.ExperimentalSplitPaneApi
 import org.jetbrains.compose.splitpane.HorizontalSplitPane
 import org.jetbrains.compose.splitpane.rememberSplitPaneState
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import java.awt.Dimension
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.moveTo
 import kotlin.system.exitProcess
 
+@Composable
+fun BrowserWindow(
+    onClickShowPreferences: () -> Unit,
+    onCloseRequest: () -> Unit
+) {
+    val preferencesManager = koinInject<PreferencesManager>()
+    Window(
+        title = "tau",
+        icon = painterResource(Res.drawable.window_icon),
+        onCloseRequest = onCloseRequest
+        // onKeyEvent = {
+        //     if (it.type == KeyEventType.KeyDown) {
+        //         when (it.key) {
+        //             Key.AltLeft -> showMenuBar = !showMenuBar
+        //             else -> return@Window false
+        //         }
+        //
+        //         return@Window true
+        //     }
+        //
+        //     false
+        // }
+    ) {
+        LaunchedEffect(Unit) {
+            window.minimumSize = Dimension(300, 400)
+        }
+
+        Column {
+            if (preferencesManager.showMenuBar) {
+                MenuBar(
+                    onClickPreferences = onClickShowPreferences,
+                )
+            }
+
+            BrowserWindowContent()
+        }
+    }
+}
+
 @OptIn(ExperimentalSplitPaneApi::class)
 @Composable
-fun BrowserWindow() {
+fun BrowserWindowContent(
+    showToolbar: Boolean = true,
+    showStatusBar: Boolean = true,
+) {
     val viewModel = koinViewModel<BrowserViewModel>()
-    val preferencesManager = koinInject<PreferencesManager>()
+    val notificationManager = koinInject<NotificationManager>()
+    val snackbarHostState = remember { SnackbarHostState() }
     val clipboard = LocalClipboard.current
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        notificationManager.events.collect { event ->
+            scope.launch {
+                val result = snackbarHostState.showSnackbar(
+                    message = event.message,
+                    actionLabel = event.action?.label
+                )
+
+                if (result == SnackbarResult.ActionPerformed) {
+                    event.action?.action?.invoke()
+                }
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.onPreviewKeyEvent {
@@ -52,10 +116,7 @@ fun BrowserWindow() {
                         }
                         Key.A -> viewModel.selectAll()
                         Key.R -> viewModel.refresh()
-                        Key.H -> {
-                            preferencesManager.showHiddenFiles = !preferencesManager.showHiddenFiles
-                            viewModel.refresh()
-                        }
+                        Key.H -> viewModel.toggleHiddenFiles()
                         Key.F -> {
                             viewModel.searching = true
                         }
@@ -73,7 +134,7 @@ fun BrowserWindow() {
 
             true
         },
-        snackbarHost = { SnackbarHost(viewModel.snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         val currentLocation by viewModel.nav.currentLocation.collectAsState()
 
@@ -116,9 +177,7 @@ fun BrowserWindow() {
                 }
             }
 
-            if (preferencesManager.showToolbar) {
-                Toolbar()
-            }
+            if (showToolbar) Toolbar()
 
             HorizontalSplitPane(
                 modifier = Modifier.fillMaxWidth(),
@@ -137,7 +196,7 @@ fun BrowserWindow() {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .heightIn(min = 42.dp, max = 42.dp),
-                                value = viewModel.search,
+                                value = viewModel.searchQuery,
                                 onValueChange = viewModel::search
                             )
                         }
@@ -152,7 +211,7 @@ fun BrowserWindow() {
                             }
                         }
 
-                        if (preferencesManager.showStatusBar) StatusBar()
+                        if (showStatusBar) StatusBar()
                     }
                 }
             }
