@@ -9,7 +9,8 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +21,8 @@ import dev.zt64.tau.domain.model.DetailColumnType
 import dev.zt64.tau.domain.model.Direction
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.items
+import dev.zt64.tau.ui.component.ScrollableContainer
+import dev.zt64.tau.ui.component.Thumbnail
 import dev.zt64.tau.ui.component.menu.ItemContextMenu
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
 import dev.zt64.tau.util.dirSize
@@ -44,148 +47,154 @@ fun DetailList(modifier: Modifier = Modifier) {
         )
     }
     val scope = rememberCoroutineScope()
+    val verticalLazyListState = rememberLazyListState()
 
-    Table(
-        modifier = modifier.fillMaxSize(),
-        columnCount = columns.size,
-        rowCount = viewModel.contents.size,
-        row = { rowIndex, content ->
-            val path = viewModel.contents[rowIndex]
+    ScrollableContainer(verticalLazyListState) {
+        Table(
+            modifier = modifier.fillMaxSize(),
+            verticalLazyListState = verticalLazyListState,
+            columnCount = columns.size,
+            rowCount = viewModel.contents.size,
+            row = { rowIndex, content ->
+                val path = viewModel.contents[rowIndex]
 
-            ItemContextMenu(path) {
-                val interactionSource = remember { MutableInteractionSource() }
-                val isHovered by interactionSource.collectIsHoveredAsState()
-                val selected by remember(viewModel.selected) {
-                    derivedStateOf { path in viewModel.selected }
-                }
-
-                Surface(
-                    modifier = Modifier
-                        .hoverable(interactionSource)
-                        .selectable(
-                            selected = selected,
-                            onClick = {
-                                viewModel.selectItems(path)
-                            },
-                            interactionSource = interactionSource,
-                            indication = LocalIndication.current
-                        )
-                        .combinedClickable(
-                            onClick = {},
-                            onDoubleClick = {
-                                scope.launch {
-                                    viewModel.open(path)
-                                }
-                            }
-                        ),
-                    color = if (rowIndex % 2 == 0) {
-                        MaterialTheme.colorScheme.background
-                    } else {
-                        MaterialTheme.colorScheme.surfaceColorAtElevation(0.5.dp)
+                ItemContextMenu(path) {
+                    val interactionSource = remember { MutableInteractionSource() }
+                    val isHovered by interactionSource.collectIsHoveredAsState()
+                    val selected by remember(viewModel.selected) {
+                        derivedStateOf { path in viewModel.selected }
                     }
-                ) {
-                    Row(
+
+                    Surface(
                         modifier = Modifier
-                            .padding(8.dp)
-                            .fillMaxWidth(),
+                            .hoverable(interactionSource)
+                            .selectable(
+                                selected = selected,
+                                onClick = { viewModel.selectItems(path) },
+                                interactionSource = interactionSource,
+                                indication = LocalIndication.current
+                            )
+                            .combinedClickable(
+                                onClick = {},
+                                onDoubleClick = {
+                                    scope.launch {
+                                        viewModel.open(path)
+                                    }
+                                }
+                            ),
+                        color = if (rowIndex % 2 == 0) {
+                            MaterialTheme.colorScheme.background
+                        } else {
+                            MaterialTheme.colorScheme.surfaceColorAtElevation(0.5.dp)
+                        }
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            content()
+                        }
+                    }
+                }
+            },
+            headerRow = { content ->
+                Surface {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         content()
                     }
                 }
-            }
-        },
-        headerRow = { content ->
-            Surface {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    content()
-                }
-            }
-        },
-        cellContent = { columnIndex, rowIndex ->
-            val item = viewModel.contents[rowIndex]
-            val column = columns[columnIndex]
+            },
+            cellContent = { columnIndex, rowIndex ->
+                val item = viewModel.contents[rowIndex]
+                val column = columns[columnIndex]
 
-            when (column) {
-                DetailColumnType.NAME -> {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(28.dp),
-                            imageVector = if (item.isDirectory()) {
-                                Icons.Default.Folder
+                when (column) {
+                    DetailColumnType.NAME -> {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Thumbnail(
+                                modifier = Modifier.size(28.dp),
+                                path = item
+                            )
+                            // Icon(
+                            //     modifier = Modifier.size(28.dp),
+                            //     imageVector = if (item.isDirectory()) {
+                            //         Icons.Default.Folder
+                            //     } else {
+                            //         Icons.Default.FilePresent
+                            //     },
+                            //     contentDescription = null
+                            // )
+
+                            Spacer(Modifier.width(4.dp))
+
+                            Text(
+                                text = item.name
+                            )
+                        }
+                    }
+                    DetailColumnType.TYPE -> {
+                        Text(
+                            text = if (item.isDirectory()) {
+                                "Directory"
                             } else {
-                                Icons.Default.FilePresent
+                                try {
+                                    Files.probeContentType(item)!!
+                                } catch (_: Exception) {
+                                    "Unknown"
+                                }
+                            },
+                            maxLines = 1
+                        )
+                    }
+                    DetailColumnType.SIZE -> {
+                        Text(
+                            text = if (item.isDirectory()) {
+                                val itemCount = remember { item.dirSize() }
+
+                                pluralStringResource(Res.plurals.items, itemCount ?: 0, itemCount ?: "?")
+                            } else {
+                                item.humanReadableSize()
+                            },
+                            maxLines = 1
+                        )
+                    }
+                    else -> {}
+                }
+            },
+            headerContent = { columnIndex ->
+                val column = columns[columnIndex]
+
+                Row(
+                    modifier = Modifier.clickable { viewModel.sortBy(column) },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(column.displayName),
+                        maxLines = 1
+                    )
+
+                    if (viewModel.sortType == column) {
+                        Icon(
+                            modifier = Modifier.size(22.dp),
+                            imageVector = if (viewModel.sortDirection == Direction.ASCENDING) {
+                                Icons.Default.ArrowUpward
+                            } else {
+                                Icons.Default.ArrowDownward
                             },
                             contentDescription = null
                         )
-
-                        Spacer(Modifier.width(4.dp))
-
-                        Text(
-                            text = item.name
-                        )
                     }
                 }
-                DetailColumnType.TYPE -> {
-                    Text(
-                        text = if (item.isDirectory()) {
-                            "Directory"
-                        } else {
-                            try {
-                                Files.probeContentType(item)!!
-                            } catch (_: Exception) {
-                                "Unknown"
-                            }
-                        },
-                        maxLines = 1
-                    )
-                }
-                DetailColumnType.SIZE -> {
-                    Text(
-                        text = if (item.isDirectory()) {
-                            val itemCount = remember { item.dirSize() }
-
-                            pluralStringResource(Res.plurals.items, itemCount ?: 0, itemCount ?: "?")
-                        } else {
-                            item.humanReadableSize()
-                        },
-                        maxLines = 1
-                    )
-                }
-                else -> {}
             }
-        },
-        headerContent = { columnIndex ->
-            val column = columns[columnIndex]
-
-            Row(
-                modifier = Modifier.clickable { viewModel.sortBy(column) },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(column.displayName),
-                    maxLines = 1
-                )
-
-                if (viewModel.sortType == column) {
-                    Icon(
-                        modifier = Modifier.size(22.dp),
-                        imageVector = if (viewModel.sortDirection == Direction.ASCENDING) {
-                            Icons.Default.ArrowUpward
-                        } else {
-                            Icons.Default.ArrowDownward
-                        },
-                        contentDescription = null
-                    )
-                }
-            }
-        }
-    )
+        )
+    }
 }
 
 @Composable
