@@ -14,14 +14,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.rememberWindowState
 import dev.zt64.tau.resources.*
 import dev.zt64.tau.ui.component.ScrollableContainer
 import dev.zt64.tau.util.*
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -339,11 +340,13 @@ private fun ChecksumsTab(path: Path) {
         MessageDigest.getInstance("SHA-512").digest(content).toHexString()
     }
 
-    val clipboardManager = LocalClipboardManager.current
+    val clipboardManager = LocalClipboard.current
 
     Column(
         modifier = Modifier.width(IntrinsicSize.Max)
     ) {
+        val scope = rememberCoroutineScope()
+
         @Composable
         fun field(
             value: String,
@@ -357,7 +360,9 @@ private fun ChecksumsTab(path: Path) {
                 trailingIcon = {
                     IconButton(
                         onClick = {
-                            clipboardManager.setText(AnnotatedString(value))
+                            scope.launch {
+                                clipboardManager.setClipEntry(ClipEntry(value))
+                            }
                         }
                     ) {
                         Icon(
