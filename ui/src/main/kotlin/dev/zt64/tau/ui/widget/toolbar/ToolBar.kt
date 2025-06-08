@@ -95,7 +95,7 @@ fun Toolbar() {
                                         .focusRequester(focusRequester)
                                         .width(400.dp)
                                         .heightIn(min = 42.dp, max = 42.dp),
-                                    value = viewModel.search,
+                                    value = viewModel.searchQuery,
                                     textStyle = MaterialTheme.typography.bodyMedium,
                                     onValueChange = viewModel::search,
                                     placeholder = {
