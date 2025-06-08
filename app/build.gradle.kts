@@ -1,3 +1,4 @@
+
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.compose.reload.ComposeHotRun
@@ -35,8 +36,8 @@ composeCompiler {
     featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
 }
 
-tasks.register<ComposeHotRun>("runHot") {
-    mainClass = "dev.zt64.tau.MainKt"
+tasks.withType<ComposeHotRun>().configureEach {
+    mainClass.set("dev.zt64.tau.MainKt")
 }
 
 compose {

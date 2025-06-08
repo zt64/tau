@@ -8,7 +8,6 @@ import com.github.ajalt.clikt.parameters.arguments.help
 import com.github.ajalt.clikt.parameters.arguments.optional
 import com.github.ajalt.clikt.parameters.transform.theme
 import com.github.ajalt.clikt.parameters.types.path
-import org.jetbrains.compose.reload.DevelopmentEntryPoint
 import org.jetbrains.skiko.setSystemLookAndFeel
 
 fun main(args: Array<String>) = EntryPoint().main(args)
@@ -27,11 +26,7 @@ private class EntryPoint : CliktCommand() {
         setSystemLookAndFeel()
 
         application {
-            DevelopmentEntryPoint {
-                Tau(
-                    onCloseRequest = ::exitApplication
-                )
-            }
+            Tau(onCloseRequest = ::exitApplication)
         }
     }
 }
