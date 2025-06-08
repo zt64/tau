@@ -20,6 +20,7 @@ class PreferencesManager(settings: PreferencesSettings) : BasePreferenceManager(
 
     // var columns by preference()
     var autoSizeColumns: Boolean by preference(true)
+
     // TODO: Store in directory
     var viewMode: ViewMode by preference(ViewMode.GRID)
 
