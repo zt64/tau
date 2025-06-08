@@ -34,7 +34,6 @@ dependencies {
 
     implementation(libs.humanReadable)
     implementation(libs.viewmodel)
-    implementation(libs.tika.core)
     implementation(libs.kfswatch)
     implementation(libs.oshi)
 

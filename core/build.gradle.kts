@@ -17,6 +17,7 @@ dependencies {
     implementation(compose.materialIconsExtended)
 
     implementation(libs.io)
+    implementation(libs.tika.core)
 
     implementation("ca.gosyer:kotlin-multiplatform-appdirs:1.2.0")
 
