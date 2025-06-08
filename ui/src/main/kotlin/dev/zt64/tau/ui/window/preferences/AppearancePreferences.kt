@@ -48,7 +48,7 @@ fun AppearancePreferences() {
             Spacer(Modifier.weight(1f))
             CircularColorPicker(
                 modifier = Modifier.size(128.dp),
-                color = HsvColor.Companion(viewModel.preferences.color),
+                color = HsvColor(viewModel.preferences.color),
                 onColorChange = {
                     viewModel.preferences.color = it.toColor().toArgb().toLong()
                 }
