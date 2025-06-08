@@ -7,6 +7,9 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -34,7 +37,7 @@ fun SearchBar(
         tonalElevation = 1.dp,
         shadowElevation = 1.dp
     ) {
-        Column {
+        Row {
             SearchField(
                 modifier = Modifier
                     .padding(4.dp)
@@ -47,8 +50,31 @@ fun SearchBar(
                         text = stringResource(Res.string.search),
                         style = MaterialTheme.typography.bodyMedium
                     )
-                }
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                },
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                },
+                isError = isError,
             )
+
+
         }
     }
 }
