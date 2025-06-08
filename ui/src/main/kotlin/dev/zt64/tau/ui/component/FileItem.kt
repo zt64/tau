@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.*
@@ -16,9 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
@@ -28,17 +24,14 @@ import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.domain.model.OpenItemAction
 import dev.zt64.tau.ui.component.menu.ItemContextMenu
 import dev.zt64.tau.ui.window.PropertiesWindow
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.apache.tika.Tika
-import org.jetbrains.skia.Image
 import org.koin.compose.koinInject
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.io.File
 import java.nio.file.Path
-import java.security.MessageDigest
-import kotlin.io.path.*
+import kotlin.io.path.isReadable
+import kotlin.io.path.isSymbolicLink
+import kotlin.io.path.name
 
 @Composable
 fun FileItem(
@@ -117,7 +110,7 @@ fun FileItem(
                 ) {
                     Thumbnail(
                         modifier = Modifier.size(48.dp),
-                        file = path
+                        path = path
                     )
 
                     val icon = when {
@@ -181,65 +174,6 @@ fun FileItem(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun Thumbnail(file: Path, modifier: Modifier = Modifier) {
-    val scope = rememberCoroutineScope()
-    var bitmap by remember { mutableStateOf<ImageBitmap?>(null) }
-    val fallbackIcon = remember(file) {
-        if (file.isDirectory()) Icons.Default.Folder else Icons.Default.Description
-    }
-
-    LaunchedEffect(file) {
-        scope.launch(Dispatchers.IO) {
-            try {
-                // MD5 hash of the file URI for thumbnail naming
-                val md5Hash = MessageDigest.getInstance("MD5")
-                    .digest("file://${file.toAbsolutePath()}".toByteArray())
-                    .joinToString("") { "%02x".format(it) }
-
-                // Check normal and large thumbnail paths
-                val xdgCacheHome = System.getenv("XDG_CACHE_HOME") ?: (System.getProperty("user.home") + "/.cache")
-
-                val thumbPath = Path("$xdgCacheHome/thumbnails/normal/$md5Hash.png")
-                if (thumbPath.exists()) {
-                    bitmap = Image.makeFromEncoded(thumbPath.readBytes()).toComposeImageBitmap()
-                } else {
-                    val mimeType = Tika().detect(file.toString())
-
-                    if (mimeType.startsWith("image/")) {
-                        bitmap = try {
-                            Image.makeFromEncoded(file.readBytes()).toComposeImageBitmap()
-                        } catch (_: Exception) {
-                            null
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                println("Error loading thumbnail: ${e.message}")
-            }
-        }
-    }
-
-    if (bitmap != null) {
-        Image(
-            modifier = modifier,
-            bitmap = bitmap!!,
-            contentDescription = null
-        )
-    } else {
-        Icon(
-            modifier = modifier,
-            imageVector = fallbackIcon,
-            tint = if (file.isHidden()) {
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-            } else {
-                MaterialTheme.colorScheme.primary
-            },
-            contentDescription = null
-        )
     }
 }
 
