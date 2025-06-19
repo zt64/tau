@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.1.21"
-compose = "1.8.1"
+compose = "1.8.2"
 hotReload = "1.0.0-alpha11"
 
 clikt = "5.0.3"
