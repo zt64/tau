@@ -18,7 +18,7 @@ dependencies {
     implementation(libs.io)
     implementation(libs.tika.core)
 
-    implementation("ca.gosyer:kotlin-multiplatform-appdirs:1.2.0")
+    implementation("ca.gosyer:kotlin-multiplatform-appdirs:2.0.0")
 
     implementation(libs.bundles.coroutines)
     implementation(libs.bundles.koin)
