@@ -1,8 +1,6 @@
 
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.compose.reload.ComposeHotRun
-import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -30,14 +28,6 @@ dependencies {
 
     testImplementation(compose.uiTest)
     testImplementation(libs.kotlin.test)
-}
-
-composeCompiler {
-    featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
-}
-
-tasks.withType<ComposeHotRun>().configureEach {
-    mainClass.set("dev.zt64.tau.MainKt")
 }
 
 compose {
