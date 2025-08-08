@@ -4,7 +4,7 @@ compose = "1.8.2"
 hotReload = "1.0.0-beta04"
 
 clikt = "5.0.3"
-tika-core = "3.2.1"
+tika-core = "3.2.2"
 datetime = "0.7.1-0.6.x-compat"
 humanReadable = "1.12.0"
 viewmodel = "2.9.1"
