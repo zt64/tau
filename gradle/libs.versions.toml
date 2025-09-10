@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.2.10"
+kotlin = "2.2.20"
 compose = "1.8.2"
 hotReload = "1.0.0-beta06"
 
