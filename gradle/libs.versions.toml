@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.2.20"
 compose = "1.8.2"
-hotReload = "1.0.0-beta07"
+hotReload = "1.0.0-beta08"
 
 clikt = "5.0.3"
 tika-core = "3.2.3"
