@@ -1,16 +1,15 @@
 package dev.zt64.tau.util
 
-import androidx.compose.ui.platform.ClipboardManager
 import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.ClipboardOwner
 import java.awt.datatransfer.Transferable
 
-val ClipboardManager.systemClipboard: Clipboard by lazy {
+val Clipboard.systemClipboard: Clipboard by lazy {
     Toolkit.getDefaultToolkit().systemClipboard
 }
 
-fun ClipboardManager.setContents(
+fun Clipboard.setContents(
     content: Transferable,
     owner: ClipboardOwner?
 ) = systemClipboard.setContents(content, owner)
