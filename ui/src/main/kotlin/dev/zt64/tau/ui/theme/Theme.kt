@@ -17,7 +17,7 @@ fun Theme(
 ) {
     DynamicMaterialTheme(
         seedColor = seedColor(),
-        useDarkTheme = isDarkTheme,
+        isDark = isDarkTheme,
         animate = true,
         animationSpec = tween()
     ) {
