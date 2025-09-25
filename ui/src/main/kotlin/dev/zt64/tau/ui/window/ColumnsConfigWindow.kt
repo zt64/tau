@@ -59,31 +59,35 @@ fun ColumnsList() {
                 ) { index, item, _ ->
                     var enabled by remember { mutableStateOf(true) }
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .draggableHandle(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Checkbox(
-                            checked = enabled,
-                            onCheckedChange = { enabled = it }
-                        )
+                    key(item.hashCode()) {
+                        ReorderableItem {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .draggableHandle(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Checkbox(
+                                    checked = enabled,
+                                    onCheckedChange = { enabled = it }
+                                )
 
-                        Text(
-                            modifier = Modifier.weight(1f),
-                            text = stringResource(item.type.displayName),
-                            style = MaterialTheme.typography.titleMedium,
-                            maxLines = 1
-                        )
+                                Text(
+                                    modifier = Modifier.weight(1f),
+                                    text = stringResource(item.type.displayName),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    maxLines = 1
+                                )
 
-                        Spacer(Modifier.width(8.dp))
+                                Spacer(Modifier.width(8.dp))
 
-                        Icon(
-                            modifier = Modifier.alpha(0.7f),
-                            imageVector = Icons.Default.DragHandle,
-                            contentDescription = "Drag handle"
-                        )
+                                Icon(
+                                    modifier = Modifier.alpha(0.7f),
+                                    imageVector = Icons.Default.DragHandle,
+                                    contentDescription = "Drag handle"
+                                )
+                            }
+                        }
                     }
                 }
 
