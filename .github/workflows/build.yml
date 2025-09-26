@@ -56,8 +56,8 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
         with:
-          distribution: ${{ vars.JVM_DISTRIBUTION }}
-          java-version: ${{ vars.JVM_VERSION }}
+          distribution: temurin
+          java-version: 17
           architecture: ${{ matrix.arch }}
 
       - name: Setup Gradle
@@ -72,8 +72,8 @@ jobs:
         with:
           name: runner-package-${{ matrix.runtime }}
           path: |
-            tau/app/build/compose/binaries/main-release/
-            tau/app/build/compose/jars/
+            tau/app/build/compose/binaries/main/*
+            tau/app/build/compose/jars/*.jar
 
       # Upload runner errors
       - name: Upload error logs
