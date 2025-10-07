@@ -75,8 +75,8 @@ jobs:
         with:
           name: runner-package-${{ matrix.runtime }}
           path: |
-            tau/app/build/compose/binaries/main/*
-            tau/app/build/compose/jars/*.jar
+            app/build/compose/binaries/main/**
+            app/build/compose/jars/*.jar
 
       # Upload runner errors
       - name: Upload error logs
