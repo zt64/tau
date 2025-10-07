@@ -1,5 +1,4 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
@@ -24,10 +23,8 @@ allprojects {
 }
 
 subprojects {
-    tasks.withType<KotlinJvmCompile>().configureEach {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_21
-        }
+    afterEvaluate {
+        kotlinExtension.jvmToolchain(21)
     }
 
     dependencies {

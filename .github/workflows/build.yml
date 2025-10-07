@@ -31,7 +31,9 @@ permissions:
 jobs:
   build:
     name: Build application packages
+    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         runtime: [ linux-x64, win-x64 ]
         include:
@@ -57,7 +59,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
           architecture: ${{ matrix.arch }}
 
       - name: Setup Gradle
@@ -68,6 +70,7 @@ jobs:
 
       # Upload runner package tar.gz/zip as artifact
       - name: Publish Artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: runner-package-${{ matrix.runtime }}
