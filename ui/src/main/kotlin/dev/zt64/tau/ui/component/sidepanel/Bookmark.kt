@@ -47,7 +47,7 @@ fun Bookmark(
         }
     ) {
         TooltipBox(
-            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
             state = rememberTooltipState(),
             tooltip = {
                 PlainTooltip {

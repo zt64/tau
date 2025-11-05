@@ -63,7 +63,7 @@ fun PropertiesWindow(
             Column {
                 var selectedTab by remember { mutableStateOf(Tab.DETAILS) }
 
-                TabRow(
+                SecondaryTabRow(
                     modifier = Modifier.fillMaxWidth(),
                     selectedTabIndex = selectedTab.ordinal
                 ) {
@@ -226,7 +226,7 @@ private fun PermissionsTab(path: Path) {
                 onExpandedChange = { expanded = it }
             ) {
                 OutlinedTextField(
-                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                    modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
                     value = view.group().name ?: stringResource(Res.string.unknown),
                     onValueChange = {},
                     readOnly = true,

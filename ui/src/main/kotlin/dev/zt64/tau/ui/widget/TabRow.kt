@@ -42,7 +42,7 @@ fun TabRow() {
     ) {
         val currentTabIndex by viewModel.nav.currentTabIndex.collectAsState()
 
-        TabRow(
+        SecondaryTabRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .scrollable(

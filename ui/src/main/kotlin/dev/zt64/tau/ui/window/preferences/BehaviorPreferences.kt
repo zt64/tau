@@ -29,14 +29,12 @@ fun BehaviorPreferences() {
                     onExpandedChange = { expanded = it }
                 ) {
                     TextField(
-                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
                         value = stringResource(preferencesManager.openItemAction.s),
                         onValueChange = {},
                         readOnly = true,
                         singleLine = true,
-                        trailingIcon = {
-                            ExposedDropdownMenuDefaults.TrailingIcon(expanded)
-                        },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                         colors = ExposedDropdownMenuDefaults.textFieldColors()
                     )
 
@@ -69,7 +67,7 @@ fun BehaviorPreferences() {
                     onExpandedChange = { expanded = it }
                 ) {
                     TextField(
-                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
                         value = stringResource(preferencesManager.sortType.displayName),
                         onValueChange = {},
                         readOnly = true,
@@ -109,7 +107,7 @@ fun BehaviorPreferences() {
                     onExpandedChange = { expanded = it }
                 ) {
                     TextField(
-                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
                         value = stringResource(preferencesManager.sortDirection.s),
                         onValueChange = {},
                         readOnly = true,
