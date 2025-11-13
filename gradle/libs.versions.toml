@@ -14,7 +14,7 @@ io = "0.8.0"
 
 windowSize = "0.5.0"
 composePipette = "1.0.1"
-materialKolor = "4.0.3"
+materialKolor = "4.0.4"
 reorderable = "3.0.0"
 
 dbus-java = "5.1.1"
