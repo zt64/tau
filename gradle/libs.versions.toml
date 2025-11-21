@@ -59,7 +59,7 @@ koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", ver
 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 
-ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.27" }
+ktlint-rules-compose = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.28" }
 
 [bundles]
 coroutines = ["coroutines-core", "coroutines-swing"]
