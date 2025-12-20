@@ -9,7 +9,7 @@ datetime = "0.7.1-0.6.x-compat"
 humanReadable = "1.12.2"
 viewmodel = "2.9.6"
 kfswatch = "1.4.0"
-oshi = "6.9.1"
+oshi = "6.9.2"
 io = "0.8.2"
 
 windowSize = "0.5.0"
