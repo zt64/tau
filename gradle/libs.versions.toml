@@ -17,7 +17,7 @@ composePipette = "1.0.1"
 materialKolor = "4.0.5"
 reorderable = "3.0.0"
 
-dbus-java = "5.1.1"
+dbus-java = "5.2.0"
 coroutines = "1.10.2"
 settings = "1.3.0"
 
