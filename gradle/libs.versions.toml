@@ -10,7 +10,7 @@ humanReadable = "1.12.3"
 viewmodel = "2.9.6"
 kfswatch = "1.4.0"
 oshi = "6.9.3"
-io = "0.8.2"
+io = "0.9.0"
 
 windowSize = "0.5.0"
 composePipette = "1.0.1"
