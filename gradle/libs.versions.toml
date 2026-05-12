@@ -5,7 +5,7 @@ hotReload = "1.1.1"
 
 clikt = "5.1.0"
 tika-core = "3.3.0"
-datetime = "0.7.1-0.6.x-compat"
+datetime = "0.8.0-0.6.x-compat"
 humanReadable = "1.12.3"
 viewmodel = "2.10.0"
 kfswatch = "1.4.0"
