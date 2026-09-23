@@ -170,6 +170,8 @@ fun DetailList(modifier: Modifier = Modifier) {
             },
             headerContent = { columnIndex ->
                 val column = columns[columnIndex]
+                val sortType by viewModel.sortType.collectAsState(DetailColumnType.NAME)
+                val sortDirection by viewModel.sortDirection.collectAsState(Direction.ASCENDING)
 
                 Row(
                     modifier = Modifier.clickable { viewModel.sortBy(column) },
@@ -180,10 +182,10 @@ fun DetailList(modifier: Modifier = Modifier) {
                         maxLines = 1
                     )
 
-                    if (viewModel.sortType == column) {
+                    if (sortType == column) {
                         Icon(
                             modifier = Modifier.size(22.dp),
-                            imageVector = if (viewModel.sortDirection == Direction.ASCENDING) {
+                            imageVector = if (sortDirection == Direction.ASCENDING) {
                                 Icons.Default.ArrowUpward
                             } else {
                                 Icons.Default.ArrowDownward

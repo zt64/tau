@@ -11,14 +11,20 @@ import dev.zt64.tau.domain.model.Direction
 import dev.zt64.tau.domain.model.OpenItemAction
 import dev.zt64.tau.resources.*
 import dev.zt64.tau.ui.component.preferences.PreferenceItem
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
 fun BehaviorPreferences() {
     val preferencesManager = koinInject<PreferencesManager>()
+    val scope = rememberCoroutineScope()
 
     Column {
+        val behaviorSettings by preferencesManager.behaviorSettings.collectAsState()
+        val viewSettings by preferencesManager.viewSettings.collectAsState()
+        val appearanceSettings by preferencesManager.appearanceSettings.collectAsState()
+
         PreferenceItem(
             headlineContent = { Text(stringResource(Res.string.open_item_action)) },
             trailingContent = {
@@ -30,7 +36,7 @@ fun BehaviorPreferences() {
                 ) {
                     TextField(
                         modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-                        value = stringResource(preferencesManager.openItemAction.s),
+                        value = stringResource(behaviorSettings.openItemAction.s),
                         onValueChange = {},
                         readOnly = true,
                         singleLine = true,
@@ -42,11 +48,17 @@ fun BehaviorPreferences() {
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
+                        val scope = rememberCoroutineScope()
                         OpenItemAction.entries.forEach { action ->
                             DropdownMenuItem(
                                 text = { Text(stringResource(action.s)) },
                                 onClick = {
-                                    preferencesManager.openItemAction = action
+                                    scope.launch {
+                                        preferencesManager.behaviorSettings.update { settings ->
+                                            settings.copy(
+                                                behavior = settings.behavior.copy(openItemAction = action))
+                                        }
+                                    }
                                     expanded = false
                                 },
                                 contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
@@ -68,7 +80,7 @@ fun BehaviorPreferences() {
                 ) {
                     TextField(
                         modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-                        value = stringResource(preferencesManager.sortType.displayName),
+                        value = stringResource(viewSettings.sortType.displayName),
                         onValueChange = {},
                         readOnly = true,
                         singleLine = true,
@@ -86,7 +98,11 @@ fun BehaviorPreferences() {
                             DropdownMenuItem(
                                 text = { Text(stringResource(type.displayName)) },
                                 onClick = {
-                                    preferencesManager.sortType = type
+                                    scope.launch {
+                                        preferencesManager.viewSettings.update { settings ->
+                                            settings.copy(view = settings.view.copy(sortType = type))
+                                        }
+                                    }
                                     expanded = false
                                 },
                                 contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
@@ -108,7 +124,7 @@ fun BehaviorPreferences() {
                 ) {
                     TextField(
                         modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-                        value = stringResource(preferencesManager.sortDirection.s),
+                        value = stringResource(viewSettings.sortDirection.s),
                         onValueChange = {},
                         readOnly = true,
                         singleLine = true,
@@ -126,7 +142,11 @@ fun BehaviorPreferences() {
                             DropdownMenuItem(
                                 text = { Text(stringResource(direction.s)) },
                                 onClick = {
-                                    preferencesManager.sortDirection = direction
+                                    scope.launch {
+                                        preferencesManager.viewSettings.update { settings ->
+                                            settings.copy(view = settings.view.copy(sortDirection = direction))
+                                        }
+                                    }
                                     expanded = false
                                 },
                                 contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
@@ -143,13 +163,19 @@ fun BehaviorPreferences() {
             },
             trailingContent = {
                 Switch(
-                    checked = preferencesManager.truncateNames,
-                    onCheckedChange = { preferencesManager.truncateNames = it }
+                    checked = appearanceSettings.truncateNames,
+                    onCheckedChange = {
+                        scope.launch {
+                            preferencesManager.appearanceSettings.update { settings ->
+                                settings.copy(appearance = settings.appearance.copy(truncateNames = it))
+                            }
+                        }
+                    }
                 )
             }
         )
 
-        if (preferencesManager.truncateNames) {
+        if (appearanceSettings.truncateNames) {
             // TODO Numerical input for lines to truncate
         }
 
@@ -162,8 +188,14 @@ fun BehaviorPreferences() {
             },
             trailingContent = {
                 Switch(
-                    checked = preferencesManager.showHiddenFiles,
-                    onCheckedChange = { preferencesManager.showHiddenFiles = it }
+                    checked = behaviorSettings.showHiddenFiles,
+                    onCheckedChange = {
+                        scope.launch {
+                            preferencesManager.behaviorSettings.update { settings ->
+                                settings.copy(behavior = settings.behavior.copy(showHiddenFiles = it))
+                            }
+                        }
+                    }
                 )
             }
         )

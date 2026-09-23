@@ -2,11 +2,31 @@ package dev.zt64.tau.domain.model
 
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.nativeKeyCode
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+
+object KeySerializer : KSerializer<Key> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Key", PrimitiveKind.LONG)
+
+    override fun serialize(encoder: Encoder, value: Key) {
+        encoder.encodeLong(value.keyCode)
+    }
+
+    override fun deserialize(decoder: Decoder): Key {
+        return Key(decoder.decodeLong())
+    }
+}
 
 /**
  * Modifier represents a modifier key that can be used in a shortcut.
  *
  */
+@Serializable
 enum class KeyModifier {
     Ctrl,
     Alt,
@@ -18,10 +38,15 @@ enum class KeyModifier {
     Meta
 }
 
+@Serializable(with = ShortcutSerializer::class)
 sealed interface Shortcut {
     fun packToInt(): Int
 
-    data class Bound(val modifiers: List<KeyModifier>, val key: Key) : Shortcut {
+    @Serializable
+    data class Bound(
+        val modifiers: List<KeyModifier>,
+        @Serializable(with = KeySerializer::class) val key: Key
+    ) : Shortcut {
         constructor(key: Key) : this(emptyList(), key)
 
         constructor(packed: Int) : this(
@@ -38,8 +63,21 @@ sealed interface Shortcut {
         }
     }
 
+    @Serializable
     data object Unbound : Shortcut {
         override fun packToInt(): Int = 0
+    }
+}
+
+object ShortcutSerializer : KSerializer<Shortcut> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Shortcut", PrimitiveKind.INT)
+
+    override fun serialize(encoder: Encoder, value: Shortcut) {
+        encoder.encodeInt(value.packToInt())
+    }
+
+    override fun deserialize(decoder: Decoder): Shortcut {
+        return Shortcut(decoder.decodeInt())
     }
 }
 

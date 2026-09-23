@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.NavigationManager
 import dev.zt64.tau.resources.*
@@ -33,6 +34,8 @@ fun MenuBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             val scope = rememberCoroutineScope()
+            val clipboard = LocalClipboard.current
+
             MenuBarItem(
                 label = { Text(stringResource(Res.string.file)) },
                 content = {
@@ -77,6 +80,7 @@ fun MenuBar(
                     DropdownMenuItem(
                         text = { Text(stringResource(Res.string.copy)) },
                         onClick = {
+
                         }
                     )
 
@@ -91,11 +95,7 @@ fun MenuBar(
             MenuBarItem(
                 label = { Text(stringResource(Res.string.view)) },
                 content = {
-                    DropdownMenuItem(
-                        text = { Text(stringResource(Res.string.copy)) },
-                        onClick = {
-                        }
-                    )
+
                 }
             )
         }

@@ -12,7 +12,7 @@ import androidx.compose.ui.window.DialogProperties
 @Composable
 fun Dialog(
     onDismissRequest: () -> Unit,
-    confirmButton: @Composable () -> Unit,
+    confirmButton: @Composable () -> Unit = {},
     modifier: Modifier = Modifier,
     dismissButton: @Composable (() -> Unit)? = null,
     icon: @Composable (() -> Unit)? = null,

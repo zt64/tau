@@ -14,20 +14,22 @@ import dev.zt64.tau.ui.window.BrowserWindow
 import dev.zt64.tau.ui.window.preferences.PreferencesWindow
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
+import org.koin.dsl.koinConfiguration
 
 @Composable
 fun Tau(onCloseRequest: () -> Unit) {
     KoinApplication(
-        application = {
+        configuration = koinConfiguration {
             modules(managerModule, viewModelModule)
         }
     ) {
         val preferencesManager = koinInject<PreferencesManager>()
+        val appearanceSettings by preferencesManager.appearanceSettings.collectAsState()
         val shortcutsManager = koinInject<ShortcutsManager>()
 
         Theme(
-            seedColor = { Color(preferencesManager.color) },
-            isDarkTheme = preferencesManager.theme == Theme.DARK || preferencesManager.theme == Theme.SYSTEM && isSystemInDarkTheme()
+            seedColor = { Color(appearanceSettings.color) },
+            isDarkTheme = (appearanceSettings.theme == Theme.DARK) || ((appearanceSettings.theme == Theme.SYSTEM) && isSystemInDarkTheme())
         ) {
             var showPreferences by rememberSaveable { mutableStateOf(false) }
 

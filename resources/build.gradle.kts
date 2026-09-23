@@ -1,15 +1,12 @@
-import org.jetbrains.compose.ExperimentalComposeLibrary
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
 }
 
-@OptIn(ExperimentalComposeLibrary::class)
 dependencies {
-    api(compose.components.resources)
-    implementation(compose.runtime)
+    api(libs.compose.resources)
+    implementation(libs.compose.runtime)
 }
 
 compose {

@@ -8,11 +8,14 @@ import dev.zt64.tau.domain.manager.NotificationManager
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.domain.model.DetailColumnType
 import dev.zt64.tau.domain.model.Direction
+import dev.zt64.tau.domain.model.ViewMode
 import dev.zt64.tau.util.creationTime
 import dev.zt64.tau.util.size
 import io.github.irgaly.kfswatch.KfsDirectoryWatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.awt.Desktop
@@ -29,7 +32,7 @@ class BrowserViewModel(
     private val notificationManager: NotificationManager,
     val nav: NavigationManager
 ) : ViewModel() {
-    private val desktop by lazy(Desktop::getDesktop)
+    private val desktop by lazy { Desktop.getDesktop() }
     private val clipboard by lazy { Toolkit.getDefaultToolkit().systemClipboard }
 
     /** The contents of the current directory */
@@ -49,9 +52,14 @@ class BrowserViewModel(
 
     // TODO: Use indices instead of paths to use less memory
     val selected = mutableStateListOf<Path>()
-    var sortType by mutableStateOf(pref.sortType)
-    var sortDirection by mutableStateOf(pref.sortDirection)
-    var viewMode by mutableStateOf(pref.viewMode)
+    val appearanceSettings = pref.appearanceSettings()
+    val behaviorSettings = pref.behaviorSettings()
+
+    val settings = pref.viewSettings()
+    val showHiddenFiles = behaviorSettings.map { it.showHiddenFiles }
+    var sortType = settings.map { it.sortType }
+    var sortDirection = settings.map { it.sortDirection }
+    var viewMode = settings.map { it.viewMode }
 
     init {
         viewModelScope.launch {
@@ -115,15 +123,18 @@ class BrowserViewModel(
     fun refresh() {
         viewModelScope.launch {
             try {
+                val viewSettings = settings.first()
+                val hidden = showHiddenFiles.first()
+
                 val newItems = nav.currentLocation.value
                     .listDirectoryEntries()
                     .asSequence()
-                    .filter { (!it.isHidden() || pref.showHiddenFiles) && (searchQuery.lowercase() in it.name.lowercase()) }
+                    .filter { (!it.isHidden() || hidden) && (searchQuery.lowercase() in it.name.lowercase()) }
                     .sortedWith(
                         compareBy<Path>(
                             { !it.isDirectory() },
                             {
-                                when (sortType) {
+                                when (viewSettings.sortType) {
                                     DetailColumnType.NAME -> it.nameWithoutExtension
                                     DetailColumnType.SIZE -> it.size()
                                     DetailColumnType.DATE_CREATED -> it.creationTime()
@@ -136,7 +147,7 @@ class BrowserViewModel(
                                     DetailColumnType.TYPE -> it.extension
                                 }
                             }
-                        ).let { if (sortDirection == Direction.DESCENDING) it else it.reversed() }
+                        ).let { if (viewSettings.sortDirection == Direction.DESCENDING) it else it.reversed() }
                     )
                     .toList()
 
@@ -149,19 +160,36 @@ class BrowserViewModel(
     }
 
     fun toggleHiddenFiles() {
-        pref.showHiddenFiles = !pref.showHiddenFiles
-        refresh()
+        viewModelScope.launch {
+            pref.behaviorSettings.update { settings ->
+                settings.copy(behavior = settings.behavior.copy(showHiddenFiles = !settings.behavior.showHiddenFiles))
+            }
+            refresh()
+        }
     }
 
     fun sortBy(type: DetailColumnType) {
-        if (sortType == type) {
-            sortDirection = if (sortDirection == Direction.ASCENDING) Direction.DESCENDING else Direction.ASCENDING
-        } else {
-            sortType = type
-            sortDirection = Direction.ASCENDING
-        }
+        viewModelScope.launch {
+            val currentSettings = settings.first()
+            val newDirection = if (currentSettings.sortType == type) {
+                if (currentSettings.sortDirection == Direction.ASCENDING) Direction.DESCENDING else Direction.ASCENDING
+            } else {
+                Direction.ASCENDING
+            }
 
-        refresh()
+            pref.viewSettings.update { settings ->
+                settings.copy(view = settings.view.copy(sortType = type, sortDirection = newDirection))
+            }
+            refresh()
+        }
+    }
+
+    fun setViewMode(mode: ViewMode) {
+        viewModelScope.launch {
+            pref.viewSettings.update { settings ->
+                settings.copy(view = settings.view.copy(viewMode = mode))
+            }
+        }
     }
 
     fun copy() {

@@ -64,9 +64,11 @@ fun BrowserWindow(
         }
 
         Column {
-            if (preferencesManager.showMenuBar) {
+            val appearanceSettings by preferencesManager.appearanceSettings.collectAsState()
+
+            if (appearanceSettings.showMenuBar) {
                 MenuBar(
-                    onClickPreferences = onClickShowPreferences,
+                    onClickPreferences = onClickShowPreferences
                 )
             }
 
@@ -205,7 +207,9 @@ fun BrowserWindowContent(
                             modifier = Modifier.weight(1f),
                             onClick = viewModel::clearSelection
                         ) {
-                            when (viewModel.viewMode) {
+                            val viewMode by viewModel.viewMode.collectAsState(ViewMode.GRID)
+
+                            when (viewMode) {
                                 ViewMode.LIST -> DetailList()
                                 ViewMode.GRID -> FileVerticalGrid()
                             }

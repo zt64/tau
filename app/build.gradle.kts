@@ -1,32 +1,28 @@
-
-import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.compose.hotReload)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.stability.analyzer)
 }
 
-@OptIn(ExperimentalComposeLibrary::class)
 dependencies {
     ktlintRuleset(libs.ktlint.rules.compose)
 
-    implementation(project(":core"))
-    implementation(project(":ui"))
-    implementation(project(":resources"))
+    implementation(projects.core)
+    implementation(projects.ui)
+    implementation(projects.resources)
 
     implementation(compose.desktop.currentOs) {
         exclude(group = "org.jetbrains.compose.material", module = "material")
     }
 
     implementation(libs.clikt)
-
     implementation(libs.bundles.koin)
 
-    testImplementation(compose.uiTest)
+    testImplementation(libs.compose.ui.test)
     testImplementation(libs.kotlin.test)
 }
 

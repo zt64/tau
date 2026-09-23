@@ -88,7 +88,7 @@ fun BrowseView(
         ContextMenuArea(
             items = {
                 buildList {
-                    add(ContextMenuItem("Create New", {}))
+                    add(ContextMenuItem("New") {})
                 }
             }
         ) {

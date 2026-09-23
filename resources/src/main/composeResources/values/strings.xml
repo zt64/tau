@@ -111,4 +111,5 @@
     <string name="frame_rate">Frame Rate</string>
     <string name="view_mode_icons">Icons</string>
     <string name="view_mode_list">List</string>
+    <string name="devices">Devices</string>
 </resources>

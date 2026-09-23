@@ -1,5 +1,3 @@
-import org.jetbrains.compose.ExperimentalComposeLibrary
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.compose)
@@ -18,18 +16,18 @@ kotlin {
     }
 }
 
-@OptIn(ExperimentalComposeLibrary::class)
 dependencies {
     ktlintRuleset(libs.ktlint.rules.compose)
 
-    implementation(project(":core"))
-    implementation(project(":resources"))
+    implementation(projects.core)
+    implementation(projects.resources)
 
-    implementation(compose.material3)
-    implementation(compose.materialIconsExtended)
-    implementation(compose.material3AdaptiveNavigationSuite)
-    implementation(compose.desktop.components.splitPane)
-    implementation(compose.preview)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.material3.windowSizeClass)
+    implementation(libs.compose.material3.adaptiveNavSuite)
+    implementation(libs.compose.icons)
+    implementation(libs.compose.splitPane)
+    implementation(libs.compose.preview)
 
     implementation(libs.humanReadable)
     implementation(libs.viewmodel)
@@ -38,12 +36,11 @@ dependencies {
 
     implementation(libs.materialKolor)
     implementation(libs.composePipette)
-    implementation(libs.windowSize)
     implementation(libs.reorderable)
 
     implementation(libs.bundles.coroutines)
     implementation(libs.bundles.koin)
 
-    testImplementation(compose.uiTest)
+    testImplementation(libs.compose.ui.test)
     testImplementation(libs.kotlin.test)
 }

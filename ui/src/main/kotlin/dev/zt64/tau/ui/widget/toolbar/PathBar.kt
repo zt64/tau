@@ -1,7 +1,10 @@
 package dev.zt64.tau.ui.widget.toolbar
 
 import androidx.compose.foundation.TooltipArea
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -47,9 +50,7 @@ fun PathBar(
     modifier: Modifier = Modifier
 ) {
     var currentSegments by remember { mutableStateOf(emptyList<Path>()) }
-    var currentSegmentIndex by rememberSaveable {
-        mutableIntStateOf(0)
-    }
+    var currentSegmentIndex by rememberSaveable { mutableIntStateOf(0) }
 
     LaunchedEffect(location) {
         if (location !in currentSegments) {

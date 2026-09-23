@@ -26,6 +26,7 @@ import dev.zt64.tau.domain.model.ViewMode
 import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.search
 import dev.zt64.tau.ui.viewmodel.BrowserViewModel
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -59,7 +60,7 @@ fun Toolbar() {
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            var operations = remember {
+            val operations = remember {
                 mutableStateListOf<Unit>()
             }
 
@@ -116,11 +117,18 @@ fun Toolbar() {
                         }
                     }
                     is ToolbarEntry.ViewMode -> {
+                        val viewMode by viewModel.viewMode.collectAsState(ViewMode.GRID)
+                        val scope = rememberCoroutineScope()
+
                         SingleChoiceSegmentedButtonRow {
                             ViewMode.entries.forEachIndexed { i, entry ->
                                 SegmentedButton(
-                                    selected = viewModel.viewMode == entry,
-                                    onClick = { viewModel.viewMode = entry },
+                                    selected = viewMode == entry,
+                                    onClick = {
+                                        scope.launch {
+                                            viewModel.setViewMode(entry)
+                                        }
+                                    },
                                     shape = SegmentedButtonDefaults.itemShape(i, ViewMode.entries.size),
                                     icon = { }
                                 ) {

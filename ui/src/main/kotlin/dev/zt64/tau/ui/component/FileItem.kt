@@ -1,6 +1,5 @@
 package dev.zt64.tau.ui.component
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -19,6 +18,7 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.domain.model.OpenItemAction
@@ -69,7 +69,9 @@ fun FileItem(
                 }
             }
         ) {
-            val currentAction by rememberUpdatedState(preferencesManager.openItemAction)
+            val behaviorSettings by preferencesManager.behaviorSettings.collectAsState()
+            val appearanceSettings by preferencesManager.appearanceSettings.collectAsState()
+            val currentAction by rememberUpdatedState(behaviorSettings.openItemAction)
 
             val onClickLambda = remember(currentAction) {
                 when (currentAction) {
@@ -151,8 +153,8 @@ fun FileItem(
                     // } else {
                     //     TextOverflow.Visible
                     // },
-                    maxLines = if (preferencesManager.truncateNames && !renaming) {
-                        preferencesManager.maxNameLines
+                    maxLines = if (appearanceSettings.truncateNames && !renaming) {
+                        appearanceSettings.maxNameLines
                     } else {
                         Int.MAX_VALUE
                     },
@@ -188,7 +190,7 @@ private fun FileItemPreview() {
     )
 }
 
-data class FileTransferable(private val listOfFiles: List<File>) : Transferable {
+data class FileTransferable(private val listOfFiles: List<Path>) : Transferable {
     override fun getTransferDataFlavors() = arrayOf(DataFlavor.javaFileListFlavor)
 
     override fun isDataFlavorSupported(flavor: DataFlavor) = DataFlavor.javaFileListFlavor == flavor

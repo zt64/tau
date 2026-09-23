@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dev.zt64.tau.domain.manager.NavigationManager
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.domain.model.Bookmark
+import dev.zt64.tau.ui.widget.Section
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,8 +20,10 @@ class SidePanelViewModel(private val preferencesManager: PreferencesManager, val
     val roots = SystemInfo().operatingSystem.fileSystem.getFileStores(true)
         .filter { it.description == "Local Disk" } // at least gets rid of some of the clutter
 
-    val pinned = MutableStateFlow(emptyList<Bookmark>())
-    val bookmarks = pinned.asStateFlow()
+    private val _pinned = MutableStateFlow(emptyList<Bookmark>())
+    val pinned = _pinned.asStateFlow()
+
+    val sections = listOf(Section.PLACES, Section.RECENT, Section.DEVICES)
 
     init {
         viewModelScope.launch {
@@ -31,21 +34,17 @@ class SidePanelViewModel(private val preferencesManager: PreferencesManager, val
                 val xdgConfig = File(System.getenv("XDG_CONFIG_HOME") ?: "$userHome/.config", "user-dirs.dirs")
 
                 // read the file and get the lines
-                val lines = xdgConfig.readLines().filter { it.startsWith("XDG_") }.associate {
+                val lines = xdgConfig.readLines().filter { it.startsWith("XDG_") }.map {
                     val (envVar, value) = it.split("=")
 
-                    envVar to value.replace("\$HOME", userHome).removeSurrounding("\"")
+                    Bookmark(
+                        path = Path(value.replace($$"$HOME", userHome).removeSurrounding("\"")),
+                        name = envVar.removePrefix("XDG_").removeSuffix("_DIR").lowercase()
+                            .replaceFirstChar { it.uppercase() }
+                    )
                 }
 
-                pinned.emit(
-                    lines.map { (envVar, value) ->
-                        Bookmark(
-                            path = Path(value),
-                            name = envVar.removePrefix("XDG_").removeSuffix("_DIR").lowercase()
-                                .replaceFirstChar { it.uppercase() }
-                        )
-                    }
-                )
+                _pinned.emit(lines)
             }
         }
     }

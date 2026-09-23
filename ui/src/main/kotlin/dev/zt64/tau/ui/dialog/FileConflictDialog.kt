@@ -5,11 +5,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import dev.zt64.tau.ui.component.Thumbnail
 import dev.zt64.tau.util.humanReadableSize
 import java.nio.file.Path
+import kotlin.io.path.Path
 import kotlin.io.path.getLastModifiedTime
 import kotlin.io.path.name
 
@@ -117,4 +119,16 @@ private fun File(file: Path) {
             )
         }
     }
+}
+
+@Preview
+@Composable
+private fun PreviewFileConflictDialog() {
+    FileConflictDialog(
+        file = Path("/a/b/c"),
+        otherFile = Path("/a/b/c"),
+        onResolveConflict = {},
+        onDismissRequest = {},
+        showApplyToAll = false
+    )
 }

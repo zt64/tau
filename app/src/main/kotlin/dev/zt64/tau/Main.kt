@@ -6,6 +6,8 @@ import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.help
 import com.github.ajalt.clikt.parameters.arguments.optional
+import com.github.ajalt.clikt.parameters.options.flag
+import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.transform.theme
 import com.github.ajalt.clikt.parameters.types.path
 import org.jetbrains.skiko.setSystemLookAndFeel
@@ -21,6 +23,8 @@ private class EntryPoint : CliktCommand() {
         )
         .optional()
         .help { theme.info("The path to open") }
+
+    val verbose by option("-v", "--verbose").flag()
 
     override fun run() {
         setSystemLookAndFeel()

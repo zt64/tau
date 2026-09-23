@@ -24,7 +24,6 @@ import dev.zt64.tau.resources.Res
 import dev.zt64.tau.resources.search
 import org.jetbrains.compose.resources.stringResource
 
-@Suppress("INVISIBLE_MEMBER")
 @Composable
 fun SearchBar(
     value: String,
@@ -73,8 +72,6 @@ fun SearchBar(
                 },
                 isError = isError,
             )
-
-
         }
     }
 }

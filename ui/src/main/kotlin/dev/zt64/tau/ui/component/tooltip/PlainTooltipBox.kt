@@ -10,7 +10,7 @@ fun PlainTooltipBox(
     content: @Composable () -> Unit
 ) {
     TooltipBox(
-        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Below),
         state = state,
         tooltip = { PlainTooltip(content = tooltipContent) },
         content = content

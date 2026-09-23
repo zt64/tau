@@ -1,7 +1,8 @@
 package dev.zt64.tau.ui.theme
 
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.*
+import androidx.compose.foundation.LocalScrollbarStyle
+import androidx.compose.foundation.ScrollbarStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -22,11 +23,11 @@ fun Theme(
         animationSpec = tween()
     ) {
         CompositionLocalProvider(
-            LocalContextMenuRepresentation provides DefaultContextMenuRepresentation(
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                textColor = MaterialTheme.colorScheme.onSurface,
-                itemHoverColor = MaterialTheme.colorScheme.inverseOnSurface
-            ),
+//            LocalContextMenuRepresentation provides DefaultContextMenuRepresentation(
+//                backgroundColor = MaterialTheme.colorScheme.surface,
+//                textColor = MaterialTheme.colorScheme.onSurface,
+//                itemHoverColor = MaterialTheme.colorScheme.inverseOnSurface
+//            ),
             LocalScrollbarStyle provides ScrollbarStyle(
                 minimalHeight = 16.dp,
                 thickness = 8.dp,

@@ -31,20 +31,17 @@ import java.awt.event.KeyEvent
 fun ShortcutsPreferences() {
     val viewModel = koinViewModel<PreferencesViewModel>()
     val scrollState = rememberScrollState()
+    val shortcuts by viewModel.shortcuts.allShortcuts.collectAsState()
 
     ScrollableContainer(scrollState) {
         Column(
             modifier = Modifier.verticalScroll(scrollState)
         ) {
-            viewModel.shortcuts.shortcuts.forEach {
+            for (entry in viewModel.shortcuts.shortcutEntries) {
                 ShortcutItem(
-                    label = {
-                        Text("Some Shortcut")
-                    },
-                    shortcut = it,
-                    onEdit = {
-                        viewModel
-                    }
+                    label = { Text(entry.label) },
+                    shortcut = entry.getter(shortcuts),
+                    onEdit = { /* TODO: Update shortcut */ }
                 )
             }
         }
@@ -52,7 +49,7 @@ fun ShortcutsPreferences() {
 }
 
 @Composable
-fun ShortcutItem(
+private fun ShortcutItem(
     label: @Composable () -> Unit,
     shortcut: Shortcut,
     onEdit: (Shortcut) -> Unit,
@@ -119,7 +116,7 @@ fun ShortcutItem(
  *
  */
 @Composable
-fun ShortcutDialog(
+private fun ShortcutDialog(
     onConfirm: (Shortcut) -> Unit,
     onDismissRequest: () -> Unit
 ) {
@@ -175,7 +172,7 @@ fun ShortcutDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.CenterHorizontally),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
                 ) {
                     val items = remember(detectedModifiers, detectedKey) {
                         buildList {

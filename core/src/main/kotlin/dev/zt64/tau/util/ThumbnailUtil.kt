@@ -18,6 +18,9 @@ private val XDG_CACHE_HOME by lazy {
     System.getenv("XDG_CACHE_HOME") ?: (System.getProperty("user.home") + "/.cache")
 }
 
+/**
+ * Get a file thumbnail
+ */
 suspend fun Path.getThumbnail(): ImageBitmap? {
     if (hostOs != OS.Linux) return null // only linux support implemented
 

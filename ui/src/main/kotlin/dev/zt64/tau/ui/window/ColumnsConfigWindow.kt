@@ -14,6 +14,7 @@ import androidx.compose.ui.window.Window
 import dev.zt64.tau.domain.manager.PreferencesManager
 import dev.zt64.tau.domain.model.DetailColumn
 import dev.zt64.tau.domain.model.DetailColumnType
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import sh.calvin.reorderable.ReorderableColumn
@@ -29,6 +30,8 @@ fun ColumnsConfigWindow(onCloseRequest: () -> Unit) {
 @Composable
 fun ColumnsList() {
     val preferences = koinInject<PreferencesManager>()
+    val viewSettings by preferences.viewSettings.collectAsState()
+    val scope = rememberCoroutineScope()
 
     Column {
         Card {
@@ -56,7 +59,7 @@ fun ColumnsList() {
                             add(toIndex, removeAt(fromIndex))
                         }
                     }
-                ) { index, item, _ ->
+                ) { _, item, _ ->
                     var enabled by remember { mutableStateOf(true) }
 
                     key(item.hashCode()) {
@@ -104,9 +107,13 @@ fun ColumnsList() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                checked = preferences.autoSizeColumns,
-                onCheckedChange = {
-                    preferences.autoSizeColumns = it
+                checked = viewSettings.autoSizeColumns,
+                onCheckedChange = { checked ->
+                    scope.launch {
+                        preferences.viewSettings.update { settings ->
+                            settings.copy(view = settings.view.copy(autoSizeColumns = checked))
+                        }
+                    }
                 }
             )
 

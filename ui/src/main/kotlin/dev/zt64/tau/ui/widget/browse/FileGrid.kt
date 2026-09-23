@@ -23,13 +23,15 @@ import kotlin.io.path.name
 @Composable
 fun FileHorizontalGrid(modifier: Modifier = Modifier) {
     val viewModel = koinViewModel<BrowserViewModel>()
+    val preferencesManager = koinInject<PreferencesManager>()
+    val appearanceSettings by preferencesManager.appearanceSettings.collectAsState()
+    var scale by remember { mutableStateOf(appearanceSettings.scale) }
 
     FileGrid(
         modifier = modifier
     ) {
-        val preferencesManager = koinInject<PreferencesManager>()
-        var scale by remember { mutableStateOf(preferencesManager.scale) }
         val gridState = rememberLazyGridState()
+        val scope = rememberCoroutineScope()
 
         LazyHorizontalGrid(
             modifier = Modifier
@@ -47,7 +49,11 @@ fun FileHorizontalGrid(modifier: Modifier = Modifier) {
                         .y
                         .toInt()
                     scale = scale.coerceAtLeast(78)
-                    preferencesManager.scale = scale
+                    scope.launch {
+                        preferencesManager.appearanceSettings.update { settings ->
+                            settings.copy(appearance = settings.appearance.copy(scale = scale))
+                        }
+                    }
                 },
             state = gridState,
             rows = GridCells.FixedSize(scale.dp),
@@ -75,13 +81,15 @@ fun FileHorizontalGrid(modifier: Modifier = Modifier) {
 @Composable
 fun FileVerticalGrid(modifier: Modifier = Modifier) {
     val viewModel = koinViewModel<BrowserViewModel>()
+    val preferencesManager = koinInject<PreferencesManager>()
+    val appearanceSettings by preferencesManager.appearanceSettings.collectAsState()
+    var scale by remember { mutableStateOf(appearanceSettings.scale) }
 
     FileGrid(
         modifier = modifier
     ) {
-        val preferencesManager = koinInject<PreferencesManager>()
-        var scale by remember { mutableStateOf(preferencesManager.scale) }
         val gridState = rememberLazyGridState()
+        val scope = rememberCoroutineScope()
 
         ScrollableContainer(
             state = gridState
@@ -101,7 +109,11 @@ fun FileVerticalGrid(modifier: Modifier = Modifier) {
                             .y
                             .toInt()
                         scale = scale.coerceAtLeast(78)
-                        preferencesManager.scale = scale
+                        scope.launch {
+                            preferencesManager.appearanceSettings.update { settings ->
+                                settings.copy(appearance = settings.appearance.copy(scale = scale))
+                            }
+                        }
                     },
                 state = gridState,
                 columns = GridCells.FixedSize(scale.dp),
@@ -111,7 +123,6 @@ fun FileVerticalGrid(modifier: Modifier = Modifier) {
             ) {
                 files(viewModel)
             }
-
         }
     }
 }

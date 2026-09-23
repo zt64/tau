@@ -1,24 +1,22 @@
-import org.jetbrains.compose.ExperimentalComposeLibrary
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ktlint)
 }
 
-@OptIn(ExperimentalComposeLibrary::class)
 dependencies {
     ktlintRuleset(libs.ktlint.rules.compose)
 
-    implementation(project(":resources"))
+    implementation(projects.resources)
 
-    implementation(compose.materialIconsExtended)
-
-    implementation(libs.io)
+    implementation(libs.compose.icons)
+    implementation(libs.kotlinx.io)
     implementation(libs.tika.core)
-
-    implementation("ca.gosyer:kotlin-multiplatform-appdirs:2.0.0")
+    implementation(libs.appdirs)
+    implementation(libs.datastore)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.bundles.coroutines)
     implementation(libs.bundles.koin)

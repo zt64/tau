@@ -2,10 +2,11 @@ import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
-    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.compose) apply false
     alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.stability.analyzer) apply false
     alias(libs.plugins.ktlint) apply false
 }
 
@@ -28,7 +29,7 @@ subprojects {
     }
 
     dependencies {
-        val ktlintRuleset by configurations
+        val ktlintRuleset = configurations["ktlintRuleset"]
 
         ktlintRuleset(rootProject.libs.ktlint.rules.compose)
     }
