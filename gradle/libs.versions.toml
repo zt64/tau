@@ -5,7 +5,7 @@ compose-material3 = "1.9.0"
 metro = "0.11.4"
 
 clikt = "5.1.0"
-tika-core = "3.3.2"
+tika-core = "4.0.0"
 datetime = "0.8.0-0.6.x-compat"
 humanReadable = "1.13.1"
 viewmodel = "2.11.0"
