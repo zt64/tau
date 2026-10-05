@@ -24,7 +24,7 @@ settings = "1.3.0"
 datastore = "1.2.1"
 appdirs = "2.0.0"
 
-kotlinx-serialization-json = "1.10.0"
+kotlinx-serialization-json = "1.11.0"
 
 koin = "4.2.2"
 
