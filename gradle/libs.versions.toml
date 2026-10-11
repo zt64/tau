@@ -28,7 +28,7 @@ kotlinx-serialization-json = "1.11.0"
 
 koin = "4.2.2"
 
-compose-stability-analyzer = "0.11.0"
+compose-stability-analyzer = "0.15.0"
 ktlintPlugin = "14.2.0"
 ktlint = "1.3.1"
 
