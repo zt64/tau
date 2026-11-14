@@ -11,7 +11,7 @@ humanReadable = "2.0.0"
 viewmodel = "2.11.0"
 kfswatch = "1.5.0"
 oshi = "7.7.3"
-io = "0.9.2"
+io = "0.9.3"
 
 materialIcons = "1.7.3"
 composePipette = "2.0.0"
