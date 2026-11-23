@@ -9,7 +9,7 @@ tika-core = "4.2.0"
 datetime = "0.8.0-0.6.x-compat"
 humanReadable = "2.0.0"
 viewmodel = "2.11.0"
-kfswatch = "1.5.0"
+kfswatch = "1.5.1"
 oshi = "7.8.0"
 io = "0.9.3"
 
