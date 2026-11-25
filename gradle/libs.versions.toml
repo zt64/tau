@@ -4,7 +4,7 @@ compose = "1.12.2"
 compose-material3 = "1.9.0"
 metro = "0.13.2"
 
-clikt = "5.1.0"
+clikt = "5.2.1"
 tika-core = "4.2.0"
 datetime = "0.8.0-0.6.x-compat"
 humanReadable = "2.0.0"
